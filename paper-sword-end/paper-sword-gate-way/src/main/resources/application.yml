@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+# 应用名称
+spring:
+  application:
+    name: fitness
+
+  jackson:
+    date-format: yyyy-MM-dd HH-mm-ss
+    time-zone: GMT+8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: zg448866
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fitness?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 200
+        max-idle: 16
+        min-idle: 8
+        max-wait: 1000
+
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+
+
+logging:
+  level:
+    root: info
+

@@ -1,4 +1,4 @@
-package com.paper.sword.vo;
+package com.paper.sword.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +36,11 @@ public class Result {
 
     public Result data(String str,Object message) {
         this.data.put(str,message);
+        return this;
+    }
+
+    public Result data(String message) {
+        this.data.put("info",message);
         return this;
     }
     

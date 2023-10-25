@@ -1,11 +1,12 @@
-package com.paper.sword;
+package com.paper.sword.video;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
-public class GateApplication {
+public class VideoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GateApplication.class, args);
+        SpringApplication.run(VideoApplication.class, args);
     }
 }

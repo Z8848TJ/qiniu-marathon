@@ -1,4 +1,4 @@
-package com.paper.sword.util.auth;
+package com.paper.sword.common.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,14 +13,14 @@ public class JwtTokenUtil {
     private static final String SIGN = "taafqU4xVVTd5T1q";
     
     // 根据用户信息生成 Token
-    public static String createToken(String phone) {
+    public static String createToken(String msg) {
 
         Calendar instance = Calendar.getInstance();
         // instance.add(Calendar.DATE, 30);
         instance.add(Calendar.MINUTE, 60);
         
         return JWT.create()
-                .withClaim(USER, phone)
+                .withClaim(USER, msg)
                 .withExpiresAt(instance.getTime())
                 .sign(Algorithm.HMAC256(SIGN));
     }

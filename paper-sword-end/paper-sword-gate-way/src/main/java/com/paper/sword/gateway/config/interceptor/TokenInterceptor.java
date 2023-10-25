@@ -1,4 +1,4 @@
-package com.paper.sword.auth.config.interceptor;
+package com.paper.sword.gateway.config.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -7,9 +7,9 @@ import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.paper.sword.vo.User;
-import com.paper.sword.vo.UserHolder;
-import com.paper.sword.util.auth.JwtTokenUtil;
+import com.paper.sword.common.vo.UserVO;
+import com.paper.sword.common.vo.UserHolder;
+import com.paper.sword.common.auth.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -40,7 +40,7 @@ public class TokenInterceptor implements HandlerInterceptor {
                 // 解析用户信息
                 String userJSON = decodedJWT.getClaim("user").asString();
                 log.info("用户信息 ==> {}", userJSON);
-                User user = JSON.parseObject(userJSON, User.class);
+                UserVO user = JSON.parseObject(userJSON, UserVO.class);
                 
                 // 保存用户信息
                 UserHolder.saveUser(user);

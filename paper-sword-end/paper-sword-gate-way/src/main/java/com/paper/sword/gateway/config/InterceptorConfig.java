@@ -1,6 +1,6 @@
-package com.paper.sword.auth.config;
+package com.paper.sword.gateway.config;
 
-import com.paper.sword.auth.config.interceptor.TokenInterceptor;
+import com.paper.sword.gateway.config.interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,12 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         
         registry.addInterceptor(tokenInterceptor)
-                .excludePathPatterns("/user/**")
-                .excludePathPatterns("/doc.html","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**")
-                .excludePathPatterns("/wx-pay/app/notify")
-                .excludePathPatterns("/boneMonitor/**")
-                .excludePathPatterns("/course/images/**")
-                .excludePathPatterns("/order-info/**");
+                .excludePathPatterns("/auth/**");
     }
 
     @Override

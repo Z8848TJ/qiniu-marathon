@@ -26,7 +26,6 @@
             <scope>compile</scope>
         </dependency>
         
-        
         <dependency>
             <groupId>com.paper.sword</groupId>
             <artifactId>paper-sword-common</artifactId>

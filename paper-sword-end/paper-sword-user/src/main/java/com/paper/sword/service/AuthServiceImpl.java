@@ -1,12 +1,13 @@
 package com.paper.sword.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.paper.sword.common.auth.JwtTokenUtil;
 import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.user.AuthService;
 import com.paper.sword.config.MailClient;
-import com.paper.sword.entity.User;
+import com.paper.sword.user.entity.User;
 import com.paper.sword.mapper.UserMapper;
 import org.apache.dubbo.config.annotation.Service;
 
@@ -71,6 +72,10 @@ public class AuthServiceImpl implements AuthService {
             return null;
         }
         
-        return JwtTokenUtil.createToken(u.getId());
+        user.setId(u.getId());
+
+        String userJson = JSONObject.toJSONString(user);
+
+        return JwtTokenUtil.createToken(userJson);
     }
 }

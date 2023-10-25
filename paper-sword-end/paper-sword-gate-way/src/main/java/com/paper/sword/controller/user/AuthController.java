@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.paper.sword.common.util.Constants.emailType.MODIFY;
@@ -31,8 +29,7 @@ public class AuthController {
     
     @PostMapping("/sendEmail/{type}")
     public Result sendEmail(@RequestBody String email, @PathVariable int type) {
-
-        Map<String, Object> res = new HashMap<>();
+        
 
         if (StringUtils.isBlank(email)) {
             return Result.error().data("邮箱不能为空");

@@ -1,4 +1,4 @@
-package com.paper.sword.interfacer.user;
+package com.paper.sword.user;
 
 import com.paper.sword.common.vo.UserVO;
 

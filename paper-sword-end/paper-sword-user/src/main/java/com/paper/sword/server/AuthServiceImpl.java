@@ -1,13 +1,13 @@
-package com.paper.sword.user.server;
+package com.paper.sword.server;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.paper.sword.common.auth.JwtTokenUtil;
+import com.paper.sword.auth.JwtTokenUtil;
 import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.UserVO;
-import com.paper.sword.interfacer.user.AuthService;
-import com.paper.sword.user.config.MailClient;
-import com.paper.sword.user.entity.User;
-import com.paper.sword.user.mapper.UserMapper;
+import com.paper.sword.user.AuthService;
+import com.paper.sword.config.MailClient;
+import com.paper.sword.entity.User;
+import com.paper.sword.mapper.UserMapper;
 import org.apache.dubbo.config.annotation.Service;
 
 import javax.annotation.Resource;

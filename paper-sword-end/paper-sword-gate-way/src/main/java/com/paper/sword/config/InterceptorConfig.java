@@ -1,6 +1,6 @@
-package com.paper.sword.gateway.config;
+package com.paper.sword.config;
 
-import com.paper.sword.gateway.config.interceptor.TokenInterceptor;
+import com.paper.sword.config.interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

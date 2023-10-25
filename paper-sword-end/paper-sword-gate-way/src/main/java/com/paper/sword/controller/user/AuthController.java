@@ -1,9 +1,9 @@
-package com.paper.sword.gateway.controller.user;
+package com.paper.sword.controller.user;
 
 import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.UserVO;
-import com.paper.sword.interfacer.user.AuthService;
+import com.paper.sword.user.AuthService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;

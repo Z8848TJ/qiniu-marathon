@@ -1,4 +1,4 @@
-package com.paper.sword.video;
+package com.paper.sword;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.paper.sword.gateway.controller.user;
+package com.paper.sword.controller.user;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

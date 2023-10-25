@@ -1,4 +1,4 @@
-package com.paper.sword.user.config;
+package com.paper.sword.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

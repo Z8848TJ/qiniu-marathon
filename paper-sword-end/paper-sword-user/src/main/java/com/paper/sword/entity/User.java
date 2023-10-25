@@ -1,4 +1,4 @@
-package com.paper.sword.user.entity;
+package com.paper.sword.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

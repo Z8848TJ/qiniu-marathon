@@ -1,4 +1,4 @@
-package com.paper.sword.gateway.config.interceptor;
+package com.paper.sword.config.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.common.vo.UserHolder;
-import com.paper.sword.common.auth.JwtTokenUtil;
+import com.paper.sword.auth.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

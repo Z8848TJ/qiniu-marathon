@@ -1,4 +1,4 @@
-package com.paper.sword.common.vo;
+package com.paper.sword.vo;
 
 /**
  * 使用 ThreadLocal 保存用户信息

@@ -1,6 +1,6 @@
 package com.paper.sword.user;
 
-import com.paper.sword.common.vo.UserVO;
+import com.paper.sword.vo.UserVO;
 
 public interface AuthService {
 

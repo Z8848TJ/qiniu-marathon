@@ -1,4 +1,4 @@
-package com.paper.sword.common.util;
+package com.paper.sword.util;
 
 /**
  * @author: zzh

@@ -2,8 +2,8 @@ package com.paper.sword.server;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.paper.sword.auth.JwtTokenUtil;
-import com.paper.sword.common.util.PaperSwordUtil;
-import com.paper.sword.common.vo.UserVO;
+import com.paper.sword.util.PaperSwordUtil;
+import com.paper.sword.vo.UserVO;
 import com.paper.sword.user.AuthService;
 import com.paper.sword.config.MailClient;
 import com.paper.sword.entity.User;

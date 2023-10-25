@@ -1,4 +1,4 @@
-package com.paper.sword.common.vo;
+package com.paper.sword.vo;
 
 import lombok.Data;
 @Data

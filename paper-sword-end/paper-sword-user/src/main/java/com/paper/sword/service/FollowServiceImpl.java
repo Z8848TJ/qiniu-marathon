@@ -2,10 +2,11 @@ package com.paper.sword.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.user.entity.Follow;
 import com.paper.sword.user.FollowService;
 import com.paper.sword.mapper.FollowMapper;
-import com.paper.sword.vo.UserHolder;
+
 import org.apache.dubbo.config.annotation.Service;
 
 

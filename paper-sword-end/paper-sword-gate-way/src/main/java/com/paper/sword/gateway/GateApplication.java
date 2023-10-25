@@ -7,5 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GateApplication {
     public static void main(String[] args) {
         SpringApplication.run(GateApplication.class, args);
+        System.out.println("111");
     }
 }

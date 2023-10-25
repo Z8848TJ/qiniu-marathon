@@ -1,4 +1,4 @@
-package com.paper.sword.server;
+package com.paper.sword.service;
 
 import com.paper.sword.user.UserService;
 import com.paper.sword.mapper.UserMapper;

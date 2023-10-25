@@ -1,4 +1,4 @@
-package com.paper.sword.util;
+package com.paper.sword.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;

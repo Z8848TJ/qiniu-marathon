@@ -1,4 +1,4 @@
-package com.paper.sword.vo;
+package com.paper.sword.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

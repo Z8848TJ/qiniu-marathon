@@ -1,5 +1,6 @@
-package com.paper.sword.server;
+package com.paper.sword.service;
 
+import com.paper.sword.annotation.ControlsLog;
 import com.paper.sword.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
@@ -17,6 +18,7 @@ public class LikeServiceImpl implements LikeService {
     private LikeMapper likeMapper;
 
     @Override
+    @ControlsLog(operateType = 0)
     public void LikeVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);
@@ -26,6 +28,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    @ControlsLog(operateType = 1)
     public void CollectVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);

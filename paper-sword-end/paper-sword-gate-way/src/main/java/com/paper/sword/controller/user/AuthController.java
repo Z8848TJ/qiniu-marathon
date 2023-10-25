@@ -1,8 +1,8 @@
 package com.paper.sword.controller.user;
 
-import com.paper.sword.util.RedisUtil;
-import com.paper.sword.vo.Result;
-import com.paper.sword.vo.UserVO;
+import com.paper.sword.common.util.RedisUtil;
+import com.paper.sword.common.vo.Result;
+import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.user.AuthService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.paper.sword.util.Constants.emailType.MODIFY;
-import static com.paper.sword.util.Constants.emailType.REGISTER;
+import static com.paper.sword.common.util.Constants.emailType.MODIFY;
+import static com.paper.sword.common.util.Constants.emailType.REGISTER;
 
 @RequestMapping("/auth")
 @RestController

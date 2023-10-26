@@ -39,7 +39,7 @@ public class Result {
         return this;
     }
 
-    public Result data(String message) {
+    public Result data(Object message) {
         this.data.put("info",message);
         return this;
     }

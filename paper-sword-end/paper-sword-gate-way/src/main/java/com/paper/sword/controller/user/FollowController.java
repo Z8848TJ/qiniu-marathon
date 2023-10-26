@@ -1,7 +1,7 @@
 package com.paper.sword.controller.user;
 
+import com.paper.sword.common.vo.Result;
 import com.paper.sword.user.FollowService;
-import com.paper.sword.vo.Result;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,6 @@ public class FollowController {
     @GetMapping("/or/not/{{followUserId}}")
     public Result isFollow(@PathVariable String followUserId) {
         boolean flag = followService.isFollow(followUserId);
-        
         return Result.success().data(flag);
     }
     

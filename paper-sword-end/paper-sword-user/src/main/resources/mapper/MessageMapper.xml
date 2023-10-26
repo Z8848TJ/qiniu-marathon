@@ -17,4 +17,9 @@
         id,from_id,to_id,
         type,extend,status
     </sql>
+    
+    <update id="updateStatusByIds" parameterType="java.lang.String">
+        UPDATE message set status = 1
+        WHERE ids in (#{ids})
+    </update>
 </mapper>

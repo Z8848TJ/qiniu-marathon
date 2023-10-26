@@ -1,6 +1,9 @@
 package com.paper.sword.user;
 
 
-public interface UserService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.paper.sword.user.entity.User;
 
+public interface UserService extends IService<User> {
+    
 }

@@ -3,7 +3,10 @@ package com.paper.sword.user.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @TableName(value ="t_message")
@@ -14,14 +17,10 @@ public class Message implements Serializable {
      */
     private String id;
 
-    /**
-     * 
-     */
+    
     private String fromId;
 
-    /**
-     * 
-     */
+    
     private String toId;
 
     /**
@@ -38,6 +37,12 @@ public class Message implements Serializable {
      * 0-未读;1-已读;2-删除;
      */
     private Integer status;
+
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

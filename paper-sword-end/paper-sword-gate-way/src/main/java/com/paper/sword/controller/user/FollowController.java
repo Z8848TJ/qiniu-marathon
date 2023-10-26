@@ -2,8 +2,11 @@ package com.paper.sword.controller.user;
 
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.user.FollowService;
+import com.paper.sword.user.entity.User;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/follow")
 @RestController
@@ -33,6 +36,13 @@ public class FollowController {
     public Result isFollow(@PathVariable String followUserId) {
         boolean flag = followService.isFollow(followUserId);
         return Result.success().data(flag);
+    }
+    
+    @GetMapping("/list/{userId}")
+    public Result followList(@PathVariable String userId) {
+        List<User> res = followService.followList(userId);
+        
+        return Result.success().data(res);
     }
     
 }

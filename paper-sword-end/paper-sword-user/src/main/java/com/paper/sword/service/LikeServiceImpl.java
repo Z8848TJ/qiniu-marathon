@@ -43,6 +43,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<Video> getLikeVideo(String userId) {
-        return likeMapper.selectList(new QueryWrapper<>());
+        return null;
     }
 }

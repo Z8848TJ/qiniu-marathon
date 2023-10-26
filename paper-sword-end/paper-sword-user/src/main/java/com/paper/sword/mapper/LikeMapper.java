@@ -5,7 +5,6 @@ import com.paper.sword.user.entity.LikeViodeVo;
 import com.paper.sword.user.entity.Like;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 /**

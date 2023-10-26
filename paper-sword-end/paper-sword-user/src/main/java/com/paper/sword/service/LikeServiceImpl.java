@@ -1,7 +1,7 @@
 package com.paper.sword.service;
 
 import com.paper.sword.annotation.ControlsLog;
-import com.paper.sword.entity.Like;
+import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
 import org.apache.dubbo.config.annotation.Service;

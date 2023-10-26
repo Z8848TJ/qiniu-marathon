@@ -2,8 +2,8 @@ package com.paper.sword.aspect;
 
 import com.paper.sword.annotation.ControlsLog;
 import com.paper.sword.common.async.AsyncLogQueue;
-import com.paper.sword.entity.Log;
-import com.paper.sword.entity.Video;
+import com.paper.sword.user.entity.Log;
+import com.paper.sword.user.entity.Video;
 import com.paper.sword.mapper.LogMapper;
 import com.paper.sword.mapper.VideoMapper;
 import com.paper.sword.common.vo.UserHolder;

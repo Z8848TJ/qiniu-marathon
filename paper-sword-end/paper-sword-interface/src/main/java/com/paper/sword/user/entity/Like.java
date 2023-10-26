@@ -1,4 +1,4 @@
-package com.paper.sword.entity;
+package com.paper.sword.user.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -10,23 +10,20 @@ import java.util.Date;
  * @author wwh
  * @date 2023/10/25
  */
-@TableName("t_log")
+@TableName("t_like")
 @Data
-public class Log {
+public class Like {
 
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 
     public String userId;
 
-    public String userName;
+    public String videoId;
 
-    public Integer controls;
-
-    public String videoType;
+    public Integer type;
 
     @TableField(fill = FieldFill.INSERT)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
     public Date createTime;
-
 }

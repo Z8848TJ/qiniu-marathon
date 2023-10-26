@@ -43,6 +43,11 @@ public class Result {
         this.data.put("info",message);
         return this;
     }
+
+    public Result data(Object message) {
+        this.data.put("info",message);
+        return this;
+    }
     
     
     public Result data(Map<String, Object> data) {

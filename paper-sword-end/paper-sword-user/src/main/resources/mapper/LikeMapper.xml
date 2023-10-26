@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paper.sword.mapper.LikeMapper">
+
+    <select id="getLikeVideo" resultType="com.paper.sword.user.entity.LikeViodeVo" parameterType="java.lang.String">
+        select
+            l.id as id,
+            l.user_id as userId,
+            l.video_id as videoId,
+            l.create_time as createTime,
+            v.video_type as videoType,
+            v.video_url as videoUrl,
+            v.`like` as `like`,
+            v.collect as collect,
+            v.description as description,
+            v.title as title
+        from t_like as l, t_video as v where l.video_id = v.id and l.type = 0 and l.user_id = #{userId,jdbcType = VARCHAR} ORDER BY l.create_time DESC
+    </select>
+    <select id="getCollectVideo" resultType="com.paper.sword.user.entity.LikeViodeVo"
+            parameterType="java.lang.String">
+        select
+            l.id as id,
+            l.user_id as userId,
+            l.video_id as videoId,
+            l.create_time as createTime,
+            v.video_type as videoType,
+            v.video_url as videoUrl,
+            v.`like` as `like`,
+            v.collect as collect,
+            v.description as description,
+            v.title as title
+        from t_like as l, t_video as v where l.video_id = v.id and l.type = 1 and l.user_id = #{userId,jdbcType = VARCHAR} ORDER BY l.create_time DESC
+    </select>
+</mapper>

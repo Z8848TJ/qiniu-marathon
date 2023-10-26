@@ -1,11 +1,10 @@
 package com.paper.sword.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paper.sword.annotation.ControlsLog;
+import com.paper.sword.user.entity.LikeViodeVo;
 import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
-import com.paper.sword.user.entity.Video;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,7 +41,12 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Video> getLikeVideo(String userId) {
-        return null;
+    public List<LikeViodeVo> getLikeVideo(String userId) {
+        return likeMapper.getLikeVideo(userId);
+    }
+
+    @Override
+    public List<LikeViodeVo> getCollectVideo(String userId) {
+        return likeMapper.getCollectVideo(userId);
     }
 }

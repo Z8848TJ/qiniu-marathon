@@ -1,7 +1,6 @@
 package com.paper.sword.user;
 
 import com.paper.sword.user.entity.LikeViodeVo;
-import com.paper.sword.user.entity.Video;
 import java.util.List;
 import org.apache.dubbo.config.annotation.Service;
 
@@ -12,11 +11,11 @@ import org.apache.dubbo.config.annotation.Service;
 @Service
 public interface LikeService {
 
-    public void LikeVideo(String userId, String videoId);
+    void likeVideo(String userId, String videoId);
 
-    public void CollectVideo(String userId, String videoId);
+    void collectVideo(String userId, String videoId);
 
-    public List<LikeViodeVo> getLikeVideo(String userId);
+    List<LikeViodeVo> getLikeVideo(String userId);
 
-    public List<LikeViodeVo> getCollectVideo(String userId);
+    List<LikeViodeVo> getCollectVideo(String userId);
 }

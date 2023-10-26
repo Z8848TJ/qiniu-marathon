@@ -21,8 +21,8 @@ public class LikeServiceImpl implements LikeService {
     private LikeMapper likeMapper;
 
     @Override
-    @ControlsLog(operateType = 0)
-    public void LikeVideo(String userId, String videoId) {
+    @ControlsLog()
+    public void likeVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);
         like.setUserId(userId);
@@ -32,7 +32,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @ControlsLog(operateType = 1)
-    public void CollectVideo(String userId, String videoId) {
+    public void collectVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);
         like.setUserId(userId);

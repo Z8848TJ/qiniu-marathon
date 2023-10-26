@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface LikeMapper extends BaseMapper<Like> {
 
-    public List<LikeViodeVo> getLikeVideo(@Param("userId") String userId);
+    List<LikeViodeVo> getLikeVideo(@Param("userId") String userId);
 
-    public List<LikeViodeVo> getCollectVideo(@Param("userId") String userId);
+    List<LikeViodeVo> getCollectVideo(@Param("userId") String userId);
 }

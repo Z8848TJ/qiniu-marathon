@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface CommentService {
 
-    public void writeComment(Comment comment);
+    void writeComment(Comment comment);
 
-    public List<Comment> getParentComment(String videoId);
+    List<Comment> getParentComment(String videoId);
 
-    public List<Comment> getChildrenComment(String parentId);
+    List<Comment> getChildrenComment(String parentId);
 }

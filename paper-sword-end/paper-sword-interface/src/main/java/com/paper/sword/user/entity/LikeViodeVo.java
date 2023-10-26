@@ -20,7 +20,7 @@ public class LikeViodeVo {
 
     public String userId;
 
-    public String VideoId;
+    public String videoId;
 
     public Integer videoType;
 

@@ -19,7 +19,7 @@ import java.util.List;
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> 
 implements MessageService {
     
-    @Reference
+    @Resource
     private MessageMapper messageMapper;
     
     @Resource

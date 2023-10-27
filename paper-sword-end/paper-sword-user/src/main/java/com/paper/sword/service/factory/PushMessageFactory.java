@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PushMessageFactory extends MessageConfig {
     
     public IPushMessage getMessageService(int messageType) {
-        
+        return messagesMap.get(messageType);
     }
     
 }

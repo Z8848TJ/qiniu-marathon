@@ -4,7 +4,7 @@ server:
 # 应用名称
 spring:
   application:
-    name: fitness
+    name: paper-sword
 
   jackson:
     date-format: yyyy-MM-dd HH-mm-ss
@@ -12,12 +12,12 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: zg448866
+    password: wW123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/fitness?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://49.234.3.91:3306/paper_sword?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
   redis:
     database: 0
-    host: localhost
+    host: 49.234.3.91
     port: 6379
     timeout: 10000
     lettuce:
@@ -27,19 +27,14 @@ spring:
         min-idle: 8
         max-wait: 1000
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:mapper/*.xml
-
 dubbo:
   application:
     name: paper-sword-gateway
   registry:
-    address: zookeeper://192.168.80.150:2181
-  protocol:
-    name: dubbo
-    port: 20880
+    address: zookeeper://49.234.3.91:2181
+  consumer:
+    timeout: 60000
+    retries: 0
 
 
 logging:

@@ -1,8 +1,7 @@
 # 应用服务 WEB 访问端口
 server:
-  port : 8081
+  port : 8082
   
-
 spring:
   mail:
     default-encoding: UTF-8
@@ -16,10 +15,18 @@ spring:
         smtp:
           ssl:
             enable: true
-
+  jackson:
+    date-format: yyyy-MM-dd HH-mm-ss
+    time-zone: GMT+8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: wW123456..
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://49.234.3.91:3306/paper_sword?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
   redis:
     database: 0
-    host: localhost
+    host: 49.234.3.91
     port: 6379
     timeout: 10000
     lettuce:
@@ -33,8 +40,8 @@ dubbo:
   application:
     name: paper-sword-user
   registry:
-    address: zookeeper://192.168.80.150:2181
+    address: zookeeper://49.234.3.91:2181
   #    address: N/A
-  consumer:
-    timeout: 60000
-    retries: 0
+  protocol:
+    name: dubbo
+    port: 20880

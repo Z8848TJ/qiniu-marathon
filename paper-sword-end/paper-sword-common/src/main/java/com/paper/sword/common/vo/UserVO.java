@@ -1,8 +1,11 @@
 package com.paper.sword.common.vo;
 
 import lombok.Data;
+
+import java.io.Serializable;
+
 @Data
-public class UserVO {
+public class UserVO implements Serializable {
     private String userId;
     
     private String id;
@@ -12,4 +15,7 @@ public class UserVO {
     private String email;
     
     private String password;
+    
+    // 验证码
+    private String code;
 }

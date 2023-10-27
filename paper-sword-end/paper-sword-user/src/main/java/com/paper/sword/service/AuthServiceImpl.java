@@ -9,12 +9,14 @@ import com.paper.sword.user.AuthService;
 import com.paper.sword.config.MailClient;
 import com.paper.sword.user.entity.User;
 import com.paper.sword.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     
     @Resource
@@ -47,8 +49,8 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(userVO.getUsername());
         user.setEmail(userVO.getEmail());
         user.setSalt(PaperSwordUtil.generateUUID().substring(0, 5));
-        user.setPassword(PaperSwordUtil.md5(user.getPassword() + user.getSalt()));
-        user.setHeaderUrl("");
+        user.setPassword(PaperSwordUtil.md5(userVO.getPassword() + user.getSalt()));
+        user.setHeaderUrl("https://cdn.pixabay.com/photo/2023/07/28/14/37/flower-8155370_1280.jpg");
         user.setCreateTime(new Date());
         
         userMapper.insert(user);
@@ -58,14 +60,14 @@ public class AuthServiceImpl implements AuthService {
     public String login(UserVO user) {
         // 验证账号
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        String username = user.getUsername();
-        wrapper.eq(User::getUsername, username);
+        String email = user.getEmail();
+        wrapper.eq(User::getEmail, email);
         User u = userMapper.selectOne(wrapper);
         
         if(u == null) {
             return null;
         }
-
+ 
         String password = PaperSwordUtil.md5(user.getPassword() + u.getSalt());
         
         if(!u.getPassword().equals(password)) {
@@ -73,6 +75,8 @@ public class AuthServiceImpl implements AuthService {
         }
         
         user.setId(u.getId());
+        user.setUsername(u.getUsername());
+        user.setPassword(null);
 
         String userJson = JSONObject.toJSONString(user);
 

@@ -1,9 +1,9 @@
 <script setup>
-import Index from './view/index.vue'
+import Recommend from './views/Recommend.vue'
 </script>
 
 <template>
-  <Index></Index>
+  <Recommend></Recommend>
 </template>
 
 <style>

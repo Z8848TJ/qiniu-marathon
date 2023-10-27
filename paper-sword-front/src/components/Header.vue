@@ -2,11 +2,11 @@
     <div class="container">
         <div class="header">
             <div class="group1">
-                <div>搞子剑</div>
-                <div>推荐</div>
-                <div>关注</div>
-                <div>朋友</div>
-                <div>我的</div>
+                <div class="logo">搞子剑</div>
+                <div class="nav">推荐</div>
+                <div class="nav">关注</div>
+                <div class="nav">朋友</div>
+                <div class="nav">我的</div>
             </div>
             <div class="searchBox">
                 <input class="search-input" type="text" placeholder="你想搜什么">
@@ -22,14 +22,22 @@
                     <img class="contribute" src="../../videolist/image/contribute.png" alt="">
                     <span>投稿</span>
                 </div>
-                <div class="avatar">头像</div>
+                <div class="avatar" @click="login" v-if="!isLogin">登录</div>
+                <div class="avatar" @click="login" v-else>头像</div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+    import {ref,defineEmits} from 'vue'
 
+    const emits = defineEmits(['login'])
+    const isLogin = ref(false)
+
+    const login = ()=>{
+        emits('login')
+    }
 
 
 </script>
@@ -38,7 +46,7 @@
 .container{
     height: 50px;
     width: 100%;
-    min-width: 1020px;
+    /*min-width: 1020px;*/
 }
 .header{
     display: flex;
@@ -46,15 +54,24 @@
 }
 .group1,.group2,.searchBox{
     display: flex;
-    margin: 10px 20px;
+    margin: 10px 10px;
 }
-.group1 div{
-    margin: 0 15px;
+.group1{
+    margin-left: 30px;
+}
+.logo{
+    width: 60px;
+    font-size: 20px;
+    margin-right: 10px;
+}
+.nav{
+    min-width: 36px;
+    margin: 0 10px;
     font-size: 18px;
     line-height: 30px;
 }
 .searchBox {
-    position: relative;
+    min-width: 260px;
     display: flex;
     align-items: center;
     border: 3px solid #ccc;
@@ -80,6 +97,7 @@
 }
 
 .search-text {
+    min-width: 32px;
     color: #ffffff;
     margin: 0 5px;
     font-size: 16px;
@@ -89,7 +107,7 @@
     width: 40px;
     height: 40px;
     text-align: center;
-    margin: 0 10px;
+    margin-right: 10px;
 }
 .letter,.contribute{
     width: 20px;
@@ -106,5 +124,6 @@
     line-height: 40px;
     border-radius: 50%;
     background-color: red;
+    margin: 0 10px;
 }
 </style>

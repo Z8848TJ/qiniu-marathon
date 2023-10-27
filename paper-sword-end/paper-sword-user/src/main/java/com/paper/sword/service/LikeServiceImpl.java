@@ -1,10 +1,10 @@
 package com.paper.sword.service;
 
 import com.paper.sword.annotation.ControlsLog;
+import com.paper.sword.user.entity.LikeViodeVo;
 import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
-import com.paper.sword.user.entity.Video;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,8 +21,8 @@ public class LikeServiceImpl implements LikeService {
     private LikeMapper likeMapper;
 
     @Override
-    @ControlsLog(operateType = 0)
-    public void LikeVideo(String userId, String videoId) {
+    @ControlsLog()
+    public void likeVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);
         like.setUserId(userId);
@@ -32,7 +32,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @ControlsLog(operateType = 1)
-    public void CollectVideo(String userId, String videoId) {
+    public void collectVideo(String userId, String videoId) {
         Like like = new Like();
         like.setVideoId(videoId);
         like.setUserId(userId);
@@ -41,7 +41,12 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Video> getLikeVideo(String userId) {
-        return null;
+    public List<LikeViodeVo> getLikeVideo(String userId) {
+        return likeMapper.getLikeVideo(userId);
+    }
+
+    @Override
+    public List<LikeViodeVo> getCollectVideo(String userId) {
+        return likeMapper.getCollectVideo(userId);
     }
 }

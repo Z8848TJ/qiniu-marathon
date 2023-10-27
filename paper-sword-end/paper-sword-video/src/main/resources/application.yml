@@ -1,0 +1,40 @@
+# 应用服务 WEB 访问端口
+server:
+  port : 8081
+  
+
+spring:
+  mail:
+    default-encoding: UTF-8
+    host: smtp.qq.com
+    port: 465
+    username: 2486722561@qq.com
+    password: nvbaozzvyysseadb
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 200
+        max-idle: 16
+        min-idle: 8
+        max-wait: 1000
+
+dubbo:
+  application:
+    name: paper-sword-user
+  registry:
+    address: zookeeper://192.168.80.150:2181
+  #    address: N/A
+  consumer:
+    timeout: 60000
+    retries: 0

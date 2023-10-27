@@ -6,6 +6,11 @@ import Index from './view/index.vue'
   <Index></Index>
 </template>
 
-<style scoped>
-
+<style>
+body{
+  margin: 0;
+  /*min-width: 1020px;*/
+  /*overflow: hidden;*/
+  user-select: none;
+}
 </style>

@@ -1,6 +1,7 @@
 package com.paper.sword.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.mapper.CommentMapper;
 import com.paper.sword.video.CommentService;
 import com.paper.sword.video.entit.Comment;
@@ -16,6 +17,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
     @Override
+    @ControlsLog(operateType = 4)
     public void writeComment(Comment comment) {
         commentMapper.insert(comment);
     }

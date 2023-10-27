@@ -1,6 +1,6 @@
 package com.paper.sword.service;
 
-import com.paper.sword.annotation.ControlsLog;
+import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.user.entity.LikeViodeVo;
 import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;

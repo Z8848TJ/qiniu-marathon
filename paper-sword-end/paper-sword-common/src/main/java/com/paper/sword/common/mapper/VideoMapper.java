@@ -1,7 +1,7 @@
-package com.paper.sword.mapper;
+package com.paper.sword.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.paper.sword.user.entity.Log;
+import com.paper.sword.common.vo.Video;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,6 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2023/10/25
  */
 @Mapper
-public interface LogMapper extends BaseMapper<Log>{
-
+public interface VideoMapper extends BaseMapper<Video> {
 }

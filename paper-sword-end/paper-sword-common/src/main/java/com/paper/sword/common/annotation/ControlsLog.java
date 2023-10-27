@@ -1,4 +1,4 @@
-package com.paper.sword.annotation;
+package com.paper.sword.common.annotation;
 
 import java.lang.annotation.*;
 

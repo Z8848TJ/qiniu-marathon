@@ -1,13 +1,13 @@
-package com.paper.sword.aspect;
+package com.paper.sword.common.aspect;
 
-import com.paper.sword.annotation.ControlsLog;
+import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.async.AsyncLogQueue;
-import com.paper.sword.user.entity.Log;
-import com.paper.sword.user.entity.Video;
-import com.paper.sword.mapper.LogMapper;
-import com.paper.sword.mapper.VideoMapper;
+import com.paper.sword.common.mapper.LogMapper;
+import com.paper.sword.common.mapper.VideoMapper;
+import com.paper.sword.common.vo.Log;
 import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.common.vo.UserVO;
+import com.paper.sword.common.vo.Video;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -32,7 +32,7 @@ public class ControlsLogAspect {
     @Autowired
     private LogMapper logMapper;
 
-    @Pointcut("@annotation(com.paper.sword.annotation.ControlsLog)")
+    @Pointcut("@annotation(com.paper.sword.common.annotation.ControlsLog)")
     private void pointcut() {}
 
     @After("pointcut()")

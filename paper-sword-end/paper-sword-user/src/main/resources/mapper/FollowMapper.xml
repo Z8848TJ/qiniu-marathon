@@ -15,4 +15,11 @@
         id,user_id,follow_user_id,
         create_time
     </sql>
+    
+    <select id="selectFollowList" resultType="com.paper.sword.user.entity.User">
+        select user_name, header_url
+        from t_follow f
+        left join t_user u on f.follow_user_id = u.id
+        where f.user_id = #{userId}
+    </select>
 </mapper>

@@ -1,27 +1,20 @@
 package com.paper.sword.controller.video;
 
-import com.paper.sword.common.vo.Result;
+import com.paper.sword.config.QiniuConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author wwh
- * @date 2023/10/26
- */
-@RequestMapping("/video")
 @RestController
+@RequestMapping("/video")
 public class VideoController {
 
-    @RequestMapping(value = "/token",method = RequestMethod.GET)
-    public Result getUpdateToken(){
-        String accessKey = "access key";
-        String secretKey = "secret key";
-        String bucket = "bucket name";
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
-        System.out.println(upToken);
-        return Result.success();
-    }
+    @Autowired
+    QiniuConfig qiniuConfig;
 
+    @GetMapping("/test")
+    public void test() {
+        System.out.println(qiniuConfig.getAccessKey());
+    }
 }

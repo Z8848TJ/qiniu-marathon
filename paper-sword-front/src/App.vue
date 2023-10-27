@@ -1,11 +1,16 @@
 <script setup>
-import Index from './view/index.vue'
+import Recommend from './views/Recommend.vue'
 </script>
 
 <template>
-  <Index></Index>
+  <Recommend></Recommend>
 </template>
 
-<style scoped>
-
+<style>
+body{
+  margin: 0;
+  /*min-width: 1020px;*/
+  /*overflow: hidden;*/
+  user-select: none;
+}
 </style>

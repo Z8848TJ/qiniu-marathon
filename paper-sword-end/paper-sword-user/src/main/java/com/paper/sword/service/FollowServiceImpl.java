@@ -10,6 +10,7 @@ import com.paper.sword.user.FollowService;
 import com.paper.sword.mapper.FollowMapper;
 
 
+import com.paper.sword.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.kafka.support.SendResult;
@@ -17,12 +18,16 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
 public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
     implements FollowService{
     
+    @Resource
+    private FollowMapper followMapper;
     @Resource
     private KafkaProducer kafkaProducer;
 
@@ -78,10 +83,16 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
         return count > 0;
     }
 
+    @Override
+    public List<User> followList(String userId) {
+        return followMapper.selectFollowList(userId);
+    }
+
     private Message buildMessage(Follow follow) {
         Message message = new Message();
         message.setToId(follow.getUserId());
         message.setFromId(follow.getFollowUserId());
+        message.setCreateTime(new Date());
         // 2- 关注
         message.setType(2);
         // 0-未读

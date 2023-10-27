@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class User{
 
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(type = IdType.ID_WORKER_STR)
     private String id;
 
     /**

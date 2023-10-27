@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
 
+    void updateStatusByIds(String ids);
 }
 
 

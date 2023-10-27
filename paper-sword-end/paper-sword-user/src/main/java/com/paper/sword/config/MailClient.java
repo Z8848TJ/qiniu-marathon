@@ -33,7 +33,7 @@ public class MailClient {
             helper.setSubject(subject);
             helper.setText(content,true);
             sender.send(helper.getMimeMessage());
-            log.info("邮件内容 ==> {}", from);
+            log.info("邮件内容 ==> {}", content);
         } catch (MessagingException e) {
             log.warn("发送邮件失败 ===> {}", e.getMessage());
             return false;

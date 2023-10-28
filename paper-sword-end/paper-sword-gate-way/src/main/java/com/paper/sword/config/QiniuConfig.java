@@ -21,8 +21,10 @@ public class QiniuConfig {
 
     private String secretKey;
 
-    private String headerName;
+    private String videoBucketName;
 
-    private String headerUrl;
+    private String videoBucketUrl;
+    
+    private String callbackUrl;
     
 }

@@ -57,7 +57,7 @@ public class ControlsLogAspect {
             log.setControls(controlsLog.operateType());
         }
         log.setVideoType(videoType);
-        log.setUserId(user.getUserId());
+        log.setUserId(user.getId());
         log.setUserName(user.getUsername());
         logMapper.insert(log);
     }

@@ -1,7 +1,7 @@
 package com.paper.sword.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.paper.sword.video.entit.Comment;
+import com.paper.sword.video.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CommentMapper extends BaseMapper<Comment> {
+    
 }

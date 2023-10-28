@@ -1,9 +1,9 @@
 <script setup>
-import Recommend from './views/Recommend.vue'
+
 </script>
 
 <template>
-  <Recommend></Recommend>
+  <router-view></router-view>
 </template>
 
 <style>

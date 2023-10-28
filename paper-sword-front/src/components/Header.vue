@@ -22,22 +22,41 @@
                     <img class="contribute" src="../../videolist/image/contribute.png" alt="">
                     <span>投稿</span>
                 </div>
-                <div class="avatar" @click="login" v-if="!isLogin">登录</div>
-                <div class="avatar" @click="login" v-else>头像</div>
+                <div class="avatar" @click="showLogin" v-if="!isLogin">登录</div>
+                <div class="avatar" @click="toUser" v-else>
+                    <img src="../../videolist/image/favicon.png" alt="">
+                </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script setup>
-    import {ref,defineEmits} from 'vue'
+    import {ref, defineEmits, defineProps, onMounted} from 'vue'
+    import {useRouter} from 'vue-router'
 
-    const emits = defineEmits(['login'])
-    const isLogin = ref(false)
+    const router = useRouter()
 
-    const login = ()=>{
-        emits('login')
+    const emits = defineEmits(['showLogin'])
+    const props = defineProps(['isLogin'])
+
+    const showLogin = ()=>{
+        emits('showLogin')
     }
+    const toUser = ()=>{
+        console.log('跳转用户页面')
+        router.push('/user')
+
+    }
+    //登录态
+    const isLogin = ref(false)
+    onMounted(()=>{
+        const userInfo = localStorage.getItem('token')
+        if(userInfo){
+            isLogin.value = true
+        }
+    })
 
 
 </script>
@@ -86,8 +105,11 @@
     outline: none;
     flex: 1;
     padding: 5px;
-    color: #555555 ;
-    background-color: #999999;
+    color: #000000 ;
+    background-color: #666666;
+}
+input::placeholder {
+    color: #000000;
 }
 
 .search-icon {
@@ -123,7 +145,12 @@
     width: 40px;
     line-height: 40px;
     border-radius: 50%;
-    background-color: red;
+    /*background-color: red;*/
     margin: 0 10px;
+}
+.avatar img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 </style>

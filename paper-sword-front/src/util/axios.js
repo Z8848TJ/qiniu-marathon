@@ -1,12 +1,13 @@
 import axios from "axios";
 
-// axios.defaults.baseURL = ''  //正式
+axios.defaults.baseURL = 'http://i7d4qr.natappfree.cc/'  //正式
 // axios.defaults.baseURL = 'http://localhost:3000' //测试
 
 //post请求头
-axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=UTF-8";
+axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
+
 //允许跨域携带cookie信息
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 //设置超时
 axios.defaults.timeout = 15000;
 
@@ -21,7 +22,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
             return Promise.resolve(response);
         } else {
             return Promise.reject(response);

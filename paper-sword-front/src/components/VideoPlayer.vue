@@ -3,8 +3,8 @@
         <div id="playBox" :class="{'playBox':true,'full':isFull}">
             <div id="videoBox" class="videoBox" @click="play">
                 <video id="video"
-                       :src="srcVideo"
-                       ref="refVideo"
+                       :src="source"
+                       ref="video"
                        @loadedmetadata="getVideoDuration"
                        @timeupdate="updateProgress"
                        @ended="videoEnded"
@@ -52,8 +52,8 @@
                                         @click="setVolume"
                                         @mousedown="startDrag"
                                         @mousemove="dragVolume"
-                                        @mouseup="endDrag"
                                         @mouseleave="endDrag"
+                                        @mouseup="endDrag"
                                         ref="refVolumeBar"
                                     >
                                     <div class="slider">
@@ -75,29 +75,42 @@
 </template>
 
 <script setup>
-import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
+    import {ref,computed,onMounted,onBeforeUnmount,defineProps,defineEmits,watch } from 'vue'
 
-    // let video = document.querySelector('#video')
-    const refVideo = ref(null)
+    const props = defineProps(['source','isPlaying'])
+
+    const video = ref(null)
     const srcVideo = ref('../../videolist/1-1.mp4')
 
 
     //播放暂停
     const isPlay = ref(false)
-    const play = function () {
-        if(video.duration <= video.currentTime){
+    const play = () =>{
+        //播放完重新播放进度条瞬间归零，没有过渡动画
+        if(video.value.duration <= video.value.currentTime){
             progressTransition.value = 'none'
             progressWidth.value = 0
         }
         if(isPlay.value){
             console.log('暂停')
-            video.pause()
+            video.value.pause()
         }else{
             console.log('播放')
-            video.play()
+            video.value.play()
         }
         isPlay.value = !isPlay.value
     }
+    //切换视频时的播放暂停
+
+    // watch(props.isPlaying, (newValue) => {
+    //     console.log(newValue)
+    //     isPlay.value = newValue;
+    //     if (newValue) {
+    //         video.value.play();
+    //     } else {
+    //         video.value.pause();
+    //     }
+    // });
 
     //时间
     const currentTime = ref("00:00")
@@ -119,9 +132,8 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     }
     //视频时长
     const getVideoDuration = () => {
-        const video = refVideo.value
-        if (video) {
-            totalTime.value = makeTime(video.duration)
+        if (video.value) {
+            totalTime.value = makeTime(video.value.duration)
         }
     }
     // 更新时间轴进度
@@ -129,10 +141,10 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     const progressTransition = ref('width 0.3s linear')
     const updateProgress = ()=>{
         // console.log(isPlay.value)
-        currentTime.value = makeTime(video.currentTime)
-        progressWidth.value = `${(video.currentTime / video.duration) * 100}%`
+        currentTime.value = makeTime(video.value.currentTime)
+        progressWidth.value = `${(video.value.currentTime / video.value.duration) * 100}%`
         //最后一秒加快速度
-        if (video.duration - video.currentTime <= 1) {
+        if (video.value.duration - video.value.currentTime <= 1) {
             progressTransition.value = 'width 0.2s linear'
         } else {
             progressTransition.value = 'width 0.3s linear'
@@ -146,9 +158,9 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
         const progressBar = event.currentTarget
         const clickX = event.clientX - progressBar.getBoundingClientRect().left
         const percent = clickX / progressBar.clientWidth
-        video.currentTime = percent * video.duration
+        video.value.currentTime = percent * video.value.duration
         isPlay.value = true
-        video.play()
+        video.value.play()
         updateProgress()
     }
 
@@ -205,7 +217,7 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     const changeSpeed = (speed)=>{
         currentSpeed.value = speed
         isSpeedListVisible.value = false
-        video.playbackRate = speed
+        video.value.playbackRate = speed
         clearTimeout(speedTimeId.value)
     }
 
@@ -217,15 +229,14 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     const refVolumeBar = ref(null)
     // 调整前的音量，用于静音恢复
     const prevVolume = ref(null)
-    //拖动
+    const nowVolume = computed(()=> (volume.value * 100).toFixed(0))
+    const volumePercent = computed(() => `${volume.value * 100}%`)
+    //拖动状态
     const dragState = ref({
         dragging: false,
         startY: 0,
         startVolume: 0,
     })
-
-    const nowVolume = computed(()=> (volume.value * 100).toFixed(0))
-    const volumePercent = computed(() => `${volume.value * 100}%`)
     //图标
     const volumeIcon = computed(()=>{
         if (isMuted.value||volume.value === 0){
@@ -242,30 +253,40 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
         if (isMuted.value) {
             prevVolume.value = volume.value
             volume.value = 0
-            video.muted = true
+            video.value.muted = true
         } else {
             volume.value = prevVolume.value || 1.0
-            video.muted = false
+            video.value.muted = false
         }
     }
-    //最后设置音量
+    //设置音量
     const setVolume = (event) => {
-        if (dragState.value.dragging) return
+        // if (dragState.value.dragging) return
         const volumeBar = event.currentTarget
         const clickY = event.clientY - volumeBar.getBoundingClientRect().top
         const percent = clickY / volumeBar.clientHeight
         // 限制音量值在 0 到 1 之间
         volume.value = Math.max(0, Math.min(1, 1.0 - percent))
-        video.volume = volume.value
+        video.value.volume = volume.value
         prevVolume.value = isMuted.value ? 1.0 : volume.value
     }
     //拖动
+    const emits = defineEmits(['dragVolume'])
     const startDrag = (event) => {
+        // console.log('startDrag')
         if (isMuted.value) toggleMute()
         const volumeBar = event.currentTarget
         dragState.value.dragging = true
         dragState.value.startY = event.clientY
+        //获取当前音量
+        const clickY = event.clientY - volumeBar.getBoundingClientRect().top
+        const percent = clickY / volumeBar.clientHeight
+        // 限制音量值在 0 到 1 之间
+        volume.value = Math.max(0, Math.min(1, 1.0 - percent))
+        video.value.volume = volume.value
+        prevVolume.value = isMuted.value ? 1.0 : volume.value
         dragState.value.startVolume = volume.value
+
         volumeBar.addEventListener('mousemove', dragVolume)
         volumeBar.addEventListener('mouseup', endDrag)
     }
@@ -277,7 +298,7 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
             const changePercent = deltaY / totalHeight
             const newVolume = dragState.value.startVolume - changePercent
             volume.value = Math.max(0, Math.min(1, newVolume))
-            video.volume = volume.value
+            video.value.volume = volume.value
         }
     }
     const endDrag = () => {
@@ -291,17 +312,20 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     //音量条显隐
     const showVolumeBar = () => {
         isVolumeBarVisible.value = true
+        emits('dragVolume',true)
         clearTimeout(volumeTimeId.value)
     }
-
     const hideVolumeBar = () => {
         volumeTimeId.value = setTimeout(()=>{
             isVolumeBarVisible.value = false
         },500)
+        emits('dragVolume',false)
     }
 
 
+    onMounted(()=>{
 
+    })
 
     onBeforeUnmount(()=>{
         clearTimeout(speedTimeId.value)
@@ -346,8 +370,8 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
     transform: translate(-50px,-50px)
 }
 .controlBox{
+    position: absolute;
     width: 100%;
-    position: fixed;
     bottom: 20px;
 }
 .progress{

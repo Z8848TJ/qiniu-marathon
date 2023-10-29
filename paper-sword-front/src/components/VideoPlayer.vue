@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-    import {ref,computed,onMounted,onBeforeUnmount,defineProps,defineEmits,watch } from 'vue'
+    import {ref,computed,onMounted,onBeforeUnmount,defineProps,defineEmits,watchEffect } from 'vue'
 
     const props = defineProps(['source','isPlaying'])
 
@@ -101,16 +101,7 @@
         isPlay.value = !isPlay.value
     }
     //切换视频时的播放暂停
-
-    // watch(props.isPlaying, (newValue) => {
-    //     console.log(newValue)
-    //     isPlay.value = newValue;
-    //     if (newValue) {
-    //         video.value.play();
-    //     } else {
-    //         video.value.pause();
-    //     }
-    // });
+    
 
     //时间
     const currentTime = ref("00:00")

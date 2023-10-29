@@ -17,7 +17,7 @@ public class JwtTokenUtil {
 
         Calendar instance = Calendar.getInstance();
         // instance.add(Calendar.DATE, 30);
-        instance.add(Calendar.MINUTE, 60);
+        instance.add(Calendar.DATE, 30);
         
         return JWT.create()
                 .withClaim(USER, msg)

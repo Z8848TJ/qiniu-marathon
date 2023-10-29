@@ -1,6 +1,6 @@
 package com.paper.sword.video;
 
-import com.paper.sword.video.entit.Comment;
+import com.paper.sword.video.entity.Comment;
 import java.util.List;
 
 /**

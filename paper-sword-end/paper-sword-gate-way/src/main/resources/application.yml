@@ -26,6 +26,7 @@ spring:
         max-idle: 16
         min-idle: 8
         max-wait: 1000
+    password: 123456
 
 dubbo:
   application:

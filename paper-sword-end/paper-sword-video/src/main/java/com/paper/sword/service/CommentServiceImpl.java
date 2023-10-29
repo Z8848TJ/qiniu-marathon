@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.mapper.CommentMapper;
 import com.paper.sword.video.CommentService;
-import com.paper.sword.video.entit.Comment;
+import com.paper.sword.video.entity.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

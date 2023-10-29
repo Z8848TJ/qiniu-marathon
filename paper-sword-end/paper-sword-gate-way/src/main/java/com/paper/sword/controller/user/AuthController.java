@@ -20,6 +20,7 @@ import static com.paper.sword.common.util.Constants.emailType.REGISTER;
 @RequestMapping("/auth")
 @RestController
 @Slf4j
+@CrossOrigin
 public class AuthController {
 
     @Reference
@@ -29,8 +30,8 @@ public class AuthController {
     private RedisTemplate<String, Object> template;
     
     
-    @PostMapping("/sendEmail/{type}")
-    public Result sendEmail(@RequestParam String email, @PathVariable int type) {
+    @GetMapping("/sendEmail")
+    public Result sendEmail(@RequestParam String email, @RequestParam int type) {
         log.info("发送验证码 ==> {}", email);
 
         if (StringUtils.isBlank(email)) {
@@ -66,8 +67,8 @@ public class AuthController {
         return Result.error().data("邮件发送失败，请联系管理员");
     }
     
-    @PostMapping("/register/{type}")
-    public Result register(@RequestBody UserVO user, @PathVariable int type) {
+    @PostMapping("/register")
+    public Result register(@RequestBody UserVO user) {
         log.info("用户注册 ==> {}", user);
         // 空值处理
         if(user == null) {
@@ -78,12 +79,7 @@ public class AuthController {
             return Result.error().data("邮箱不能为空");
         }
 
-        String codeKey = "";
-        if(type == REGISTER) {
-            codeKey = RedisUtil.getRegisterKey(email);
-        } else if(type == MODIFY) {
-            codeKey = RedisUtil.getModifyKey(email);
-        }
+        String codeKey = RedisUtil.getRegisterKey(email);
 
         String code = (String)template.opsForValue().get(codeKey);
         
@@ -98,7 +94,7 @@ public class AuthController {
         
         authService.register(user);
         
-        return Result.success();
+        return Result.success().data("注册成功");
     }
     
     @PostMapping("/login")

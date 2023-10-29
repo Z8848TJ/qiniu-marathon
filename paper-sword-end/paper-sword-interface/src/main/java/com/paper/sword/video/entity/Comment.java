@@ -1,4 +1,4 @@
-package com.paper.sword.video.entit;
+package com.paper.sword.video.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

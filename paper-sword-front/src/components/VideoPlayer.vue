@@ -369,6 +369,7 @@ import {ref,computed,onMounted,onBeforeUnmount} from 'vue'
 }
 .progress:hover,.progress:hover .now{
     height: 10px;
+    cursor: pointer;
 }
 .control{
     width: 100%;

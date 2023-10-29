@@ -360,6 +360,11 @@ source-map-js@^1.0.2:
   resolved "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
 
+swiper@^11.0.3:
+  version "11.0.3"
+  resolved "https://registry.npmmirror.com/swiper/-/swiper-11.0.3.tgz#9c325154db2a4431f508b7e8e300621365eb4c3d"
+  integrity sha512-MyV9ooQsriAe2EibeamqewLjgCfSvl2xoyratl6S3ln5BXDL4BzlO6mxcbLMCzQL6Z60b/u0AS/nKrepL0+TAg==
+
 vite@^4.4.5:
   version "4.5.0"
   resolved "https://registry.npmmirror.com/vite/-/vite-4.5.0.tgz#ec406295b4167ac3bc23e26f9c8ff559287cff26"

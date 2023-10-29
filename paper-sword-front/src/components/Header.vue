@@ -33,13 +33,12 @@
 </template>
 
 <script setup>
-    import {ref, defineEmits, defineProps, onMounted} from 'vue'
+    import {ref, defineEmits, onMounted} from 'vue'
     import {useRouter} from 'vue-router'
 
     const router = useRouter()
 
     const emits = defineEmits(['showLogin'])
-    const props = defineProps(['isLogin'])
 
     const showLogin = ()=>{
         emits('showLogin')

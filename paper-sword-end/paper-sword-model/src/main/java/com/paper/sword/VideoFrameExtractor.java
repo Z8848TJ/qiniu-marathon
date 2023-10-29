@@ -13,34 +13,18 @@ import java.io.IOException;
 import java.util.Date;
 
 public class VideoFrameExtractor {
-    public static void main(String[] args) {
-        String datasetPath = "D:\\video"; // 数据集目录
-        String outputDir = "D:\\frames"; // 用于存储提取的帧
+    public static String getFrame() {
+        String videoPath = "D:\\video\\美食\\点点族素材 (36).mp4"; // 数据集目录
+        String outputDir = "D:\\demo"; // 用于存储提取的帧
 
-        File datasetDir = new File(datasetPath);
-        File[] classDirs = datasetDir.listFiles(File::isDirectory);
+        int frameCount = getVideoFrameCount(videoPath);
+        int count = frameCount / 10;
+        String outputDirPath = outputDir;
+        File outputDirFile = new File(outputDirPath);
+        outputDirFile.mkdirs();
+        extractFrames(videoPath, outputDirPath,count);
 
-        if (classDirs != null) {
-            for (File classDir : classDirs) {
-                String className = classDir.getName();
-
-                File[] videoFiles = classDir.listFiles((dir, name) -> name.endsWith(".mp4"));
-
-                if (videoFiles != null) {
-                    int videoNum = 0;
-                    for (File videoFile : videoFiles) {
-                        String videoName = videoFile.getName();
-                        String videoPath = videoFile.getAbsolutePath();
-                        int frameCount = getVideoFrameCount(videoPath);
-                        int count = frameCount / 10;
-                        String outputDirPath = outputDir + File.separator + className;
-                        File outputDirFile = new File(outputDirPath);
-                        outputDirFile.mkdirs();
-                        extractFrames(videoPath, outputDirPath,count);
-                    }
-                }
-            }
-        }
+        return outputDir;
     }
 
     private static void extractFrames(String videoPath, String outputDir,int framesPerSecond) {

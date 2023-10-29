@@ -19,6 +19,7 @@
         <module>paper-sword-video</module>
         <module>paper-sword-interface</module>
         <module>paper-sword-common</module>
+        <module>paper-sword-model</module>
     </modules>
 
     <properties>

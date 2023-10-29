@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.paper-sword</groupId>
+        <artifactId>paper-sword-end</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.paper.sword</groupId>
+    <artifactId>paper-sword-model</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>xuggler</groupId>
+            <artifactId>xuggler</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg-platform</artifactId>
+            <version>4.4-1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>pytorch-engine</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId>
+            <artifactId>tensorflow-model-zoo</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ai.djl.tensorflow/tensorflow-native-auto -->
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId> <!-- 根据你的框架选择 -->
+            <artifactId>tensorflow-engine</artifactId> <!-- 根据你的框架选择 -->
+            <version>0.16.0</version> <!-- 替换为最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId> <!-- 根据你的框架选择 -->
+            <artifactId>tensorflow-native-auto</artifactId> <!-- 根据你的框架选择 -->
+            <version> 2.4.1</version> <!-- 替换为最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>pytorch-engine</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.pytorch/pytorch_android -->
+        <dependency>
+            <groupId>org.pytorch</groupId>
+            <artifactId>pytorch_java_only</artifactId>
+            <version>1.13.1</version> <!-- 版本号可能有所不同 -->
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId> <!-- 根据你的深度学习框架选择 -->
+            <artifactId>tensorflow-engine</artifactId> <!-- 根据你的深度学习框架选择 -->
+            <version>0.16.0</version> <!-- 替换为最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <version>0.16.0</version> <!-- 替换为最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId>
+            <artifactId>tensorflow-engine</artifactId>
+            <version>0.16.0</version> <!-- 替换为最新版本 -->
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.tensorflow</groupId>
+            <artifactId>tensorflow-model-zoo</artifactId>
+            <version>0.16.0</version> <!-- 替换为最新版本 -->
+        </dependency>
+
+
+    </dependencies>
+
+</project>

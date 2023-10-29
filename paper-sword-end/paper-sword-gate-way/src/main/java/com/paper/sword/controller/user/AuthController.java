@@ -21,7 +21,7 @@ import static com.paper.sword.common.util.Constants.emailType.REGISTER;
 @RestController
 @Slf4j
 public class AuthController {
-    
+
     @Reference
     AuthService authService;
 

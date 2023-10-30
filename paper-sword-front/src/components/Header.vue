@@ -70,12 +70,17 @@
     display: flex;
     justify-content: space-between;
 }
+
 .group1,.group2,.searchBox{
     display: flex;
     margin: 10px 10px;
 }
 .group1{
     margin-left: 30px;
+}
+.group1 div{
+     /*margin-left: 30px;*/
+     cursor: pointer;
 }
 .logo{
     width: 60px;
@@ -115,6 +120,7 @@ input::placeholder {
     width: 20px;
     height: 20px;
     margin: 0 5px;
+    cursor: pointer;
 }
 
 .search-text {
@@ -123,12 +129,14 @@ input::placeholder {
     margin: 0 5px;
     font-size: 16px;
     line-height: 30px;
+    cursor: pointer;
 }
 .group2 div{
     width: 40px;
     height: 40px;
     text-align: center;
     margin-right: 10px;
+    cursor: pointer;
 }
 .letter,.contribute{
     width: 20px;
@@ -151,5 +159,6 @@ input::placeholder {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    transform: translate(0,-5px);
 }
 </style>

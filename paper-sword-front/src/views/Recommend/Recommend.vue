@@ -14,6 +14,7 @@
             >
 <!--                @mousedown="onMouseDown"-->
                     <VideoPlayer
+                            v-if="shouldRenderVideo(index)"
                             :source="video.source"
                             @dragVolume="changeVolume"
                             :isPlaying="currentIndex === index"
@@ -32,8 +33,8 @@
 
 <script setup>
     import {ref,onMounted} from 'vue'
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-    import 'swiper/css';
+    import { Swiper, SwiperSlide } from 'swiper/vue'
+    import 'swiper/css'
     import {Autoplay,Mousewheel,Keyboard} from 'swiper/modules'
 
     import VideoPlayer from '../../components/VideoPlayer.vue'
@@ -69,13 +70,12 @@
         { id: 5, source: 'http://s38keg0f3.hb-bkt.clouddn.com/%E6%96%97%E7%A0%B4-1.mp4?e=1698568348&token=51Qm5EEd37-kTBM5STG7Wec0jE8f1t6d-te6G20o:y5RuRNK0D-21AW8UY3b8J-wtaY8=' },
         { id: 6, source: 'http://s38keg0f3.hb-bkt.clouddn.com/%E6%96%97%E7%A0%B4-2.mp4?e=1698568356&token=51Qm5EEd37-kTBM5STG7Wec0jE8f1t6d-te6G20o:g6sSlwGO65YZ9v7wcQ7eSDY4vKQ=' },
 
-    ]);
+    ])
 
     //切换视频
     const currentIndex = ref(0)
 
     const onSlideChange = (e)=>{
-        console.log('change',e)
         currentIndex.value = e.activeIndex
     }
 
@@ -85,14 +85,18 @@
         isDragVolume.value = value
     }
 
-
+    //同时只渲染三个视频
+    const shouldRenderVideo = (index) => {
+        // 根据 currentIndex 和视频的索引判断是否需要渲染视频组件
+        return (
+            Math.abs(index - currentIndex.value) <= 1 ||
+            index === currentIndex.value
+        )
+    }
 
     // onMounted(() => {
-    //     const firstVideoPlayer = refs.VideoPlayer[0];
-    //     if (firstVideoPlayer) {
-    //         firstVideoPlayer.play();
-    //     }
-    // });
+    //
+    // })
 
 
 </script>

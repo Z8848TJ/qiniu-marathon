@@ -17,8 +17,8 @@
                         <p>邮箱：{{ account }}</p>
                     </div>
                 </div>
-                <div class="search-bar">
-                    <!-- 搜索框和按钮 -->
+                <div class="controlsBox">
+                    <button class="setting">资料设置</button>
                 </div>
             </div>
             <div class="userContent">
@@ -27,9 +27,9 @@
                 </div>
                 <hr>
                 <div class="content">
-                    <div v-if="selectedCategory === '作品'">显示作品图片</div>
-                    <div v-else-if="selectedCategory === '喜欢'">显示喜欢图片</div>
+                    <div v-if="selectedCategory === '喜欢'">显示喜欢图片</div>
                     <div v-else-if="selectedCategory === '收藏'">显示收藏图片</div>
+                    <div v-else-if="selectedCategory === '作品'">显示作品图片</div>
                 </div>
             </div>
         </div>
@@ -46,8 +46,8 @@
     const followingCount = ref(500)
     const likesCount = ref(5000)
     const account = ref('2825787448@qq.com')
-    const categories = ref(['作品', '喜欢', '收藏'])
-    const selectedCategory = ref('作品')// 默认选中的分类
+    const categories = ref([ '喜欢', '收藏','作品'])
+    const selectedCategory = ref('喜欢')// 默认选中的分类
 
 
 
@@ -61,12 +61,12 @@
     .userContainer{
         margin: 0 auto;
         width: 90%;
-        margin: 0 auto;
         height: calc(100vh - 100px);
     }
 
     .userInfoBox {
         display: flex;
+        justify-content: space-between;
         margin-top: 50px;
     }
 
@@ -88,7 +88,7 @@
     }
 
     .userInfo h2 {
-        font-size: 1.5rem;
+        /*font-size: 24px;*/
         margin: 0;
     }
 
@@ -100,11 +100,22 @@
         margin-right: 20px;
     }
 
-    .search-bar {
+    .controlsBox {
         flex: 1;
         display: flex;
         justify-content: flex-end;
         align-items: center;
+    }
+    .setting{
+        width: 100px;
+        height: 40px;
+        font-size: 20px;
+        text-align: center;
+        line-height: 40px;
+        background-color: #999999;
+        border: 1px solid #999999;
+        border-radius: 5px;
+        cursor: pointer;
     }
 
     .search-input {

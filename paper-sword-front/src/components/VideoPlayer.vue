@@ -75,13 +75,12 @@
 </template>
 
 <script setup>
-    import {ref,computed,onMounted,onBeforeUnmount,defineProps,defineEmits,watchEffect } from 'vue'
+    import {ref,computed,onMounted,onUpdated,onBeforeUnmount,defineProps,watch } from 'vue'
 
     const props = defineProps(['source','isPlaying'])
 
     const video = ref(null)
     const srcVideo = ref('../../videolist/1-1.mp4')
-
 
     //播放暂停
     const isPlay = ref(false)
@@ -100,8 +99,6 @@
         }
         isPlay.value = !isPlay.value
     }
-    //切换视频时的播放暂停
-    
 
     //时间
     const currentTime = ref("00:00")
@@ -313,11 +310,21 @@
         emits('dragVolume',false)
     }
 
-
     onMounted(()=>{
-
+        console.log(123)
+        watch(props,(newValue)=>{
+            if(newValue.isPlaying){
+                video.value.play()
+                isPlay.value = true
+            }else{
+                video.value.pause()
+                isPlay.value = false
+            }
+        },{
+            immediate: true,
+            deep: true
+        })
     })
-
     onBeforeUnmount(()=>{
         clearTimeout(speedTimeId.value)
         clearTimeout(volumeTimeId.value)
@@ -366,7 +373,7 @@
     bottom: 20px;
 }
 .progress{
-    min-width: 1020px;
+    /*min-width: 1020px;*/
     height: 3px;
     background-color: #999999;
     border-radius: 3px;

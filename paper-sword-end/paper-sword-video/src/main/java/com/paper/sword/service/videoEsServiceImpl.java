@@ -1,0 +1,81 @@
+package com.paper.sword.service;
+
+import com.paper.sword.common.vo.EsVideo;
+import com.paper.sword.video.VideoService;
+import com.paper.sword.video.entity.Video;
+import com.paper.sword.video.videoEsService;
+import org.apache.dubbo.config.annotation.Service;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author wwh
+ * @date 2023/10/30
+ */
+@Service
+public class videoEsServiceImpl implements videoEsService {
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchTemplate;
+
+    @Autowired
+    private VideoService videoService;
+
+
+    @Override
+    public void saveEsVideo(EsVideo esVideo) {
+        elasticsearchTemplate.save(esVideo);
+    }
+
+    @Override
+    public List<Video> getEsVideoByType(String type) {
+        ArrayList<Video> EsVideoList = new ArrayList<>();
+        SortBuilder<?> sort = SortBuilders.fieldSort("createTime").order(SortOrder.DESC);
+        String[] split = type.split(",");
+        BoolQueryBuilder should = QueryBuilders.boolQuery();
+        for (String s : split) {
+            should.should(QueryBuilders.matchQuery("type", s));
+        }
+        NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
+        nativeSearchQuery.withQuery(should);
+        nativeSearchQuery.withSort(sort);
+        SearchHits<EsVideo> search = elasticsearchTemplate.search(nativeSearchQuery.build(), EsVideo.class);
+        for (SearchHit<EsVideo> esVideoSearchHit : search) {
+            String id = esVideoSearchHit.getContent().getId();
+            Video byId = videoService.getById(id);
+            EsVideoList.add(byId);
+        }
+        return EsVideoList;
+    }
+
+    @Override
+    public List<Video> getEsVideo(String keyWord) {
+        ArrayList<Video> EsVideoList = new ArrayList<>();
+        SortBuilder<?> sort = SortBuilders.fieldSort("createTime").order(SortOrder.DESC);
+        BoolQueryBuilder should = QueryBuilders.boolQuery()
+                .should(QueryBuilders.matchQuery("title", keyWord))
+                .should(QueryBuilders.matchQuery("description", keyWord));
+
+        NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
+        nativeSearchQuery.withQuery(should);
+        nativeSearchQuery.withSort(sort);
+        SearchHits<EsVideo> search = elasticsearchTemplate.search(nativeSearchQuery.build(), EsVideo.class);
+        for (SearchHit<EsVideo> esVideoSearchHit : search) {
+            String id = esVideoSearchHit.getContent().getId();
+            Video byId = videoService.getById(id);
+            EsVideoList.add(byId);
+        }
+        return EsVideoList;
+    }
+}

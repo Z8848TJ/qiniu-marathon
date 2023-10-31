@@ -1,5 +1,6 @@
 package com.paper.sword;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -8,13 +9,12 @@ import java.io.InputStreamReader;
  * @date 2023/10/29
  */
 public class getLable {
-        public static void main(String[] args) {
+        public static String getLable(String scriptPath,String videoPath,String outputDir) {
+            String line = "";
             try {
                 // 定义Python脚本的命令和参数
                 String pythonScript = "python";
-                String scriptPath = "C:\\Users\\86151\\PycharmProjects\\pythonProject2\\demo.py";
-                String arg1 = VideoFrameExtractor.getFrame();
-
+                String arg1 = VideoFrameExtractor.getFrame(videoPath,outputDir);
                 // 创建ProcessBuilder并设置命令和参数
                 ProcessBuilder processBuilder = new ProcessBuilder(pythonScript, scriptPath, arg1);
 
@@ -23,7 +23,6 @@ public class getLable {
 
                 // 从进程的输出流中读取结果
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
-                String line;
                 while ((line = reader.readLine()) != null) {
                     System.out.println(line);
                 }
@@ -32,8 +31,17 @@ public class getLable {
                 int exitCode = process.waitFor();
                 System.out.println("Python脚本执行完毕，退出码：" + exitCode);
 
+                File folder = new File(outputDir);
+                File[] files = folder.listFiles();
+                for (File file : files) {
+                    if(file.isFile()){
+                        file.delete();
+                    }
+                }
+
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+            return line;
         }
     }

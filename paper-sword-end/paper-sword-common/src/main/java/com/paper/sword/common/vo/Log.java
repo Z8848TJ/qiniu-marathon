@@ -21,7 +21,7 @@ public class Log {
 
     public String userName;
 
-    public Integer controls;
+    public String controls;
 
     public String videoType;
 

@@ -3,11 +3,15 @@ package com.paper.sword.controller.video;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.paper.sword.common.util.PaperSwordUtil;
+import com.paper.sword.common.vo.EsVideo;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.UserHolder;
+import com.paper.sword.config.Lableconfig;
 import com.paper.sword.config.QiniuConfig;
+import com.paper.sword.getLable;
 import com.paper.sword.video.VideoService;
 import com.paper.sword.video.entity.Video;
+import com.paper.sword.video.videoEsService;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
@@ -24,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/video")
@@ -32,9 +37,17 @@ public class VideoController {
 
     @Autowired
     private QiniuConfig qiniuConfig;
+
+    @Autowired
+    private Lableconfig lableconfig;
     
     @Reference
     private VideoService videoService;
+
+    @Reference
+    private videoEsService esService;
+
+
 
     @GetMapping("/upload")
     public Result upload() {
@@ -72,14 +85,25 @@ public class VideoController {
         
         Result res;
         if(Integer.parseInt(size) > 0) {
+            String lable = getLable.getLable(lableconfig.scriptPath,qiniuConfig.getVideoBucketUrl()+fileName, lableconfig.outputDir);
             // 将视频信息保存到数据库
             Video video = new Video();
+            video.setId(UUID.randomUUID().toString());
+            video.setVideoType(lable);
             video.setVideoUrl(fileName);
             video.setCreateTime(new Date());
             video.setUserId(userId);
             log.info("上传视频信息 ==> {}", video);
             videoService.save(video);
-            
+            EsVideo esVideo = new EsVideo();
+            esVideo.setId(video.getId());
+            esVideo.setVideoType(video.getVideoType());
+            esVideo.setTitle(video.getTitle());
+            esVideo.setDescription(video.getDescription());
+            esVideo.setCreateTime(video.getCreateTime());
+            esService.saveEsVideo(esVideo);
+
+
             response.setStatus(200);
             res = Result.success().data("文件上传成功");
         } else {

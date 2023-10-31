@@ -2,6 +2,7 @@ package com.paper.sword;
 
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameConverter.ToMat;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -13,10 +14,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public class VideoFrameExtractor {
-    public static String getFrame() {
-        String videoPath = "D:\\video\\美食\\点点族素材 (36).mp4"; // 数据集目录
-        String outputDir = "D:\\demo"; // 用于存储提取的帧
-
+    public static String getFrame(String videoPath,String outputDir) {
         int frameCount = getVideoFrameCount(videoPath);
         int count = frameCount / 10;
         String outputDirPath = outputDir;
@@ -56,7 +54,6 @@ public class VideoFrameExtractor {
                 }
                 frameNumber++;
             }
-
             grabber.stop();
         } catch (Exception e) {
             e.printStackTrace();

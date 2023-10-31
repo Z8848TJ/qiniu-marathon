@@ -3,6 +3,9 @@ server:
 
 # 应用名称
 spring:
+  elasticsearch:
+    rest:
+      uris: 49.234.3.91:9200
   application:
     name: paper-sword
 

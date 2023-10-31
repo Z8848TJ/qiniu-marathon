@@ -31,7 +31,7 @@ public class MessageController {
     @GetMapping("/push")
     public Result pushInteractMessage() {
         UserVO user = UserHolder.getUser();
-        String userId = user.getUserId();
+        String userId = user.getId();
         
         List<String> info = messageService.pushInteractMessage(userId);
         

@@ -15,7 +15,6 @@ public class Video implements Serializable {
     /**
      * id
      */
-    @TableId
     private String id;
 
     /**
@@ -26,7 +25,7 @@ public class Video implements Serializable {
     /**
      * 视频类型
      */
-    private Integer videoType;
+    private String videoType;
 
     /**
      * 视频连接

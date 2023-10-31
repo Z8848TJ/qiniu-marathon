@@ -56,12 +56,13 @@ public class ControlsLogAspect {
         Log log = new Log();
         ControlsLog controlsLog = method.getAnnotation(ControlsLog.class);
         if( controlsLog!=null){
-            log.setControls(controlsLog.operateType());
+            int operateType = controlsLog.operateType();
+            log.setControls(String.valueOf(operateType));
             String[] split = videoType.split(",");
             for(int i = 0; i<split.length; i++){
                 MarkVo markVo = new MarkVo();
                 int markType = Integer.parseInt(split[i]);
-                markVo.setUserId(Integer.parseInt(user.getUserId()));
+                markVo.setUserId(Integer.parseInt(user.getId()));
                 markVo.setType(markType);
                 //根据不同的操作设置不同的偏好值
                 switch (controlsLog.operateType()){
@@ -126,7 +127,7 @@ public class ControlsLogAspect {
 
 
         log.setVideoType(videoType);
-        log.setUserId(user.getUserId());
+        log.setUserId(user.getId());
         log.setUserName(user.getUsername());
         logMapper.insert(log);
     }

@@ -17,7 +17,7 @@ public class Like {
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 
-    public String userId;
+    public Integer userId;
 
     public String videoId;
 

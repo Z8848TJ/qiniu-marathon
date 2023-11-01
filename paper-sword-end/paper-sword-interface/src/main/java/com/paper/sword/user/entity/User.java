@@ -13,7 +13,7 @@ import java.util.Date;
 public class User{
 
     @TableId(type = IdType.ID_WORKER_STR)
-    private String id;
+    private Integer id;
 
     /**
      * 用户名

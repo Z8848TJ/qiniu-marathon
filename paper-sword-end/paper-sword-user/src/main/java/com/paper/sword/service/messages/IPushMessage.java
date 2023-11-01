@@ -1,5 +1,6 @@
 package com.paper.sword.service.messages;
 
+import com.paper.sword.common.vo.MessageVO;
 import com.paper.sword.user.entity.Message;
 
 
@@ -8,7 +9,7 @@ import com.paper.sword.user.entity.Message;
  * @description:
  */
 public interface IPushMessage {
-    
-    String buildMessage(Message message);
+
+    MessageVO buildMessage(Message message);
     
 }

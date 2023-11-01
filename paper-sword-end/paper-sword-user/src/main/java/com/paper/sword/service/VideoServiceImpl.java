@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
-        implements VideoService{
+    implements VideoService{
 
     @Override
     public List<Video> videoListByUserId(Integer id) {

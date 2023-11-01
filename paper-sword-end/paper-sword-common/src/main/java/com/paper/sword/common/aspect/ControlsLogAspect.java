@@ -2,6 +2,8 @@ package com.paper.sword.common.aspect;
 
 import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.async.AsyncLogQueue;
+import com.paper.sword.common.entity.Log;
+import com.paper.sword.common.entity.Video;
 import com.paper.sword.common.mapper.LogMapper;
 import com.paper.sword.common.mapper.MarkMapper;
 import com.paper.sword.common.mapper.VideoMapper;
@@ -62,7 +64,7 @@ public class ControlsLogAspect {
             for(int i = 0; i<split.length; i++){
                 MarkVo markVo = new MarkVo();
                 int markType = Integer.parseInt(split[i]);
-                markVo.setUserId(Integer.parseInt(user.getId()));
+                markVo.setUserId(user.getId());
                 markVo.setType(markType);
                 //根据不同的操作设置不同的偏好值
                 switch (controlsLog.operateType()){

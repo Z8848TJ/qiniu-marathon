@@ -14,15 +14,15 @@ public interface FollowService extends IService<Follow> {
      * @param followUserId 关注者 ID
      * @param isFollow 关注 or 取关
      */
-    void follow(String followUserId, Boolean isFollow);
+    void follow(Integer followUserId, Boolean isFollow);
 
     /**
      * 是否关注
      * @param followUserId 关注 ID
      * @return 是否关注
      */
-    boolean isFollow(String followUserId);
+    boolean isFollow(Integer followUserId);
 
 
-    List<User> followList(String userId);
+    List<User> followList(Integer userId);
 }

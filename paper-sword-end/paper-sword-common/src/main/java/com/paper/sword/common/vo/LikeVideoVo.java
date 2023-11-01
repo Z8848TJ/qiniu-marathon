@@ -11,14 +11,16 @@ import java.util.Date;
 
 /**
  * @author wwh
- * @date 2023/10/25
+ * @date 2023/10/26
  */
 @Data
-public class Video {
+public class LikeVideoVo {
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 
     public String userId;
+
+    public String videoId;
 
     public Integer videoType;
 

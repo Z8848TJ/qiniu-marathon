@@ -1,7 +1,7 @@
 package com.paper.sword.video;
 
 import com.paper.sword.common.vo.EsVideo;
-import com.paper.sword.video.entity.Video;
+import com.paper.sword.common.entity.Video;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @author wwh
  * @date 2023/10/30
  */
-public interface videoEsService {
+public interface VideoEsService {
 
     void saveEsVideo(EsVideo esVideo);
 

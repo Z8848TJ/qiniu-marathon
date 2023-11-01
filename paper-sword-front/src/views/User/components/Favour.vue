@@ -1,11 +1,11 @@
 <template>
-
+    喜欢
 </template>
 
-<script>
-    export default {
-        name: "Favour"
-    }
+<script setup>
+
+
+
 </script>
 
 <style scoped>

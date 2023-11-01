@@ -1,11 +1,12 @@
 <template>
-
+    作品
 </template>
 
-<script>
-    export default {
-        name: "Works"
-    }
+<script setup>
+
+
+
+
 </script>
 
 <style scoped>

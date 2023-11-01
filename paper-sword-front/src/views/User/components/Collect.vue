@@ -1,11 +1,10 @@
 <template>
-
+    收藏
 </template>
 
-<script>
-    export default {
-        name: "Collect"
-    }
+<script setup>
+
+
 </script>
 
 <style scoped>

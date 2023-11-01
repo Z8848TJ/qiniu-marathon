@@ -1,6 +1,6 @@
 <template>
     <div class="recommend">
-        <Header @showLogin="showLogin"></Header>
+        <Header></Header>
         <Swiper
                 @swiper="onSwiper" @slideChange="onSlideChange" :class="{'swiper-no-swiping':isDragVolume}"
                 :modules="modules"
@@ -22,12 +22,7 @@
                     </VideoPlayer>
             </swiper-slide>
         </Swiper>
-
-<!--            <VideoPlayer-->
-<!--                    :source="videos[1].source"-->
-<!--                    @dragVolume="changeVolume"-->
-<!--                ></VideoPlayer>-->
-        <LoginRegister class="loginRegisterBox" @close="closeLogin" @login="login" v-if="isShow"></LoginRegister>
+        <LoginRegister class="loginRegisterBox" v-if="store.state.showLoginRegister"></LoginRegister>
     </div>
 </template>
 
@@ -36,23 +31,13 @@
     import { Swiper, SwiperSlide } from 'swiper/vue'
     import 'swiper/css'
     import {Autoplay,Mousewheel,Keyboard} from 'swiper/modules'
+    import {useStore} from 'vuex'
+
+    const store = useStore()
 
     import VideoPlayer from '../../components/VideoPlayer.vue'
     import LoginRegister from '../../components/LoginRegister.vue'
 
-
-    //登录注册
-    const isShow = ref(false)
-    const showLogin = ()=>{
-        isShow.value = true
-    }
-    const closeLogin = ()=>{
-        isShow.value = false
-    }
-    const login = ()=>{
-        isShow.value = false
-        isLogin.value = true
-    }
 
     //视频
     let mySwiper = null
@@ -95,7 +80,6 @@
     }
 
     // onMounted(() => {
-    //
     // })
 
 
@@ -112,43 +96,14 @@
     display: flex;
     flex-direction: column;
 }
-.header {
-    height: 50px;
-    background-color: #333;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.swiper{
+    margin: 0;
 }
-.videoContainer {
-    /*height: 100vh;*/
-    height: calc(100vh - 50px);
-    /*overflow-y: auto;*/
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-}
-
-.video.active {
-    display: block;
-}
-
-
-
-
 .loginRegisterBox{
     position: absolute;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2;
 }
 </style>

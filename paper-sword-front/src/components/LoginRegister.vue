@@ -13,7 +13,8 @@
                 <input class="username" v-model="username" type="text" v-if="isRegister" placeholder="请输入用户名">
                 <div class="inputBox">
                     <input v-model="email" type="text" @focus="clearError('email')" @blur="validate('email')" placeholder="请输入邮箱" />
-                    <div class="sendCode" v-if="isRegister" @click="sendCode">发送验证码</div>
+                    <div class="sendCode" v-if="isRegister && !countTime" @click="sendCode">发送验证码</div>
+                    <div class="sendCode" v-if="countTime" @click="sendCode" disabled>{{countDown}} 秒后重试</div>
                     <div class="error" v-if="emailError">{{ emailError }}</div>
                 </div>
                 <input class="code" v-model="code" type="text" v-if="isRegister" placeholder="请输入验证码">
@@ -25,16 +26,18 @@
             </div>
             <div class="switch">
                 <span>{{ isRegister ? '已有账号？' : '没有账号？' }}</span>
-                <a @click="toggleForm">{{ isRegister ? '登录' : '注册' }}</a>
+                <a @click="toggleForm">{{ isRegister ? '登录' : '立即注册' }}</a>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, defineEmits } from 'vue'
+    import { ref, onBeforeUnmount } from 'vue'
     import {GetAction, PostAction} from '../util/api'
+    import {useStore} from 'vuex'
 
+    const store = useStore()
     const username = ref('')
     const email = ref('')
     const emailError = ref('')
@@ -43,7 +46,6 @@
     const passwordError = ref('')
     const isRegister = ref(false)
 
-    const emits = defineEmits(['close','login'])
 
     const handleLogin = () => {
         //注册信息
@@ -71,7 +73,8 @@
             PostAction('auth/login',loginParams).then((res)=>{
                 console.log(res)
                 localStorage.setItem('token',res.data.info)
-                emits('login')
+                store.commit('login',loginParams)
+                store.commit('showLoginRegister',true)
             })
 
         }
@@ -116,21 +119,46 @@
         }
     }
     //发送验证码
+    //倒计时
+    const countDown = ref(60)
+    const countTime = ref(null)
+
     const sendCode = ()=>{
-        const params = {
-            email:email.value,
-            type:0
+        console.log(email.value)
+        if(email.value !== ''){
+            const params = {
+                email:email.value,
+                type:0
+            }
+            GetAction('auth/sendEmail', params).then((res)=>{
+                console.log(res)
+                if(res.code === 200){
+                    clearInterval(countTime.value)
+                    countTime.value = null
+                }
+            })
+            countTime.value = setInterval(()=>{
+                if(countDown.value >0){
+                    countDown.value --
+                }else{
+                    clearInterval(countTime.value)
+                    countTime.value = null
+                }
+            },1000)
+        }else{
+            emailError.value = '请输入邮箱！'
         }
-        GetAction('auth/sendEmail', params).then((res)=>{
-            console.log(res)
-        })
     }
 
 
     //关闭
     const closeLoginRegister = ()=>{
-        emits('close')
+        store.commit('showLoginRegister',false)
     }
+
+    onBeforeUnmount(()=>{
+        clearInterval(countTime.value)
+    })
 
 </script>
 
@@ -140,6 +168,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        width: 100%;
         position: relative;
         background-color: #fff;
     }

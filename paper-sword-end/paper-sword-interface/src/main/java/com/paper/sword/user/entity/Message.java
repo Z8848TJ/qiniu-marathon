@@ -18,10 +18,10 @@ public class Message implements Serializable {
     private String id;
 
     
-    private String fromId;
+    private Integer fromId;
 
     
-    private String toId;
+    private Integer toId;
 
     /**
      * 0-点赞;1-评论;2-关注

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 @ConfigurationProperties(prefix = "lable")
 @Data
 @Slf4j
-public class Lableconfig {
+public class LabelConfig {
 
     public String scriptPath;
 

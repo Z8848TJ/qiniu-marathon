@@ -19,7 +19,7 @@ public class Comment {
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 
-    public String userId;
+    public Integer userId;
 
     public String videoId;
 
@@ -27,7 +27,7 @@ public class Comment {
 
     public String content;
 
-    public String recoverUserId;
+    public Integer recoverUserId;
 
     public Integer likes;
 

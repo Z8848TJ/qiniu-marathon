@@ -21,12 +21,12 @@ public class Follow implements Serializable {
     /**
      * 用户 ID
      */
-    private String userId;
+    private Integer userId;
 
     /**
      * 关联的用户 ID
      */
-    private String followUserId;
+    private Integer followUserId;
 
     /**
      * 创建时间

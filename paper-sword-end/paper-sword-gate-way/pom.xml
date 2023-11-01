@@ -25,13 +25,6 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        
-        <dependency>
-            <groupId>com.paper.sword</groupId>
-            <artifactId>paper-sword-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.qiniu/qiniu-java-sdk -->
         <dependency>
@@ -46,6 +39,7 @@
             <version>3.14.2</version>
             <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

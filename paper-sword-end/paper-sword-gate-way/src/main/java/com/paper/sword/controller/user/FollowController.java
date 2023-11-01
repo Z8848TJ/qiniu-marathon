@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/follow")
 @RestController
 public class FollowController {
-    
+
     @Reference
     private FollowService followService;
 
@@ -20,10 +20,10 @@ public class FollowController {
      * @param followUserId 关注者 ID
      * @param isFollow 关注 or 取关
      */
-    @PostMapping("/{followUserId}/{isFollow}")
-    public Result follow(@PathVariable String followUserId, @PathVariable Boolean isFollow) {
+    @PostMapping("/opt")
+    public Result follow(@RequestParam Integer followUserId, @RequestParam Boolean isFollow) {
         followService.follow(followUserId, isFollow);
-        
+
         return Result.success();
     }
 
@@ -32,16 +32,16 @@ public class FollowController {
      * @param followUserId 关注者 ID
      * @return 是否关注 true or false
      */
-    @GetMapping("/or/not/{{followUserId}}")
-    public Result isFollow(@PathVariable String followUserId) {
+    @GetMapping("/or/not")
+    public Result isFollow(@RequestParam Integer followUserId) {
         boolean flag = followService.isFollow(followUserId);
         return Result.success().data(flag);
     }
-    
-    @GetMapping("/list/{userId}")
-    public Result followList(@PathVariable String userId) {
+
+    @GetMapping("/list")
+    public Result followList(@RequestParam Integer userId) {
         List<User> res = followService.followList(userId);
-        
+
         return Result.success().data(res);
     }
     

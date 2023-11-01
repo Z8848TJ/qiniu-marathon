@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Data
 public class UserVO implements Serializable {
     
-    private String id;
+    private Integer id;
     
     private String username;
     

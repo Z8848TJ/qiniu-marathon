@@ -1,6 +1,5 @@
 package com.paper.sword.service.factory;
 
-
 import com.paper.sword.service.messages.IPushMessage;
 import org.springframework.stereotype.Service;
 

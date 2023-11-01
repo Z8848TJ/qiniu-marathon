@@ -1,4 +1,4 @@
-package com.paper.sword.user.entity;
+package com.paper.sword.common.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -20,7 +20,7 @@ public class Video {
 
     public String userId;
 
-    public Integer videoType;
+    public String videoType;
 
     public String videoUrl;
 
@@ -29,6 +29,8 @@ public class Video {
     public String collect;
 
     public String title;
+
+    public String cover;
 
     public String description;
 

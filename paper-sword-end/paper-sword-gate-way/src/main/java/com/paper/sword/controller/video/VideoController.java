@@ -6,13 +6,13 @@ import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.EsVideo;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.UserHolder;
-import com.paper.sword.config.Lableconfig;
+import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.getLable;
 import com.paper.sword.video.RecommendedService;
 import com.paper.sword.video.VideoService;
-import com.paper.sword.video.entity.Video;
-import com.paper.sword.video.videoEsService;
+import com.paper.sword.common.entity.Video;
+import com.paper.sword.video.VideoEsService;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
@@ -44,9 +44,6 @@ public class VideoController {
     
     @Reference
     private VideoService videoService;
-
-    @Reference
-    private RecommendedService recommendedService;
 
     @Reference
     private videoEsService esService;

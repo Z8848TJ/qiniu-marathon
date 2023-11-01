@@ -1,7 +1,7 @@
 package com.paper.sword.common.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.paper.sword.common.vo.Video;
+import com.paper.sword.common.entity.Video;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

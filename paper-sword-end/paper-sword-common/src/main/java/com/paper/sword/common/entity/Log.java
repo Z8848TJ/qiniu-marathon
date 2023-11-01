@@ -1,4 +1,4 @@
-package com.paper.sword.common.vo;
+package com.paper.sword.common.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -17,7 +17,7 @@ public class Log {
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 
-    public String userId;
+    public Integer userId;
 
     public String userName;
 

@@ -32,9 +32,9 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
     private KafkaProducer kafkaProducer;
 
     @Override
-    public void follow(String followUserId, Boolean isFollow) {
+    public void follow(Integer followUserId, Boolean isFollow) {
         // 获取登录用户
-        String userId = UserHolder.getUser().getId();
+        Integer userId = UserHolder.getUser().getId();
 
         // 判断关注或取关
         if (isFollow) {
@@ -72,9 +72,9 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
 
     
     @Override
-    public boolean isFollow(String followUserId) {
+    public boolean isFollow(Integer followUserId) {
         // 获取登录用户
-        String userId = UserHolder.getUser().getId();
+        Integer userId = UserHolder.getUser().getId();
 
         Integer count = query().eq("user_id", userId)
                 .eq("follow_user_id", followUserId)
@@ -84,7 +84,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
     }
 
     @Override
-    public List<User> followList(String userId) {
+    public List<User> followList(Integer userId) {
         return followMapper.selectFollowList(userId);
     }
 

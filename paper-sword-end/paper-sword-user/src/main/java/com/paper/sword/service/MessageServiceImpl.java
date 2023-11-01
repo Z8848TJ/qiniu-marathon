@@ -2,6 +2,7 @@ package com.paper.sword.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.paper.sword.common.vo.MessageVO;
 import com.paper.sword.service.factory.PushMessageFactory;
 import com.paper.sword.service.messages.IPushMessage;
 import com.paper.sword.user.MessageService;
@@ -26,21 +27,21 @@ implements MessageService {
     private PushMessageFactory messageFactory;
     
     @Override
-    public List<String> pushInteractMessage(String userId) {
+    public List<MessageVO> pushInteractMessage(Integer userId) {
         // 查询该用户的未读信息
         LambdaQueryWrapper<Message> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Message::getStatus, 0);
+        wrapper.eq(Message::getToId, userId);
         List<Message> messages = baseMapper.selectList(wrapper);
 
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<MessageVO> list = new ArrayList<>();
         // 对不同的消息进行不同的处理
         for (Message message : messages) {
             Integer type = message.getType();
             IPushMessage messageService = messageFactory.getMessageService(type);
-            String msgJson = messageService.buildMessage(message);
-            list.add(msgJson);
+            list.add(messageService.buildMessage(message));
         }
-        
+
         return list;
     }
 

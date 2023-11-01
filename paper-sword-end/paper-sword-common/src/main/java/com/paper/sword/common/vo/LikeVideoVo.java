@@ -1,4 +1,4 @@
-package com.paper.sword.user.entity;
+package com.paper.sword.common.vo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -14,7 +14,7 @@ import java.util.Date;
  * @date 2023/10/26
  */
 @Data
-public class LikeViodeVo {
+public class LikeVideoVo {
     @TableId(value = "id", type = IdType.ID_WORKER)
     public String id;
 

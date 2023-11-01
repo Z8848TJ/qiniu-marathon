@@ -5,6 +5,8 @@ import com.paper.sword.common.vo.MarkVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 /**
  * @author wwh
  * @date 2023/10/28
@@ -13,5 +15,7 @@ import org.apache.ibatis.annotations.Param;
 public interface MarkMapper extends BaseMapper<MarkVo> {
 
     Integer selectByUserIdAndType(@Param("userId") Integer userId,@Param("type") Integer type);
+
+    Map<Integer,Integer> selectByUserId(@Param("userId")Integer userId);
 
 }

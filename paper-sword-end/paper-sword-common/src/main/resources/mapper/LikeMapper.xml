@@ -9,4 +9,9 @@
         select mark
         from t_mark where user_id = ${userId} and type = ${type};
     </select>
+
+
+    <select id="selectByUserId" resultType="java.util.Map" parameterType="java.lang.Integer">
+        SELECT video_type,mark from t_mark WHERE user_id = 1 ORDER BY mark DESC limit 0,3;
+    </select>
 </mapper>

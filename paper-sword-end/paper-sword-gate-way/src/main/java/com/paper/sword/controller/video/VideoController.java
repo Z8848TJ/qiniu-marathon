@@ -9,6 +9,7 @@ import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.config.Lableconfig;
 import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.getLable;
+import com.paper.sword.video.RecommendedService;
 import com.paper.sword.video.VideoService;
 import com.paper.sword.video.entity.Video;
 import com.paper.sword.video.videoEsService;
@@ -43,6 +44,9 @@ public class VideoController {
     
     @Reference
     private VideoService videoService;
+
+    @Reference
+    private RecommendedService recommendedService;
 
     @Reference
     private videoEsService esService;
@@ -122,7 +126,7 @@ public class VideoController {
         
         List<Video> list = 
                 videoService.videoListByUserId(UserHolder.getUser().getId());
-        
+        recommendedService.getRecommend(1);
         return Result.success().data(list);
     }
     

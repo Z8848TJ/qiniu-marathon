@@ -17,19 +17,22 @@
                         <p>邮箱：{{ account }}</p>
                     </div>
                 </div>
-                <div class="controlsBox">
+                <div class="settingBox" v-if="isCurrentUser">
                     <button class="setting">资料设置</button>
+                </div>
+                <div class="controlsBox" v-else>
+                    <button class="control" @click="followUser">{{ isFollowing ? '已关注' : '关注' }}</button>
+                    <button class="control">私信</button>
+                    <button class="control">分享</button>
                 </div>
             </div>
             <div class="userContent">
                 <div class="category">
-                    <button v-for="category in categories" :key="category">{{ category }}</button>
+                    <button v-for="category in categories" :key="category" @click="changeContent(category)">{{ category }}</button>
                 </div>
                 <hr>
                 <div class="content">
-                    <div v-if="selectedCategory === '喜欢'">显示喜欢图片</div>
-                    <div v-else-if="selectedCategory === '收藏'">显示收藏图片</div>
-                    <div v-else-if="selectedCategory === '作品'">显示作品图片</div>
+                    <router-view></router-view>
                 </div>
             </div>
         </div>
@@ -38,8 +41,10 @@
 
 <script setup>
 
+    import {ref,onMounted} from 'vue'
+    import {useRouter} from 'vue-router'
 
-    import {ref} from 'vue'
+    const router = useRouter()
 
     const userName = ref('luo')
     const followersCount = ref(1000)
@@ -47,8 +52,22 @@
     const likesCount = ref(5000)
     const account = ref('2825787448@qq.com')
     const categories = ref([ '喜欢', '收藏','作品'])
-    const selectedCategory = ref('喜欢')// 默认选中的分类
+    //切换分类
+    const changeContent = (category)=>{
+        if(category==='喜欢'){
+            router.push('/user/self')
+        }else if(category==='收藏'){
+            router.push('/user/self/collect')
+        }else if(category==='作品'){
+            router.push('/user/self/works')
+        }
+    }
 
+    const isCurrentUser = ref(false); // 根据用户身份状态判断是否是当前用户
+    const isFollowing = ref(false); // 根据用户关注状态判断是否已关注
+    const followUser = () => {
+        isFollowing.value = !isFollowing.value;
+    };
 
 
 </script>
@@ -100,7 +119,7 @@
         margin-right: 20px;
     }
 
-    .controlsBox {
+    .settingBox {
         flex: 1;
         display: flex;
         justify-content: flex-end;
@@ -117,24 +136,24 @@
         border-radius: 5px;
         cursor: pointer;
     }
-
-    .search-input {
-        width: 200px;
-        height: 30px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        margin-right: 10px;
+    .controlsBox{
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
     }
-
-    .search-button {
-        background-color: #333;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
+    .control{
+        width: 100px;
+        height: 40px;
+        margin: 0 10px;
+        font-size: 20px;
+        text-align: center;
+        line-height: 40px;
+        background-color: #999999;
+        border: 1px solid #999999;
         border-radius: 5px;
         cursor: pointer;
     }
+
 
     .userContent {
         margin-top: 60px;

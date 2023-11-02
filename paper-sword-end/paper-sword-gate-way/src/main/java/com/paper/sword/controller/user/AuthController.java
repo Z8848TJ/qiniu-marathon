@@ -20,7 +20,6 @@ import static com.paper.sword.common.util.Constants.emailType.REGISTER;
 @RequestMapping("/auth")
 @RestController
 @Slf4j
-@CrossOrigin
 public class AuthController {
 
     @Reference

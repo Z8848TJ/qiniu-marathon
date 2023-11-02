@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-    import {ref,computed,onMounted,onUpdated,onBeforeUnmount,defineProps,watch } from 'vue'
+    import {ref,computed,onMounted,onUpdated,onBeforeUnmount,watch } from 'vue'
 
     const props = defineProps(['source','isPlaying'])
 
@@ -129,14 +129,17 @@
     const progressTransition = ref('width 0.3s linear')
     const updateProgress = ()=>{
         // console.log(isPlay.value)
-        currentTime.value = makeTime(video.value.currentTime)
-        progressWidth.value = `${(video.value.currentTime / video.value.duration) * 100}%`
-        //最后一秒加快速度
-        if (video.value.duration - video.value.currentTime <= 1) {
-            progressTransition.value = 'width 0.2s linear'
-        } else {
-            progressTransition.value = 'width 0.3s linear'
+        if(video.value){
+            currentTime.value = makeTime(video.value.currentTime)
+            progressWidth.value = `${(video.value.currentTime / video.value.duration) * 100}%`
+            //最后一秒加快速度
+            if (video.value.duration - video.value.currentTime <= 1) {
+                progressTransition.value = 'width 0.2s linear'
+            } else {
+                progressTransition.value = 'width 0.3s linear'
+            }
         }
+
     }
     const videoEnded = ()=>{
         isPlay.value=false
@@ -199,7 +202,6 @@
         speedTimeId.value = setTimeout(()=>{
             isSpeedListVisible.value = false
         },500)
-
     }
     //改变视频播放速度
     const changeSpeed = (speed)=>{
@@ -311,7 +313,6 @@
     }
 
     onMounted(()=>{
-        console.log(123)
         watch(props,(newValue)=>{
             if(newValue.isPlaying){
                 video.value.play()
@@ -326,6 +327,7 @@
         })
     })
     onBeforeUnmount(()=>{
+        video.value = null
         clearTimeout(speedTimeId.value)
         clearTimeout(volumeTimeId.value)
     })
@@ -429,7 +431,7 @@
     position: absolute;
     bottom: 25px;
     left: 0;
-    z-index: 50;
+    /*z-index: 50;*/
 }
 .speedList div:hover,.active{
     color: #dc143c;
@@ -477,7 +479,7 @@ img{
     position: absolute;
     bottom: 10px;
     left: 0;
-    z-index: 50;
+    /*z-index: 50;*/
 }
 .slider{
     height: 100px;
@@ -485,7 +487,7 @@ img{
     margin: 0 auto;
     border: solid 1px #999999;
     border-radius: 5px;
-    z-index: 50;
+    /*z-index: 50;*/
 }
 .nowVolume{
     height: 10px;

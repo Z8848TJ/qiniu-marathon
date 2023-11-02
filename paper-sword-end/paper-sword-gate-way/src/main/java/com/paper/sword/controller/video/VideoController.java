@@ -3,7 +3,10 @@ package com.paper.sword.controller.video;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.paper.sword.common.util.PaperSwordUtil;
-import com.paper.sword.common.vo.*;
+import com.paper.sword.common.vo.EsVideo;
+import com.paper.sword.common.vo.Result;
+import com.paper.sword.common.vo.UserHolder;
+import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.getLable;
@@ -56,20 +59,25 @@ public class VideoController {
         JSONObject json = new JSONObject();
         json.put("key", "$(key)");
         json.put("fsize", "${fsize}");
-        json.put("userId", UserHolder.getUser().getId());
+        UserVO user = UserHolder.getUser();
+        json.put("userId", user.getId());
 
         StringMap policy = new StringMap();
         policy.put("callbackUrl", qiniuConfig.getCallbackUrl());
-        policy.put("returnBody", json.toJSONString());
+        policy.put("callbackBody", json.toJSONString());
         policy.put("callbackBodyType", "application/json");
 
+        log.info("上传文件 Bucket  ==> {}", qiniuConfig.getVideoBucketName());
         String token = auth.uploadToken(qiniuConfig.getVideoBucketName(), filename, 3600, policy);
 
-        return Result.success().data(token);
+        log.info("上传文件 token  ==> {}", token);
+        return Result.success()
+                .data("token", token)
+                .data("key", filename);
     }
 
     
-    @PostMapping("/callbackUrl")
+    @PostMapping("/callback")
     public String uploadCallback(HttpServletRequest request, HttpServletResponse response) {
        // 处理通知参数 
         String body = PaperSwordUtil.readDataFromHttp(request);
@@ -85,7 +93,7 @@ public class VideoController {
             String lable = getLable.getLable(labelconfig.scriptPath,qiniuConfig.getVideoBucketUrl()+fileName, labelconfig.outputDir);
             // 将视频信息保存到数据库
             Video video = new Video();
-            video.setId(UUID.randomUUID().toString());
+            video.setId(PaperSwordUtil.generateUUID());
             video.setVideoType(lable);
             video.setVideoUrl(fileName);
             video.setCreateTime(new Date());
@@ -117,8 +125,9 @@ public class VideoController {
     @GetMapping("/list")
     public Result videoList() {
         
-        List<Video> list =
+        List<Video> list = 
                 videoService.videoListByUserId(UserHolder.getUser().getId());
+        
         return Result.success().data(list);
     }
 
@@ -140,5 +149,5 @@ public class VideoController {
         List<Video> esVideoByType = esService.getEsVideoByType(stringBuilder.toString());
         return Result.success().data(esVideoByType);
     }
-    
+
 }

@@ -25,16 +25,21 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("客户端请求接口 ==> {}", request.getRequestURL());
+        log.info("客户端请求接口 ==> {}, {}", request.getRequestURL(), request.getMethod());
+        
+        // 处理预检请求，直接放行
+        if(request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
         
         Map<String, Object> map = new HashMap<>();
         String token = request.getHeader("Authorization");
+        
         if(token == null) {
             map.put("msg", "token为空");
         } else {
             log.info("验证 token");
             try {
-                log.info("用户token ==> {}", token);
                 DecodedJWT decodedJWT = JwtTokenUtil.verify(token);
                 
                 // 解析用户信息

@@ -44,4 +44,8 @@ public class getLable {
             }
             return line;
         }
+
+    public static void main(String[] args) {
+        getLable("C:\\Users\\86151\\PycharmProjects\\pythonProject2\\demo.py","http://s38keg0f3.hb-bkt.clouddn.com/04940270b1d346c8ba39ac56ebd36bef","D:\\demo");
+    }
     }

@@ -13,7 +13,7 @@
                         <!-- 分类导航内容 -->
                         <!-- 这里可以放你的分类导航菜单 -->
                         <ul>
-                            <li>热门</li>
+                            <li v-for="(cate,index) in cateList">{{cate.name}}</li>
                             <li>体育</li>
                             <li>游戏</li>
                         </ul>
@@ -79,6 +79,12 @@
     const hideCateInfo = ()=>{
         showNav.value = false
     }
+    const cateList = ref([
+        {id:1,name:'热门'},
+        {id:2,name:'体育'},
+        {id:3,name:'游戏'},
+    ])
+
 
     //用户
     //登录态
@@ -112,6 +118,7 @@
             store.commit('isLogin')
         }
         console.log(store.state.isLogin)
+
     })
     onBeforeUnmount(()=>{
         clearTimeout(showProfileId.value)
@@ -171,6 +178,7 @@
     list-style: none;
     padding: 0;
     display: flex;
+    flex-wrap: wrap;
 }
 .nav-dropdown li{
     width: 60px;
@@ -256,7 +264,7 @@ input::placeholder {
     position: absolute;
     top: 40px;
     right: 0;
-    background-color: red;
+    background-color: rgb(45, 44, 44);
     border: 1px solid #999999;
     border-radius: 10px;
     padding: 10px;

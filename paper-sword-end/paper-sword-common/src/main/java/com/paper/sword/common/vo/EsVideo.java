@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -20,7 +21,7 @@ import java.util.Date;
  */
 @Data
 @Document(indexName = "EsVideo", createIndex = true)
-public class EsVideo {
+public class EsVideo implements Serializable {
 
     @Id
     public String id;

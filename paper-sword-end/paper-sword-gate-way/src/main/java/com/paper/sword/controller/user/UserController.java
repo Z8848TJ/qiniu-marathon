@@ -21,7 +21,7 @@ public class UserController {
     /**
      * 用户喜欢视频列表
      */
-    @GetMapping("/videoList")
+    @GetMapping("/likeList")
     public Result videoList() {
         Integer id = UserHolder.getUser().getId();
 

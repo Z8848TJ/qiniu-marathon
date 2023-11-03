@@ -10,23 +10,22 @@ import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.getLable;
+import com.paper.sword.video.RecommendedService;
+import com.paper.sword.video.VideoEsService;
 import com.paper.sword.video.VideoService;
 import com.paper.sword.common.entity.Video;
-import com.paper.sword.video.VideoEsService;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/video")
@@ -37,13 +36,16 @@ public class VideoController {
     private QiniuConfig qiniuConfig;
 
     @Autowired
-    private LabelConfig labelConfig;
+    private LabelConfig labelconfig;
     
     @Reference
     private VideoService videoService;
 
     @Reference
     private VideoEsService esService;
+
+    @Reference
+    private RecommendedService recommendedService;
 
 
 
@@ -88,11 +90,11 @@ public class VideoController {
         
         Result res;
         if(Integer.parseInt(size) > 0) {
-            String label = getLable.getLable(labelConfig.scriptPath,qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
+            String lable = getLable.getLable(labelconfig.scriptPath,qiniuConfig.getVideoBucketUrl()+fileName, labelconfig.outputDir);
             // 将视频信息保存到数据库
             Video video = new Video();
             video.setId(PaperSwordUtil.generateUUID());
-            video.setVideoType(label);
+            video.setVideoType(lable);
             video.setVideoUrl(fileName);
             video.setCreateTime(new Date());
             video.setUserId(userId);
@@ -128,5 +130,24 @@ public class VideoController {
         
         return Result.success().data(list);
     }
-    
+
+
+    @GetMapping("/recommend")
+    public Result recommend(@RequestParam() Integer userId) {
+        List<Similarity> similarityByUser = recommendedService.getSimilarityByUser(userId);
+        HashSet<Integer> strings = new HashSet<>();
+        for (Similarity similarity : similarityByUser) {
+            List<Integer> videoTypeByUserId = recommendedService.getVideoTypeByUserId(similarity.userTwo);
+            for (Integer i : videoTypeByUserId) {
+                strings.add(i);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer string : strings) {
+            stringBuilder.append(string);
+        }
+        List<Video> esVideoByType = esService.getEsVideoByType(stringBuilder.toString());
+        return Result.success().data(esVideoByType);
+    }
+
 }

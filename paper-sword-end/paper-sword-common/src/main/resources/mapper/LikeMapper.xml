@@ -9,4 +9,31 @@
         select mark
         from t_mark where user_id = ${userId} and type = ${type};
     </select>
+
+
+    <select id="select" resultMap="resultMap" parameterType="java.lang.Integer">
+        SELECT user_id, video_type
+        FROM (
+            SELECT
+            user_id,
+            video_type,
+            mark,
+            IF(@prev_user = user_id, @rank := @rank + 1, @rank := 1) AS rank,
+            @prev_user := user_id
+        FROM (SELECT * FROM t_mark ORDER BY user_id, mark DESC) AS sorted_data
+        JOIN (SELECT @prev_user := 0, @rank := 0) AS vars
+        ) ranked_videos
+        WHERE rank &lt;= 4;
+    </select>
+    <select id="selectByUserId" resultType="java.lang.Integer"
+            parameterType="java.lang.Integer">
+        select video_type from t_mark where user_id = ${userId}
+    </select>
+    <resultMap id="resultMap" type="com.paper.sword.common.vo.MarkVo">
+        <id property="userId" column="user_id" />
+        <collection property="markVoList" ofType="java.lang.String">
+            <result column="video_type" />
+        </collection>
+    </resultMap>
+
 </mapper>

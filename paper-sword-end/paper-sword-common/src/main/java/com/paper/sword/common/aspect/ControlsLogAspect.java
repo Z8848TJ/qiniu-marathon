@@ -62,10 +62,10 @@ public class ControlsLogAspect {
             log.setControls(String.valueOf(operateType));
             String[] split = videoType.split(",");
             for(int i = 0; i<split.length; i++){
-                MarkVo markVo = new MarkVo();
+                MarkBo markVo = new MarkBo();
                 int markType = Integer.parseInt(split[i]);
                 markVo.setUserId(user.getId());
-                markVo.setType(markType);
+                markVo.setVideoType(markType);
                 //根据不同的操作设置不同的偏好值
                 switch (controlsLog.operateType()){
                     case 0: {

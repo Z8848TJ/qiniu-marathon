@@ -29,6 +29,8 @@ public class Video implements Serializable {
 
     public String title;
 
+    public String cover;
+
     public String description;
 
     @TableField(fill = FieldFill.INSERT)

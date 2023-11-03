@@ -13,7 +13,7 @@ public interface VideoEsService {
 
     void saveEsVideo(EsVideo esVideo);
 
-    List<Video> getEsVideoByType(String type);
+    List<String> getEsVideoByType(String type);
 
     List<Video> getEsVideo(String keyWord);
 

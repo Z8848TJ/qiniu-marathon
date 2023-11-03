@@ -27,7 +27,7 @@
     </select>
     <select id="selectByUserId" resultType="java.lang.Integer"
             parameterType="java.lang.Integer">
-        select video_type from t_mark where user_id = ${userId}
+        select video_type from t_mark where user_id = ${userId} order by video_type DESC limit 0,3
     </select>
     <resultMap id="resultMap" type="com.paper.sword.common.vo.MarkVo">
         <id property="userId" column="user_id" />

@@ -96,6 +96,11 @@
             <artifactId>tensorflow-model-zoo</artifactId>
             <version>0.16.0</version> <!-- 替换为最新版本 -->
         </dependency>
+        <dependency>
+            <groupId>com.paper.sword</groupId>
+            <artifactId>paper-sword-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
 
     </dependencies>

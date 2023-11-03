@@ -38,8 +38,8 @@ public class VideoEsServiceImpl implements VideoEsService {
     }
 
     @Override
-    public List<Video> getEsVideoByType(String type) {
-        ArrayList<Video> EsVideoList = new ArrayList<>();
+    public List<String> getEsVideoByType(String type) {
+        ArrayList<String> EsVideoList = new ArrayList<>();
         SortBuilder<?> sort = SortBuilders.fieldSort("createTime").order(SortOrder.DESC);
         String[] split = type.split(",");
         BoolQueryBuilder should = QueryBuilders.boolQuery();
@@ -52,8 +52,7 @@ public class VideoEsServiceImpl implements VideoEsService {
         SearchHits<EsVideo> search = elasticsearchTemplate.search(nativeSearchQuery.build(), EsVideo.class);
         for (SearchHit<EsVideo> esVideoSearchHit : search) {
             String id = esVideoSearchHit.getContent().getId();
-            Video video = videoService.getById(id);
-            EsVideoList.add(video);
+            EsVideoList.add(id);
         }
         return EsVideoList;
     }

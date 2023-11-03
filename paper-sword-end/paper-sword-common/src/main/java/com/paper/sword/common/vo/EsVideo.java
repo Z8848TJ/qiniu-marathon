@@ -26,13 +26,10 @@ public class EsVideo implements Serializable {
     @Id
     public String id;
 
-    @Field(type = FieldType.Text)
     public String videoType;
 
-    @Field(type = FieldType.Text)
     public String title;
 
-    @Field(type = FieldType.Text)
     public String description;
 
     public Date createTime;

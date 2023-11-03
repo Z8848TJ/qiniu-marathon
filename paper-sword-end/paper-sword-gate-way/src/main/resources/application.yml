@@ -46,8 +46,3 @@ elasticsearch:
   hostname: 49.234.3.91
   port: 9200
 
-
-elasticsearch:
-  hostname: 49.234.3.91
-  port: 9200
-

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://mbeyfb.natappfree.cc/'  //正式
+axios.defaults.baseURL = 'http://jv7da6.natappfree.cc/'  //正式
 // axios.defaults.baseURL = 'http://localhost:3000' //测试
 
 //post请求头

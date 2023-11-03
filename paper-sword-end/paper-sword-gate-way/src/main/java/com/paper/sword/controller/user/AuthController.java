@@ -3,6 +3,7 @@ package com.paper.sword.controller.user;
 import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.UserVO;
+import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.user.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.paper.sword.common.util.Constants.emailType.MODIFY;
@@ -24,6 +26,9 @@ public class AuthController {
 
     @Reference
     AuthService authService;
+    
+    @Autowired
+    private QiniuConfig qiniuConfig;
 
     @Autowired
     private RedisTemplate<String, Object> template;
@@ -96,6 +101,36 @@ public class AuthController {
         return Result.success().data("注册成功");
     }
     
+    @PostMapping("/modify")
+    public Result modifyPassword(@RequestBody UserVO userVO) {
+        log.info("用户修改密码 ==> {}", userVO);
+
+        // 空值处理
+        if(userVO == null) {
+            throw new IllegalArgumentException("参数不能为空!");
+        }
+        String email = userVO.getEmail();
+        if (StringUtils.isBlank(email)) {
+            return Result.error().data("邮箱不能为空");
+        }
+
+        String codeKey = RedisUtil.getModifyKey(email);
+
+        String code = (String)template.opsForValue().get(codeKey);
+
+        if(code == null || !code.equals(userVO.getCode())) {
+            return Result.error().data("验证码错误");
+        }
+
+        if (StringUtils.isBlank(userVO.getPassword())) {
+            return Result.error().data("密码不能为空");
+        }
+
+        authService.modifyPassword(userVO);
+
+        return Result.success().data("修改成功");
+    }
+    
     @PostMapping("/login")
     public Result login(@RequestBody UserVO user) {
         log.info("用户登录 ==> {}", user);
@@ -111,7 +146,11 @@ public class AuthController {
         }
         
         // 验证账号
-        String token = authService.login(user);
+        Map<String, Object> map = authService.login(user);
+
+        String token = (String)map.get("token");
+        String header = (String)map.get("header");
+        map.put("header", qiniuConfig.getHeaderBucketUrl() + header);
         
         log.info("登录 token ==> {}", token);
         
@@ -119,7 +158,7 @@ public class AuthController {
             return Result.error().data("登录失败");
         }
         
-        return Result.success().data(token);
+        return Result.success().data(map);
     }
     
 }

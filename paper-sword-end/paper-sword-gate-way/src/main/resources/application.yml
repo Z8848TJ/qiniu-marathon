@@ -45,3 +45,7 @@ logging:
   level:
     root: info
 
+elasticsearch:
+  hostname: 49.234.3.91
+  port: 9200
+

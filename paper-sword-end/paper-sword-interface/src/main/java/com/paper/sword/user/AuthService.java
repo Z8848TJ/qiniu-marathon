@@ -2,6 +2,8 @@ package com.paper.sword.user;
 
 import com.paper.sword.common.vo.UserVO;
 
+import java.util.Map;
+
 public interface AuthService {
 
     /**
@@ -14,6 +16,8 @@ public interface AuthService {
     boolean checkEmail(String email);
 
     void register(UserVO user);
+    
+    void modifyPassword(UserVO user);
 
-    String login(UserVO user);
+    Map<String, Object> login(UserVO user);
 }

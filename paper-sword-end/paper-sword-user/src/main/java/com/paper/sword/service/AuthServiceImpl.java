@@ -2,6 +2,7 @@ package com.paper.sword.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.paper.sword.common.auth.JwtTokenUtil;
 import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.UserVO;
@@ -14,6 +15,8 @@ import org.apache.dubbo.config.annotation.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -50,14 +53,24 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(userVO.getEmail());
         user.setSalt(PaperSwordUtil.generateUUID().substring(0, 5));
         user.setPassword(PaperSwordUtil.md5(userVO.getPassword() + user.getSalt()));
-        user.setHeaderUrl("https://cdn.pixabay.com/photo/2023/07/28/14/37/flower-8155370_1280.jpg");
+        user.setHeaderUrl("th.jfif");
         user.setCreateTime(new Date());
         
         userMapper.insert(user);
     }
 
     @Override
-    public String login(UserVO user) {
+    public void modifyPassword(UserVO userVo) {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getEmail, userVo.getEmail());
+
+        User user = new User();
+        user.setPassword(userVo.getPassword());
+        userMapper.update(user, wrapper);
+    }
+
+    @Override
+    public Map<String, Object> login(UserVO user) {
         // 验证账号
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         String email = user.getEmail();
@@ -80,6 +93,12 @@ public class AuthServiceImpl implements AuthService {
 
         String userJson = JSONObject.toJSONString(user);
 
-        return JwtTokenUtil.createToken(userJson);
+        String token = JwtTokenUtil.createToken(userJson);
+        
+        Map<String, Object> res = new HashMap<>();
+        res.put("token", token);
+        res.put("header", u.getHeaderUrl());
+        
+        return res;
     }
 }

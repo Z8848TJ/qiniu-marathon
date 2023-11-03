@@ -20,11 +20,21 @@ public class QiniuConfig {
     private String accessKey;
 
     private String secretKey;
+    
+    private String domain;
 
     private String videoBucketName;
 
     private String videoBucketUrl;
+
+    private String videoCallbackUrl;
+
+    private String headerBucketName;
+
+    private String headerBucketUrl;
+
+    private String headerCallbackUrl;
     
-    private String callbackUrl;
+    
     
 }

@@ -1,17 +1,21 @@
 package com.paper.sword.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.vo.LikeVideoVo;
 import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.mq.producer.KafkaProducer;
+import com.paper.sword.user.CommentService;
 import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
 import com.paper.sword.user.entity.Message;
+import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,13 +24,17 @@ import java.util.List;
  * @date 2023/10/25
  */
 @Service
-public class LikeServiceImpl implements LikeService {
+public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> 
+        implements LikeService {
 
     @Resource
     private LikeMapper likeMapper;
 
     @Resource
     private KafkaProducer kafkaProducer;
+    
+    @Reference
+    private CommentService commentService;
 
     @Override
     @ControlsLog()
@@ -55,6 +63,30 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @ControlsLog(operateType = 3)
     public void transfer(String videoId) {}
+
+    @Override
+    public List<Integer> videoInfoCount(String videoId) {
+
+        List<Integer> list = new ArrayList<>();
+
+        Integer likeCount = query()
+                .eq("video_id", videoId)
+                .eq("type", 0)
+                .count();
+
+        Integer collectCount = query()
+                .eq("video_id", videoId)
+                .eq("type", 1)
+                .count();
+
+        int commentCount = commentService.commentCount(videoId);
+        
+        list.add(likeCount);
+        list.add(collectCount);
+        list.add(commentCount);
+        
+        return list;
+    }
 
     @Override
     @ControlsLog(operateType = 5)

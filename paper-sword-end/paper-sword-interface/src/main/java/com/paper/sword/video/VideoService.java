@@ -8,6 +8,9 @@ import java.util.List;
 public interface VideoService extends IService<Video> {
 
 
+    /**
+     * 作品列表
+     */
     List<Video> videoListByUserId(Integer id);
     
 }

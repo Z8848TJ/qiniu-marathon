@@ -34,7 +34,9 @@ public class QiniuConfig {
     private String headerBucketUrl;
 
     private String headerCallbackUrl;
-    
-    
+
+    private String imageBucketUrl;
+
+    private String imageBucketName;
     
 }

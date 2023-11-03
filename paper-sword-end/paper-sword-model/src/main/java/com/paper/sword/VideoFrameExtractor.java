@@ -20,13 +20,13 @@ public class VideoFrameExtractor {
         String outputDirPath = outputDir;
         File outputDirFile = new File(outputDirPath);
         outputDirFile.mkdirs();
-        extractFrames(videoPath, outputDirPath,count);
-
-        return outputDir;
+        String s = extractFrames(videoPath, outputDirPath, count);
+        return s;
     }
 
-    private static void extractFrames(String videoPath, String outputDir,int framesPerSecond) {
+    private static String extractFrames(String videoPath, String outputDir,int framesPerSecond) {
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath);
+        String s = "";
         try {
             grabber.start();
             Frame frame;
@@ -35,7 +35,6 @@ public class VideoFrameExtractor {
                 if (frameNumber % framesPerSecond == 0) {
                     Date date = new Date();
                     String frameFileName = String.format("%s/frame%05d.jpg", outputDir,date.getTime());
-
                     // 将 OpenCV Mat 转换为 Java BufferedImage
                     org.bytedeco.javacv.Java2DFrameConverter frameConverter = new org.bytedeco.javacv.Java2DFrameConverter();
                     BufferedImage bufferedImage = frameConverter.getBufferedImage(frame, 1.0);
@@ -47,6 +46,7 @@ public class VideoFrameExtractor {
                             ImageIO.write(bufferedImage, "jpg", outputImage);
                             System.out.println(frameFileName);
                             System.out.println("图像保存成功");
+                            s = frameFileName;
                         }
                     } catch (IOException e) {
                         System.out.println("图像保存失败: " + e.getMessage());
@@ -58,6 +58,7 @@ public class VideoFrameExtractor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return s;
     }
 
     private static int getVideoFrameCount(String videoPath) {

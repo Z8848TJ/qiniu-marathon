@@ -17,7 +17,7 @@ public class Video implements Serializable {
     @TableId(value = "id", type = IdType.INPUT)
     public String id;
 
-    public String userId;
+    public Integer userId;
 
     public String videoType;
 

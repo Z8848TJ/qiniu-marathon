@@ -84,10 +84,12 @@ dubbo:
   registry:
     address: zookeeper://49.234.3.91:2181
   #    address: N/A
-
   protocol:
     name: dubbo
     port: 20880
+  consumer:
+    timeout: 60000
+    retries: 0
 
 elasticsearch:
   hostname: 49.234.3.91

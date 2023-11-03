@@ -13,7 +13,7 @@ if __name__ == '__main__':
         print("Usage: python your_script.py argument1 argument2 ...")
         sys.exit(1)
 
-    arg1 = "D:\demo"
+    arg1 = sys.argv[1]
     sys.stdout.reconfigure(encoding='utf-8')
 
     custom_class_to_idx = {
@@ -42,7 +42,6 @@ if __name__ == '__main__':
         nn.ReLU(),
         nn.Linear(256, 10)
     )
-
     model.load_state_dict(torch.load('D:/frames/model/model.pt'))
     model.eval()
 
@@ -79,30 +78,27 @@ if __name__ == '__main__':
             # top2_probabilities 包含相应的两个最高概率值
 
             top2_labels_numpy = top2_labels.numpy()
+            # 定义一个数字类别索引
+            class_idx = top2_labels_numpy
 
-            for i in range(len(top2_labels_numpy)):
-                for j in range(len(top2_labels_numpy[i])):
-                    # 定义一个数字类别索引
-                    class_idx = top2_labels_numpy[i][j]
-                    print(class_idx)
-                    print("概率为")
-                    print(top2_probabilities)
-                    if top2_probabilities[i][j] < 0.9:
-                        break;
 
-                    # 通过数字索引获取类别标签
-                    label = None
-                    for class_name, idx in custom_class_to_idx.items():
-                        if idx == class_idx:
-                            label = class_name
-                            break
-                    # 输出类别标签
-                    if label is not None:
-                        if label not in my_list:
-                            my_list.append(label)
-                    else:
-                        continue;
-    if len(my_list) == 0:
-        print("无法匹配标签")
-    else:
-        print(my_list)
+            # 通过数字索引获取类别标签
+            label = None
+            index = None
+            for class_name, idx in custom_class_to_idx.items():
+                if idx == class_idx:
+                    label = class_name
+                    index = idx
+                    break
+            # 输出类别标签
+            if index is not None:
+                if index not in my_list:
+                    my_list.append(index)
+            else:
+                continue;
+        if len(my_list) == 0:
+            print("无法匹配标签")
+        else:
+            str_list = [str(item) for item in my_list]  # 将整数转换为字符串
+            returnString = ",".join(str_list)
+            print(returnString)

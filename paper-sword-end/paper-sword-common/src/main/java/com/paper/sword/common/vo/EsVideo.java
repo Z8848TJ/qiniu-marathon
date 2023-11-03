@@ -20,19 +20,16 @@ import java.util.Date;
  * @date 2023/10/30
  */
 @Data
-@Document(indexName = "EsVideo", createIndex = true)
+@Document(indexName = "esvideo", createIndex = true)
 public class EsVideo implements Serializable {
 
     @Id
     public String id;
 
-    @Field(type = FieldType.Text)
     public String videoType;
 
-    @Field(type = FieldType.Text,analyzer = "ik_max_word")
     public String title;
 
-    @Field(type = FieldType.Text,analyzer = "ik_max_word")
     public String description;
 
     public Date createTime;

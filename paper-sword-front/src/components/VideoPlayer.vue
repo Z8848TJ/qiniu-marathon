@@ -13,6 +13,22 @@
                     <img src="../../videolist/image/bigPlay.png" alt="" v-if="!isPlay">
                 </div>
             </div>
+            <div class="detailBox">
+                <div class="Description">
+                    作品标题
+                </div>
+            </div>
+            <div class="interactionBox">
+                <div class="like">
+                    点赞
+                </div>
+                <div class="review">
+                    评论
+                </div>
+                <div class="collect">
+                    收藏
+                </div>
+            </div>
             <div class="controlBox">
                 <div class="progress" @click="selectTime">
                     <div class="now" :style="{ width: progressWidth, transition: progressTransition }"></div>
@@ -368,6 +384,23 @@
     top: 50%;
     left: 50%;
     transform: translate(-50px,-50px)
+}
+.detailBox{
+    height: 100px;
+    width: 30%;
+    background-color: red;
+    position: absolute;
+    bottom: 50px;
+    left: 20px;
+}
+
+.interactionBox{
+    height: 100px;
+    width: 100px;
+    background-color: red;
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
 }
 .controlBox{
     position: absolute;

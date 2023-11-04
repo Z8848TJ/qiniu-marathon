@@ -3,7 +3,7 @@
         <div id="playBox" :class="{'playBox':true,'full':isFull}" tabindex="0" @keydown="adjustProgress">
             <div id="videoBox" class="videoBox" @click="play">
                 <video id="video"
-                       :src="source"
+                       :src="source.videoUrl"
                        ref="video"
                        @loadedmetadata="getVideoDuration"
                        @timeupdate="updateProgress"
@@ -15,25 +15,25 @@
                 </div>
             </div>
             <div class="detailBox">
-                <div class="author">作者名字</div>
+                <div class="author">@ {{source.username}}</div>
                 <div class="description">
-                    这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述
+                    {{source.description}}
                 </div>
             </div>
             <div class="interactionBox">
                 <div class="like">
-                    <img src="../../videolist/image/like.png" alt="">
-<!--                    <img src="../../videolist/image/liked.png" alt="">-->
-                    <div class="interactionText">100</div>
+                    <img src="../../videolist/image/like.png" alt="" v-if="!isLiked" @click="changeLiked(1)">
+                    <img src="../../videolist/image/liked.png" alt="" v-else @click="changeLiked(0)">
+                    <div class="interactionText">{{likeNumber}}</div>
                 </div>
                 <div class="review">
                     <img src="../../videolist/image/review.png" alt="">
-                    <div class="interactionText">200</div>
+                    <div class="interactionText">{{reviewNumber}}</div>
                 </div>
                 <div class="collect">
-                    <img src="../../videolist/image/star.png" alt="">
-                    <!--                    <img src="../../videolist/image/stared.png" alt="">-->
-                    <div class="interactionText">300</div>
+                    <img src="../../videolist/image/star.png" alt="" v-if="!isStar" @click="changeCollect(1)">
+                    <img src="../../videolist/image/stared.png" alt="" v-else @click="changeCollect(0)">
+                    <div class="interactionText">{{collectNumber}}</div>
                 </div>
                 <div class="more">
                     <img src="../../videolist/image/more.png" alt="">
@@ -97,17 +97,18 @@
                 </div>
             </div>
         </div>
+        <div class="blurBg" :style="{ 'background-image': `url(${source.cover})` }"></div>
 
     </div>
 </template>
 
 <script setup>
-    import {ref,computed,onMounted,onUpdated,onBeforeUnmount,watch } from 'vue'
+    import {ref,computed,onMounted,onBeforeUnmount,watch } from 'vue'
+    import {GetAction} from "../util/api";
 
     const props = defineProps(['source','isPlaying'])
 
     const video = ref(null)
-    const srcVideo = ref('../../videolist/1-1.mp4')
 
     //播放暂停
     const isPlay = ref(false)
@@ -355,12 +356,53 @@
         emits('dragVolume',false)
     }
 
+    //点赞等信息
+    const isLiked = ref(false)
+    const likeNumber = ref(110)
+    const changeLiked = (type)=>{
+        if(type ===1){
+            isLiked.value = true
+            likeNumber.value++
+        }else{
+            isLiked.value = false
+            likeNumber.value--
+        }
+        let params = {
+            videoId : props.source.id,
+            userId : props.source.userId,
+            type : type
+        }
+        GetAction('/interact/like',params).then((res)=>{
+            console.log(res)
+        })
+    }
+    //评论转发数
+    const reviewNumber = ref(1145)
+    const isStar = ref(false)
+    const collectNumber = ref(16)
+    const changeCollect = (type)=>{
+        if(type ===1){
+            isStar.value = true
+            collectNumber.value++
+        }else{
+            isStar.value = false
+            collectNumber.value--
+        }
+        GetAction('/interact/collect')
+    }
+
+
+    //初始化信息
+    const initData = ()=>{
+
+    }
 
     onMounted(()=>{
+        initData()
         watch(props,(newValue)=>{
             if(newValue.isPlaying){
-                video.value.play()
                 isPlay.value = true
+                video.value.play()
                 document.addEventListener('keydown', adjustProgress);
             }else{
                 video.value.pause()
@@ -388,9 +430,9 @@
 .fullscreen {
     user-select: none;
 }
-.container::before{
+.blurBg{
     content: "";
-    background-image: url("../../videolist/image/bg2.png");
+    /*background-image: url("../../videolist/image/bg2.png");*/
     background-size: cover;
     filter: blur(10px);
     position: absolute;
@@ -398,6 +440,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: -1;
 }
 .videoBox{
     position: relative;
@@ -439,14 +482,13 @@
 
 .interactionBox{
     height: 400px;
-    width: 50px;
+    width: 70px;
     position: absolute;
     bottom: 50px;
     right: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    /*background-color: red;*/
 }
 .like,.review,.collect,.more{
     width: 100%;
@@ -462,6 +504,9 @@
 .review,.collect,.more img{
     width: 30px;
     height: 30px;
+}
+.interactionText{
+
 }
 
 .controlBox{
@@ -596,6 +641,13 @@ img{
     position: absolute;
     bottom: 0;
 }
-
+.loading-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+}
 
 </style>

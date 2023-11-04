@@ -3,10 +3,10 @@
         <div class="header">
             <div class="group1">
                 <div class="logo" @click="navigate('/')">搞子剑</div>
-                <div class="nav" @click="navigate('/')">推荐</div>
-                <div class="nav" @click="navigate('/')">关注</div>
-                <div class="nav" @click="navigate('/')">朋友</div>
-                <div class="nav" @click="navigate('/')">我的</div>
+                <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/' }" @click="navigate('/')">推荐</div>
+                <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/following' }" @click="navigate('/following')">关注</div>
+<!--                <div class="nav" @click="navigate('/friends')">朋友</div>-->
+                <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/user/self' }" @click="navigate('/user/self')">我的</div>
                 <div class="category" @mouseenter="showCateInfo" @mouseleave="hideCateInfo">
                     <div class="nav" @click="navigate('/')">分类</div>
                     <div class="nav-dropdown" v-if="showNav">
@@ -110,14 +110,19 @@
 
     }
 
-
+    //路由变化
+    const currentRoute = ref('')
+    router.afterEach((to)=>{
+        // console.log(to)
+        currentRoute.value = to.path
+    })
 
     onMounted(()=>{
+        // console.log(router.currentRoute.value.path)
         const userInfo = localStorage.getItem('token')
         if(userInfo){
             store.commit('isLogin')
         }
-        console.log(store.state.isLogin)
 
     })
     onBeforeUnmount(()=>{
@@ -130,16 +135,21 @@
 .container{
     height: 50px;
     width: 100%;
-    /*min-width: 1020px;*/
+    /*padding: 10px 0;*/
 }
 .header{
     display: flex;
     justify-content: space-between;
 }
 
-.group1,.group2,.searchBox{
+.group1{
+    height: 50px;
     display: flex;
-    margin: 10px 10px;
+    /*margin: 10px 10px;*/
+}
+.searchBox,.group2{
+    display: flex;
+    margin: 10px;
 }
 .group1{
     margin-left: 30px;
@@ -149,15 +159,26 @@
      cursor: pointer;
 }
 .logo{
-    width: 60px;
-    font-size: 20px;
+    height: 50px;
+    width: 70px;
+    line-height: 50px;
+    font-size: 22px;
+    color: #ffffff;
     margin-right: 10px;
 }
 .group1 .nav{
+    height: 50px;
+    width: 70px;
+    border-radius: 5px;
     min-width: 36px;
-    margin: 0 10px;
+    /*margin: 0 10px ;*/
     font-size: 18px;
-    line-height: 30px;
+    line-height: 50px;
+    color: #ffffff;
+    text-align: center;
+}
+.highlight {
+    background-color: rgba(100,100,100,0.6); /* 高亮时的样式 */
 }
 .category{
     position: relative;
@@ -167,11 +188,11 @@
     /*display: none;*/
     width: 240px;
     height: 150px;
-    color: #999999;
-    background-color: rgba(0,0,0,0.6);
+    color: #ffffff;
+    background-color: rgba(0,0,0,0.3);
     border-radius: 8px;
     position: absolute;
-    top: 40px;
+    top: 50px;
     left: -100px;
 }
 .nav-dropdown ul{
@@ -205,11 +226,11 @@
     outline: none;
     flex: 1;
     padding: 5px;
-    color: #000000 ;
-    background-color: #666666;
+    color: #ffffff ;
+    background-image: url('/background.jpg');
 }
 input::placeholder {
-    color: #000000;
+    color: #999999;
 }
 
 .search-icon {
@@ -241,6 +262,7 @@ input::placeholder {
 .group2 span{
     display: block;
     font-size: 10px;
+    color: #ffffff;
 }
 
 .avatar{

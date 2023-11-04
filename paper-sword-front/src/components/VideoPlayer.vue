@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div id="playBox" :class="{'playBox':true,'full':isFull}">
+        <div id="playBox" :class="{'playBox':true,'full':isFull}" tabindex="0" @keydown="adjustProgress">
             <div id="videoBox" class="videoBox" @click="play">
                 <video id="video"
                        :src="source"
@@ -8,31 +8,42 @@
                        @loadedmetadata="getVideoDuration"
                        @timeupdate="updateProgress"
                        @ended="videoEnded"
+
                 ></video>
                 <div class="vPlay">
                     <img src="../../videolist/image/bigPlay.png" alt="" v-if="!isPlay">
                 </div>
             </div>
             <div class="detailBox">
-                <div class="Description">
-                    作品标题
+                <div class="author">作者名字</div>
+                <div class="description">
+                    这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述，这里是描述
                 </div>
             </div>
             <div class="interactionBox">
                 <div class="like">
-                    点赞
+                    <img src="../../videolist/image/like.png" alt="">
+<!--                    <img src="../../videolist/image/liked.png" alt="">-->
+                    <div class="interactionText">100</div>
                 </div>
                 <div class="review">
-                    评论
+                    <img src="../../videolist/image/review.png" alt="">
+                    <div class="interactionText">200</div>
                 </div>
                 <div class="collect">
-                    收藏
+                    <img src="../../videolist/image/star.png" alt="">
+                    <!--                    <img src="../../videolist/image/stared.png" alt="">-->
+                    <div class="interactionText">300</div>
+                </div>
+                <div class="more">
+                    <img src="../../videolist/image/more.png" alt="">
                 </div>
             </div>
             <div class="controlBox">
                 <div class="progress" @click="selectTime">
                     <div class="now" :style="{ width: progressWidth, transition: progressTransition }"></div>
                 </div>
+                <button ref="button"></button>
                 <div class="control">
                     <div class="group1">
                         <div class="playButton" @click="play">
@@ -169,6 +180,22 @@
         isPlay.value = true
         video.value.play()
         updateProgress()
+    }
+    //键盘切换时间
+    const adjustProgress = (event)=>{
+       if(props.isPlaying){
+           if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+               if (event.key === 'ArrowLeft') {
+                   video.value.currentTime -= 5
+                   progressWidth.value = `${(video.value.currentTime / video.value.duration) * 100}%`
+               } else if (event.key === 'ArrowRight') {
+                   video.value.currentTime += 5
+                   progressWidth.value = `${(video.value.currentTime / video.value.duration) * 100}%`
+               }
+               // 防止事件冒泡
+               event.preventDefault()
+           }
+       }
     }
 
     //全屏
@@ -328,24 +355,29 @@
         emits('dragVolume',false)
     }
 
+
     onMounted(()=>{
         watch(props,(newValue)=>{
             if(newValue.isPlaying){
                 video.value.play()
                 isPlay.value = true
+                document.addEventListener('keydown', adjustProgress);
             }else{
                 video.value.pause()
                 isPlay.value = false
+                document.removeEventListener('keydown', adjustProgress);
             }
         },{
             immediate: true,
             deep: true
         })
+
     })
     onBeforeUnmount(()=>{
         video.value = null
         clearTimeout(speedTimeId.value)
         clearTimeout(volumeTimeId.value)
+        document.removeEventListener('keydown', adjustProgress);
     })
 </script>
 
@@ -388,24 +420,57 @@
 .detailBox{
     height: 100px;
     width: 30%;
-    background-color: red;
     position: absolute;
     bottom: 50px;
     left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #ffffff;
+}
+.author{
+    font-size: 22px;
+}
+.description{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .interactionBox{
-    height: 100px;
-    width: 100px;
-    background-color: red;
+    height: 400px;
+    width: 50px;
     position: absolute;
     bottom: 50px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /*background-color: red;*/
 }
+.like,.review,.collect,.more{
+    width: 100%;
+    height: 50px;
+    margin: 20px auto;
+    text-align: center;
+    color: #ffffff;
+}
+.like img{
+    width: 35px;
+    height: 35px;
+}
+.review,.collect,.more img{
+    width: 30px;
+    height: 30px;
+}
+
 .controlBox{
     position: absolute;
     width: 100%;
     bottom: 20px;
+}
+.controlBox Button{
+    display: none;
 }
 .progress{
     /*min-width: 1020px;*/
@@ -417,7 +482,7 @@
 .progress .now{
     width: 0;
     height: 3px;
-    background-color: #dc143c;
+    background-color: red;
     border-radius: 3px;
     transition: width 500ms linear;
     position: absolute;

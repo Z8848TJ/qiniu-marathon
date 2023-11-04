@@ -13,6 +13,16 @@ const routes = [
         name: 'recommend',
         component: Recommend
     },
+    {
+        path: '/following',
+        name: 'following',
+        component: Recommend
+    },
+    {
+        path: '/friends',
+        name: 'friends',
+        component: Recommend
+    },
     // {    path: '/',    name: 'user',    component: User,  },
     {
         path: '/user/self',

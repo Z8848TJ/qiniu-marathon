@@ -73,12 +73,16 @@ public class UploadController {
         Integer userId = (Integer) bodyMap.get("userId");
 
         // 幂等性处理
-        Integer videoCountByUrl = videoService.getVideoCountByUrl(qiniuConfig.getVideoBucketUrl() + fileName);
-        if(videoCountByUrl > 0) {
-            return "";
+        String url = qiniuConfig.getVideoBucketUrl() + fileName;
+        Video videoOld = videoService.getVideoCountByUrl(url);
+        Result res;
+        if(videoOld != null) {
+            response.setStatus(200);
+            res = Result.success().data(videoOld);
+            return JSON.toJSONString(res);
         }
 
-        Result res;
+
         if(Integer.parseInt(size) > 0) {
             fileVo lable = getLable.getLable(labelConfig.scriptPath, qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
             // 将视频信息保存到数据库

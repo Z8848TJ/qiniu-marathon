@@ -1,11 +1,13 @@
 package com.paper.sword.controller;
 
+import com.paper.sword.common.entity.Video;
 import com.paper.sword.common.mapper.MarkMapper;
 import com.paper.sword.common.vo.EsVideo;
 import com.paper.sword.common.vo.MarkBo;
 import com.paper.sword.common.vo.MarkVo;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.video.RecommendedService;
+import com.paper.sword.video.VideoEsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -32,6 +34,9 @@ public class videoController {
     public RecommendedService recommendedService;
 
     @Autowired
+    public VideoEsService videoEsService;
+
+    @Autowired
     private ElasticsearchRestTemplate elasticsearchTemplate;
     @RequestMapping("/mark")
     public Result get(){
@@ -50,5 +55,13 @@ public class videoController {
         Map<Integer, MarkVo> recommend = recommendedService.getRecommend();
         recommendedService.getSimilar(recommend);
         return Result.success().data(recommend);
+    }
+
+
+    @RequestMapping("/recommend")
+    public Result recommend(String keyword){
+
+        List<String> ceshi = videoEsService.getEsVideo(keyword);
+        return Result.success().data(ceshi);
     }
 }

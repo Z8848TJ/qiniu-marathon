@@ -13,6 +13,6 @@ public interface VideoService extends IService<Video> {
      */
     List<Video> videoListByUserId(Integer id);
 
-    Integer getVideoCountByUrl(String url);
+    Video getVideoCountByUrl(String url);
     
 }

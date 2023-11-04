@@ -26,10 +26,14 @@ public class EsVideo implements Serializable {
     @Id
     public String id;
 
+    public String videoId;
+
+    @Field(type = FieldType.Keyword, analyzer = "ik_max_word")
     public String videoType;
 
-    public String title;
+    public String username;
 
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
     public String description;
 
     public Date createTime;

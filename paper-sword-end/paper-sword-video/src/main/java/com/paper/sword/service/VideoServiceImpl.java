@@ -24,8 +24,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     }
 
     @Override
-    public Integer getVideoCountByUrl(String url) {
-        return baseMapper.selectCount(new QueryWrapper<Video>().eq("video_url", url));
+    public Video getVideoCountByUrl(String url) {
+        return baseMapper.selectOne(new QueryWrapper<Video>().eq("video_url", url));
     }
 }
 

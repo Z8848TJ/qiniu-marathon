@@ -64,8 +64,8 @@ public class VideoController {
 
 
     @GetMapping("/recommend")
-    public Result recommend(@RequestParam() Integer userId) {
-        List<Similarity> similarityByUser = recommendedService.getSimilarityByUser(userId);
+    public Result recommend() {
+        List<Similarity> similarityByUser = recommendedService.getSimilarityByUser(UserHolder.getUser().getId());
         HashSet<Integer> strings = new HashSet<>();
         for (Similarity similarity : similarityByUser) {
             List<Integer> videoTypeByUserId = recommendedService.getVideoTypeByUserId(similarity.userTwo);
@@ -83,8 +83,9 @@ public class VideoController {
                 stringBuilder.append(string);
             }
         }
-        List<String> esVideoByType = esService.getEsVideoByType(stringBuilder.toString());
-        return Result.success().data(esVideoByType);
+        List<Video> videoList = esService.getEsVideoByType(stringBuilder.toString());
+        
+        return Result.success().data(videoList);
     }
 
     @PostMapping("/videoInfo")

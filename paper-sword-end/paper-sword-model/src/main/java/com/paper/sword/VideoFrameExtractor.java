@@ -64,19 +64,19 @@ public class VideoFrameExtractor {
     private static int getVideoFrameCount(String videoPath) {
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath);
         grabber.setAudioChannels(0);
+        int frameCount = 0;
         try {
             grabber.start();
-            int frameCount = 0;
+            
 
             while (grabber.grab() != null) {
                 frameCount++;
             }
-
             grabber.stop();
             return frameCount;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return frameCount;
     }
 }

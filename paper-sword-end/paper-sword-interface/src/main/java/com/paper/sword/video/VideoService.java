@@ -14,5 +14,6 @@ public interface VideoService extends IService<Video> {
     List<Video> videoListByUserId(Integer id);
 
     Video getVideoCountByUrl(String url);
-    
+
+    void completeVideo(List<Video> esVideoList);
 }

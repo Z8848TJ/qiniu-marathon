@@ -36,6 +36,10 @@ spring:
         min-idle: 8
         max-wait: 1000
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 dubbo:
   application:
     name: paper-sword-user

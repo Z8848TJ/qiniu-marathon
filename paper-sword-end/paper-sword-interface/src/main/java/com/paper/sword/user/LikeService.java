@@ -25,6 +25,11 @@ public interface LikeService extends IService<Like> {
     void collectVideo(String videoId, Integer userId);
 
     /**
+     * 用户是否点赞，是否收藏
+     */
+    List<Boolean> isLikeAndIsCollect(String videoId, Integer userId);
+
+    /**
      * 用户喜欢视频列表
      */
     List<LikeVideoVo> getLikeVideo(Integer userId);

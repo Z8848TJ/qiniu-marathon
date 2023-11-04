@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface MessageService extends IService<Message> {
 
+    Integer unReadCount(Integer userId);
 
     List<MessageVO> pushInteractMessage(Integer userId);
 

@@ -24,6 +24,16 @@ public class MessageController {
     private MessageService messageService;
 
     /**
+     * 用户未读消息条数
+     */
+    @GetMapping("/unReadCount")
+    public Result unReadCount() {
+        Integer count = messageService.unReadCount(UserHolder.getUser().getId());
+        
+        return Result.success().data(count);
+    }
+
+    /**
      * 向用户推送消息
      * @return 未读消息
      */

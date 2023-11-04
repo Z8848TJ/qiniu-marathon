@@ -61,6 +61,26 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
     }
 
     @Override
+    public List<Boolean> isLikeAndIsCollect(String videoId, Integer userId) {
+        boolean like = query().eq("video_id", videoId)
+                .eq("user_id", userId)
+                .eq("type", 0)
+                .count() > 0;
+
+        boolean collect = query().eq("video_id", videoId)
+                .eq("user_id", userId)
+                .eq("type", 1)
+                .count() > 0;
+
+        List<Boolean> res = new ArrayList<>();
+        
+        res.add(like);
+        res.add(collect);
+        
+        return res;
+    }
+
+    @Override
     @ControlsLog(operateType = 3)
     public void transfer(String videoId) {}
 

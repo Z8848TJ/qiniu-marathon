@@ -52,8 +52,11 @@ public class VideoController {
     @GetMapping("/count")
     public Result listCount(@RequestParam String videoId) {
         List<Integer> counts = likeService.videoInfoCount(videoId);
+        List<Boolean> res = likeService.isLikeAndIsCollect(videoId, UserHolder.getUser().getId());
         
-        return Result.success().data(counts);
+        return Result.success()
+                .data("counts", counts)
+                .data("likeAndCollect", res);
     }
 
 

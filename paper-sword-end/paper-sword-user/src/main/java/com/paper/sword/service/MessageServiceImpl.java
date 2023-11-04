@@ -25,7 +25,14 @@ implements MessageService {
     
     @Resource
     private PushMessageFactory messageFactory;
-    
+
+    @Override
+    public Integer unReadCount(Integer userId) {
+        return query().eq("to_id", userId)
+                .eq("status", 0)
+                .count();
+    }
+
     @Override
     public List<MessageVO> pushInteractMessage(Integer userId) {
         // 查询该用户的未读信息

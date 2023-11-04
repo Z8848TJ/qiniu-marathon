@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://jv7da6.natappfree.cc/'  //正式
+axios.defaults.baseURL = 'http://req43w.natappfree.cc'  //正式
 // axios.defaults.baseURL = 'http://localhost:3000' //测试
 
 //post请求头
@@ -14,7 +14,7 @@ axios.defaults.timeout = 15000;
 
 axios.interceptors.request.use(
     config => {
-        console.log(config.headers)
+        // console.log(config.headers)
         return config;
     },
     error => {

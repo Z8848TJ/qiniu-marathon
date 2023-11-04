@@ -59,7 +59,7 @@
 
     //切换视频
     const currentIndex = ref(0)
-
+    const refVideo = ref(null)
     const onSlideChange = (e)=>{
         currentIndex.value = e.activeIndex
     }
@@ -80,6 +80,7 @@
     }
 
     // onMounted(() => {
+    //
     // })
 
 
@@ -89,12 +90,14 @@
 .recommend{
     /*width: 100%;*/
     /*!*height: 100vh;*!*/
-    background-color: #666666;
+    /*background-color: #666666;*/
     /*position: relative;*/
     width: 100%;
     height: 100vh;
+    background-image: url('/background.jpg');
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 .swiper{
     margin: 0;

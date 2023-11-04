@@ -23,11 +23,8 @@ public class Video implements Serializable {
 
     public String videoUrl;
 
-    public String like;
 
-    public String collect;
-
-    public String title;
+    public String username;
 
     public String cover;
 

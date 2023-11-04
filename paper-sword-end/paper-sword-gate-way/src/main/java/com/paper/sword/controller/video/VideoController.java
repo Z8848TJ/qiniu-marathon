@@ -13,8 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/video")
@@ -73,6 +75,7 @@ public class VideoController {
         for (Integer string : strings) {
             if(i!=strings.size() - 1){
                 stringBuilder.append(string+",");
+                i++;
             }else{
                 stringBuilder.append(string);
             }
@@ -83,16 +86,20 @@ public class VideoController {
 
     @PostMapping("/videoInfo")
     public Result videoInfo(@RequestBody Video video) {
+        video.setUsername(UserHolder.getUser().getUsername());
+        video.setCreateTime(new Date());
         videoService.updateById(video);
         Video byId = videoService.getById(video.getId());
         EsVideo esVideo = new EsVideo();
-        esVideo.setId(byId.getId());
+        esVideo.setId(UUID.randomUUID().toString());
+        esVideo.setVideoId(byId.getId());
         esVideo.setVideoType(byId.getVideoType());
-        esVideo.setTitle(byId.getTitle());
+        esVideo.setUsername(UserHolder.getUser().getUsername());
         esVideo.setDescription(byId.getDescription());
         esVideo.setCreateTime(byId.getCreateTime());
         esService.saveEsVideo(esVideo);
-        return Result.success();
+
+        return Result.success().data("投稿成功");
     }
 
 

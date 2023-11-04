@@ -6,6 +6,7 @@ import com.paper.sword.common.entity.Video;
 import com.paper.sword.video.VideoEsService;
 import org.apache.dubbo.config.annotation.Service;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -44,35 +45,32 @@ public class VideoEsServiceImpl implements VideoEsService {
         String[] split = type.split(",");
         BoolQueryBuilder should = QueryBuilders.boolQuery();
         for (String s : split) {
-            should.should(QueryBuilders.matchQuery("type", s));
+            should.should(QueryBuilders.matchQuery("videoType", s));
         }
         NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
         nativeSearchQuery.withQuery(should);
         nativeSearchQuery.withSort(sort);
         SearchHits<EsVideo> search = elasticsearchTemplate.search(nativeSearchQuery.build(), EsVideo.class);
         for (SearchHit<EsVideo> esVideoSearchHit : search) {
-            String id = esVideoSearchHit.getContent().getId();
+            String id = esVideoSearchHit.getContent().getVideoId();
             EsVideoList.add(id);
         }
         return EsVideoList;
     }
 
     @Override
-    public List<Video> getEsVideo(String keyWord) {
-        ArrayList<Video> EsVideoList = new ArrayList<>();
+    public List<String> getEsVideo(String keyWord) {
+        ArrayList<String> EsVideoList = new ArrayList<>();
         SortBuilder<?> sort = SortBuilders.fieldSort("createTime").order(SortOrder.DESC);
         BoolQueryBuilder should = QueryBuilders.boolQuery()
-                .should(QueryBuilders.matchQuery("title", keyWord))
                 .should(QueryBuilders.matchQuery("description", keyWord));
-
         NativeSearchQueryBuilder nativeSearchQuery = new NativeSearchQueryBuilder();
         nativeSearchQuery.withQuery(should);
         nativeSearchQuery.withSort(sort);
         SearchHits<EsVideo> search = elasticsearchTemplate.search(nativeSearchQuery.build(), EsVideo.class);
         for (SearchHit<EsVideo> esVideoSearchHit : search) {
-            String id = esVideoSearchHit.getContent().getId();
-            Video byId = videoService.getById(id);
-            EsVideoList.add(byId);
+            String id = esVideoSearchHit.getContent().getVideoId();
+            EsVideoList.add(id);
         }
         return EsVideoList;
     }

@@ -15,7 +15,7 @@ public interface VideoEsService {
 
     List<String> getEsVideoByType(String type);
 
-    List<Video> getEsVideo(String keyWord);
+    List<String> getEsVideo(String keyWord);
 
 
 

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -97,6 +98,13 @@ public class UploadController {
             video.setCover(qiniuConfig.getImageBucketUrl()+s);
             log.info("上传视频信息 ==> {}", video);
             videoService.save(video);
+            File folder = new File(labelConfig.outputDir);
+            File[] files = folder.listFiles();
+            for (File file : files) {
+                if(file.isFile()){
+                    file.delete();
+                }
+            }
 
             response.setStatus(200);
             res = Result.success().data(video);

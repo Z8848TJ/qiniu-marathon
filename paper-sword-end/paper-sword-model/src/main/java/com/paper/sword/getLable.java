@@ -39,14 +39,6 @@ public class getLable {
                 int exitCode = process.waitFor();
                 System.out.println("Python脚本执行完毕，退出码：" + exitCode);
 
-/*                File folder = new File(outputDir);
-                File[] files = folder.listFiles();
-                for (File file : files) {
-                    if(file.isFile()){
-                        file.delete();
-                    }
-                }*/
-
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

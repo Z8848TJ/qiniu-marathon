@@ -39,7 +39,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         // 获取视频的总数
         Integer count = query().count();
 
-        int begin = RANDOM.nextInt(count - 10);
+        int begin = RANDOM.nextInt(Math.max(count - 10, 0));
         int end = begin + 10 < count ? begin + 10 : count;
 
         // 随机查询视频

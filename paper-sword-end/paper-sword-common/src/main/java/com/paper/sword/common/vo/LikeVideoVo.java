@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Data
 public class LikeVideoVo {
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;
 
     public String userId;

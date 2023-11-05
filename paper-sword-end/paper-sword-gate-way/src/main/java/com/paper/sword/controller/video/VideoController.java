@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/video")
@@ -106,6 +103,20 @@ public class VideoController {
 
         return Result.success().data("投稿成功");
     }
+
+    @RequestMapping("/search")
+    public Result recommend(String keyword){
+
+        List<String> searchVideo = esService.getEsVideo(keyword);
+        ArrayList<Video> videos = new ArrayList<>();
+        for (String s : searchVideo) {
+            Video byId = videoService.getById(s);
+            videos.add(byId);
+        }
+        return Result.success().data(searchVideo);
+    }
+
+
 
 
 }

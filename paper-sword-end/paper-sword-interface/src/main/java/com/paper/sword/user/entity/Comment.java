@@ -16,7 +16,7 @@ import java.util.Date;
 @Data
 public class Comment {
 
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;
 
     public Integer userId;

@@ -1,12 +1,17 @@
 <template>
     <div class="recommend">
         <Header></Header>
+        <div class="loading" v-if="loading">
+            <div class="loading-spinner"></div>
+            <p style="color: white">加载中...</p>
+        </div>
         <Swiper
                 @swiper="onSwiper" @slideChange="onSlideChange" :class="{'swiper-no-swiping':isDragVolume}"
                 :modules="modules"
                 :direction="'vertical'"
                 mousewheel
                 keyboard
+                v-else
         >
             <swiper-slide
                     v-for="(video,index) of videos"
@@ -15,7 +20,8 @@
 <!--                @mousedown="onMouseDown"-->
                     <VideoPlayer
                             v-if="shouldRenderVideo(index)"
-                            :source="video.source"
+                            :source="video"
+
                             @dragVolume="changeVolume"
                             :isPlaying="currentIndex === index"
                     >
@@ -32,6 +38,7 @@
     import 'swiper/css'
     import {Autoplay,Mousewheel,Keyboard} from 'swiper/modules'
     import {useStore} from 'vuex'
+    import {GetAction} from '../../util/api'
 
     const store = useStore()
 
@@ -47,15 +54,7 @@
         mySwiper = swiper
     }
 
-    const videos = ref([
-        { id: 1, source: './videolist/1-1.mp4' },
-        { id: 2, source: './videolist/1-2.mp4' },
-        { id: 3, source: './videolist/1-3.mp4' },
-        { id: 4, source: 'http://s38keg0f3.hb-bkt.clouddn.com/test.mp4?e=1698568323&token=51Qm5EEd37-kTBM5STG7Wec0jE8f1t6d-te6G20o:2pYiAbg5Aa8_1_FbabkrJQgOevc=' },
-        { id: 5, source: 'http://s38keg0f3.hb-bkt.clouddn.com/%E6%96%97%E7%A0%B4-1.mp4?e=1698568348&token=51Qm5EEd37-kTBM5STG7Wec0jE8f1t6d-te6G20o:y5RuRNK0D-21AW8UY3b8J-wtaY8=' },
-        { id: 6, source: 'http://s38keg0f3.hb-bkt.clouddn.com/%E6%96%97%E7%A0%B4-2.mp4?e=1698568356&token=51Qm5EEd37-kTBM5STG7Wec0jE8f1t6d-te6G20o:g6sSlwGO65YZ9v7wcQ7eSDY4vKQ=' },
-
-    ])
+    const videos = ref([])
 
     //切换视频
     const currentIndex = ref(0)
@@ -79,9 +78,18 @@
         )
     }
 
-    // onMounted(() => {
-    //
-    // })
+
+    // loading
+    const loading = ref(true);
+
+
+    onMounted(() => {
+        GetAction('video/recommend').then((res)=>{
+            console.log(res)
+            videos.value = res.data.info
+            loading.value = false
+        })
+    })
 
 
 </script>
@@ -95,6 +103,8 @@
     width: 100%;
     height: 100vh;
     background-image: url('/background.jpg');
+    /*filter: blur(10px);*/
+    background-size: cover;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -102,11 +112,25 @@
 .swiper{
     margin: 0;
 }
-.loginRegisterBox{
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 2;
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>

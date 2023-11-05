@@ -1,5 +1,6 @@
 package com.paper.sword.controller.video;
 
+import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.vo.EsVideo;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.Similarity;

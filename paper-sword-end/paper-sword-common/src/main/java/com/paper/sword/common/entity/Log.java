@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 public class Log {
 
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;
 
     public Integer userId;

@@ -1,6 +1,7 @@
 package com.paper.sword.user;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.vo.LikeVideoVo;
 import java.util.List;
 
@@ -17,7 +18,8 @@ public interface LikeService extends IService<Like> {
     /**
      * 点赞
      */
-    void likeVideo(String videoId, Integer userId);
+    @ControlsLog()
+    void likeVideo(String videoId, Integer fromId,  Integer toId, Integer type);
 
     /**
      * 收藏

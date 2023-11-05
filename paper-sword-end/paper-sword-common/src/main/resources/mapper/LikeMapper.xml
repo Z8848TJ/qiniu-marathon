@@ -3,11 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paper.sword.common.mapper.MarkMapper">
+    <update id="updateByUserAndType" parameterType="com.paper.sword.common.vo.MarkBo">
+        update t_mark SET mark = ${mark} where user_id = ${userId} and video_type = ${videoType}
+    </update>
 
 
     <select id="selectByUserIdAndType" resultType="java.lang.Integer">
         select mark
-        from t_mark where user_id = ${userId} and type = ${type};
+        from t_mark where user_id = ${userId} and video_type = ${type};
     </select>
 
 

@@ -2,7 +2,10 @@ package com.paper.sword.controller.video;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.paper.sword.common.entity.Dict;
 import com.paper.sword.common.entity.Video;
+import com.paper.sword.common.mapper.DictMapper;
 import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.*;
 import com.paper.sword.config.LabelConfig;
@@ -54,6 +57,9 @@ public class UploadController {
     private UserService userService;
 
     @Autowired
+    private DictMapper dictMapper;
+
+    @Autowired
     private Upload upload;
     
     
@@ -77,7 +83,23 @@ public class UploadController {
         String url = qiniuConfig.getVideoBucketUrl() + fileName;
         Video videoOld = videoService.getVideoCountByUrl(url);
         Result res;
+
         if(videoOld != null) {
+            String[] split = videoOld.getVideoType().split(",");
+            StringBuilder stringBuilder = new StringBuilder();
+
+
+            for (int i = 0; i < split.length - 1; i++) {
+                Dict key = dictMapper.getValueByKey(Integer.parseInt(split[i]));
+                stringBuilder.append(key.getValue()).append(",");
+            }
+
+            Dict key = dictMapper.getValueByKey(Integer.parseInt(split[split.length - 1]));
+            stringBuilder.append(key.getValue());
+
+            String videoTypeString = stringBuilder.toString();
+            videoOld.setVideoString(videoTypeString);
+
             response.setStatus(200);
             res = Result.success().data(videoOld);
             return JSON.toJSONString(res);
@@ -91,12 +113,28 @@ public class UploadController {
             String id = PaperSwordUtil.generateUUID();
             video.setId(id);
             video.setVideoType(lable.getType());
+            String[] split = lable.getType().split(",");
+            StringBuilder stringBuilder = new StringBuilder();
+
+
+            for (int i = 0; i < split.length - 1; i++) {
+                Dict key = dictMapper.getValueByKey(Integer.parseInt(split[i]));
+                stringBuilder.append(key.getValue()).append(",");
+            }
+
+            Dict key = dictMapper.getValueByKey(Integer.parseInt(split[split.length - 1]));
+            stringBuilder.append(key.getValue());
+
+            String videoTypeString = stringBuilder.toString();
+
             video.setVideoUrl(qiniuConfig.getVideoBucketUrl()+fileName);
             video.setCreateTime(new Date());
             video.setUserId(userId);
-            String s = upload.imageUpload(lable.imagePath);
-            video.setCover(qiniuConfig.getImageBucketUrl()+s);
+            String coverUrl = upload.imageUpload(lable.imagePath);
+            video.setCover(qiniuConfig.getImageBucketUrl() + coverUrl);
+            video.setVideoString(videoTypeString);
             log.info("上传视频信息 ==> {}", video);
+
             videoService.save(video);
             File folder = new File(labelConfig.outputDir);
             File[] files = folder.listFiles();
@@ -105,7 +143,6 @@ public class UploadController {
                     file.delete();
                 }
             }
-
             response.setStatus(200);
             res = Result.success().data(video);
         } else {

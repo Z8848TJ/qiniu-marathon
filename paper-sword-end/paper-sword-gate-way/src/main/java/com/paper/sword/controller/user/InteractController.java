@@ -1,12 +1,12 @@
 package com.paper.sword.controller.user;
 
+import com.paper.sword.common.annotation.ControlsLog;
+import com.paper.sword.common.enumType.OperateType;
 import com.paper.sword.common.vo.Result;
+import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.user.LikeService;
-import jdk.nashorn.internal.ir.annotations.Reference;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: zzh
@@ -20,23 +20,25 @@ public class InteractController {
     private LikeService likeService;
     
     // 点赞
+    @ControlsLog(operateType = OperateType.like)
     @GetMapping("/like")
-    public Result like(@RequestParam String videoId, @RequestParam Integer userId) {
-        likeService.likeVideo(videoId, userId);
-        
+    public Result like(@RequestParam String videoId, @RequestParam Integer userId, @RequestParam Integer type) {
+        Integer fromId = UserHolder.getUser().getId();
+        likeService.likeVideo(videoId, fromId, userId, type);
         return Result.success();
     }
     
     // 收藏
     @GetMapping("/collect")
+    @ControlsLog(operateType = OperateType.collect)
     public Result collect(@RequestParam String videoId, @RequestParam Integer userId) {
         likeService.collectVideo(videoId, userId);
-
         return Result.success();
     }
     
     // 转发
     @GetMapping("transfer")
+    @ControlsLog(operateType = OperateType.retransmission)
     public Result transfer(@RequestParam String videoId) {
         likeService.transfer(videoId);
 
@@ -45,6 +47,7 @@ public class InteractController {
     
     // 不感兴趣
     @GetMapping("/notLike")
+    @ControlsLog(operateType = OperateType.NotInterested)
     public Result notList(@RequestParam String videoId) {
         likeService.notLike(videoId);
 
@@ -53,6 +56,7 @@ public class InteractController {
     
     // 举报
     @GetMapping("/report")
+    @ControlsLog(operateType = OperateType.report)
     public Result report(@RequestParam String videoId) {
         likeService.report(videoId);
 

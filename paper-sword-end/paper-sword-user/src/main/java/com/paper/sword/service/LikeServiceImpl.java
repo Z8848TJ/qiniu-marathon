@@ -1,6 +1,7 @@
 package com.paper.sword.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.vo.LikeVideoVo;
@@ -37,17 +38,25 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
     private CommentService commentService;
 
     @Override
-    @ControlsLog()
-    public void likeVideo(String videoId, Integer userId) {
-        Like like = new Like();
-        like.setVideoId(videoId);
-        like.setUserId(userId);
-        like.setType(0);
-        likeMapper.insert(like);
+    public void likeVideo(String videoId, Integer fromId, Integer toId, Integer type) {
+        if(type == 1) {
+            Like like = new Like();
+            like.setVideoId(videoId);
+            like.setUserId(fromId);
+            like.setType(0);
+            like.setCreateTime(new Date());
+            likeMapper.insert(like);
 
-        // 发送通知消息
-        Message message = buildMessage(videoId, userId);
-        kafkaProducer.sendInteractMessage(message);
+            // 发送通知消息
+            Message message = buildMessage(videoId, fromId, toId);
+            kafkaProducer.sendInteractMessage(message);
+        } else {
+            // 删除数据库记录
+            likeMapper.delete(new QueryWrapper<Like>()
+                            .eq("video_id", videoId)
+                            .eq("user_id", fromId));
+        }
+
     }
 
     @Override
@@ -126,10 +135,10 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
         return likeMapper.getCollectVideo(userId);
     }
 
-    private Message buildMessage(String videoId, Integer userId) {
+    private Message buildMessage(String videoId, Integer fromId, Integer toId) {
         Message message = new Message();
-        message.setToId(UserHolder.getUser().getId());
-        message.setFromId(userId);
+        message.setToId(toId);
+        message.setFromId(fromId);
         message.setCreateTime(new Date());
         // 0 - 关注
         message.setType(0);

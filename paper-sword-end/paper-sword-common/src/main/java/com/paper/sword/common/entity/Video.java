@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -23,6 +24,9 @@ public class Video implements Serializable {
     public Integer userId;
 
     public String videoType;
+
+    @TableField(exist = false)
+    public String videoString;
 
     public String videoUrl;
 

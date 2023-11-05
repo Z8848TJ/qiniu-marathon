@@ -25,4 +25,6 @@ public interface MarkMapper extends BaseMapper<MarkBo> {
 
 
     List<Integer> selectByUserId(@Param("userId") Integer userId);
+
+    void updateByUserAndType(MarkBo markVo);
 }

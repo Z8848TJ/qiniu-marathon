@@ -31,6 +31,7 @@ public class VideoFrameExtractor {
             grabber.start();
             Frame frame;
             int frameNumber = 0;
+            int co = 0;
             while ((frame = grabber.grab()) != null) {
                 if (frameNumber % framesPerSecond == 0) {
                     Date date = new Date();
@@ -46,7 +47,10 @@ public class VideoFrameExtractor {
                             ImageIO.write(bufferedImage, "jpg", outputImage);
                             System.out.println(frameFileName);
                             System.out.println("图像保存成功");
-                            s = frameFileName;
+                            if(co == 1){
+                                 s = frameFileName;
+                            }
+                            co++;
                         }
                     } catch (IOException e) {
                         System.out.println("图像保存失败: " + e.getMessage());

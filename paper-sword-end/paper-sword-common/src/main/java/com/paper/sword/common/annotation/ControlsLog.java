@@ -1,14 +1,16 @@
 package com.paper.sword.common.annotation;
 
+import com.paper.sword.common.enumType.OperateType;
+
 import java.lang.annotation.*;
 
 /**
  * @author wwh
  * @date 2023/10/25
  */
+@Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface ControlsLog {
-    int operateType() default 0;
+    OperateType operateType() default OperateType.like;
 }

@@ -51,7 +51,7 @@ public class InteractMessageListener {
             // 4. 消息消费完成 手动提交位移
             ack.acknowledge();
         } catch (Exception e) {
-            log.error("消费MQ消息，失败 topic：{} message：{}", topic, optional.get());
+            log.error("消费MQ消息，失败 topic：{} message：{} exc : {}", topic, optional.get(), e.getMessage());
         }
     }
     

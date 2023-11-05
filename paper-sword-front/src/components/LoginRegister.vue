@@ -169,8 +169,11 @@
         align-items: center;
         height: 100vh;
         width: 100%;
-        position: relative;
-        background-color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 50;
+        background-color: rgba(55,55,55,0.8);
     }
 
     .loginBox {

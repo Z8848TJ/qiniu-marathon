@@ -8,23 +8,26 @@
                     <div class="userInfo">
                         <h2>{{ userName }}</h2>
                         <div class="stats">
-                            <span>关注：{{ followingCount }}</span>
+                            <span>关注：{{ followCount }}</span>
                             <span>|</span>
-                            <span>粉丝：{{ followersCount }}</span>
+                            <span>粉丝：{{ followCount }}</span>
                             <span>|</span>
-                            <span>点赞数：{{ likesCount }}</span>
+                            <span>获赞数：{{ likesCount }}</span>
                         </div>
                         <p>邮箱：{{ account }}</p>
                     </div>
                 </div>
-                <div class="settingBox" v-if="isCurrentUser">
-                    <button class="setting">资料设置</button>
+                <div class="settingBox">
+                    <button class="setting" @click="logout">退出登录</button>
                 </div>
-                <div class="controlsBox" v-else>
-                    <button class="control" @click="followUser">{{ isFollowing ? '已关注' : '关注' }}</button>
-                    <button class="control">私信</button>
-                    <button class="control">分享</button>
-                </div>
+<!--                <div class="settingBox" v-if="isCurrentUser">-->
+<!--                    <button class="setting" @click="setting">资料设置</button>-->
+<!--                </div>-->
+<!--                <div class="controlsBox" v-else>-->
+<!--                    <button class="control" @click="followUser">{{ isFollowing ? '已关注' : '关注' }}</button>-->
+<!--                    <button class="control">私信</button>-->
+<!--                    <button class="control">分享</button>-->
+<!--                </div>-->
             </div>
             <div class="userContent">
                 <div class="category">
@@ -36,21 +39,29 @@
                 </div>
             </div>
         </div>
+        <div class="alert">
+            <el-alert title="投稿成功！" type="success" center show-icon v-if="logoutSuccess"/>
+        </div>
     </div>
 </template>
 
 <script setup>
 
-    import {ref,onMounted} from 'vue'
+    import {ref,onMounted,onBeforeUnmount} from 'vue'
     import {useRouter} from 'vue-router'
+    import {useStore} from 'vuex'
+    import {GetAction} from "../../util/api";
+    import {ElAlert} from 'element-plus'
+    import 'element-plus/dist/index.css';
 
     const router = useRouter()
+    const store = useStore()
 
     const userName = ref('luo')
-    const followersCount = ref(1000)
-    const followingCount = ref(500)
-    const likesCount = ref(5000)
-    const account = ref('2825787448@qq.com')
+    const followCount = ref(0)
+    const followedCount = ref(0)
+    const likesCount = ref(0)
+    const account = ref('')
     const categories = ref([ '喜欢', '收藏','作品'])
     //切换分类
     const changeContent = (category)=>{
@@ -63,11 +74,41 @@
         }
     }
 
-    const isCurrentUser = ref(false); // 根据用户身份状态判断是否是当前用户
-    const isFollowing = ref(false); // 根据用户关注状态判断是否已关注
-    const followUser = () => {
-        isFollowing.value = !isFollowing.value;
-    };
+    //退出登录
+
+    const logoutSuccess = ref(false)
+    const logoutTime = ref(null)
+    const logout = ()=>{
+        logoutSuccess.value = true
+        logoutTime.value = setTimeout(()=>{
+            localStorage.removeItem('token')
+            store.commit('logout')
+            store.state.isLogin = false
+            router.push('/')
+        },500)
+    }
+
+    // const isCurrentUser = ref(false); // 根据用户身份状态判断是否是当前用户
+    // const isFollowing = ref(false); // 根据用户关注状态判断是否已关注
+    // const followUser = () => {
+    //     isFollowing.value = !isFollowing.value;
+    // };
+
+    onMounted(()=>{
+        GetAction('/user/mainInfo').then((res)=>{
+            console.log(res)
+            followCount.value = res.data.followCount
+            followedCount.value = res.data.followedCount
+            likesCount.value = res.data.likeCount
+            userName.value = res.data.user.username
+            account.value = res.data.user.email
+        })
+
+    })
+
+    onBeforeUnmount(()=>{
+        clearTimeout(logoutTime.value)
+    })
 
 
 </script>
@@ -184,6 +225,19 @@
         margin-top: 10px;
     }
 
-    /* 图片样式可以根据需求自定义 */
+    .alert{
+        width: 200px;
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-100px,0);
+    }
+
+    .el-alert {
+        margin: 20px 0 0;
+    }
+    .el-alert:first-child {
+        margin: 0;
+    }
 
 </style>

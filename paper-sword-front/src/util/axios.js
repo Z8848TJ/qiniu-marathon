@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://b2qttj.natappfree.cc/'  //正式
+axios.defaults.baseURL = 'http://z989un.natappfree.cc/'  //正式
 // axios.defaults.baseURL = 'http://localhost:3000' //测试
 
 //post请求头
@@ -24,7 +24,7 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     response => {
-        console.log(response)
+        // console.log(response)
         if (response.status === 200) {
             return Promise.resolve(response);
         } else {

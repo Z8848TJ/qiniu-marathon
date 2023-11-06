@@ -12,10 +12,8 @@
             l.create_time as createTime,
             v.video_type as videoType,
             v.video_url as videoUrl,
-            v.`like` as `like`,
-            v.collect as collect,
             v.description as description,
-            v.title as title
+            v.cover as cover
         from t_like as l, t_video as v where l.video_id = v.id and l.type = 0 and l.user_id = #{userId,jdbcType = VARCHAR} ORDER BY l.create_time DESC
     </select>
     <select id="getCollectVideo" resultType="com.paper.sword.common.vo.LikeVideoVo">
@@ -26,10 +24,8 @@
             l.create_time as createTime,
             v.video_type as videoType,
             v.video_url as videoUrl,
-            v.`like` as `like`,
-            v.collect as collect,
             v.description as description,
-            v.title as title
+            v.cover as cover
         from t_like as l, t_video as v where l.video_id = v.id and l.type = 1 and l.user_id = #{userId,jdbcType = VARCHAR} ORDER BY l.create_time DESC
     </select>
 </mapper>

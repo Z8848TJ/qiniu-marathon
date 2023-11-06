@@ -38,7 +38,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         if(token == null) {
             map.put("msg", "token为空");
         } else {
-            log.info("验证 token");
+            log.info("验证 token ==> {}", token);
             try {
                 DecodedJWT decodedJWT = JwtTokenUtil.verify(token);
                 

@@ -4,7 +4,7 @@
         <div class="userContainer">
             <div class="userInfoBox">
                 <div class="avatarBox">
-                    <img src="../../../videolist/image/favicon.png" alt="User Avatar" class="avatar">
+                    <img src="/favicon.png" alt="User Avatar" class="avatar">
                     <div class="userInfo">
                         <h2>{{ userName }}</h2>
                         <div class="stats">
@@ -39,9 +39,6 @@
                 </div>
             </div>
         </div>
-        <div class="alert">
-            <el-alert title="投稿成功！" type="success" center show-icon v-if="logoutSuccess"/>
-        </div>
     </div>
 </template>
 
@@ -51,8 +48,6 @@
     import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
     import {GetAction} from "../../util/api";
-    import {ElAlert} from 'element-plus'
-    import 'element-plus/dist/index.css';
 
     const router = useRouter()
     const store = useStore()
@@ -76,13 +71,11 @@
 
     //退出登录
 
-    const logoutSuccess = ref(false)
     const logoutTime = ref(null)
     const logout = ()=>{
-        logoutSuccess.value = true
         logoutTime.value = setTimeout(()=>{
             localStorage.removeItem('token')
-            store.commit('logout')
+            store.commit('changeLog',false)
             store.state.isLogin = false
             router.push('/')
         },500)
@@ -225,19 +218,6 @@
         margin-top: 10px;
     }
 
-    .alert{
-        width: 200px;
-        position: fixed;
-        top: 10%;
-        left: 50%;
-        transform: translate(-100px,0);
-    }
 
-    .el-alert {
-        margin: 20px 0 0;
-    }
-    .el-alert:first-child {
-        margin: 0;
-    }
 
 </style>

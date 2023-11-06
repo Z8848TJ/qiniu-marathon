@@ -161,14 +161,14 @@ public class UploadController {
         HashMap bodyMap = JSON.parseObject(body, HashMap.class);
         String fileName = (String)bodyMap.get("key");
         Integer size = (Integer)bodyMap.get("fsize");
-        String userId = (String)bodyMap.get("userId");
+        Integer userId = (Integer)bodyMap.get("userId");
 
         Result res;
         // 保存用户头像信息
         if(size > 0) {
             User user = new User();
             user.setHeaderUrl(fileName);
-            user.setId(Integer.parseInt(userId));
+            user.setId(userId);
             userService.updateById(user);
 
             response.setStatus(200);

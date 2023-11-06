@@ -8,9 +8,9 @@ import lombok.Data;
  */
 @Data
 public class Dict {
-    public Integer id;
-
-    public String dictName;
+//    public Integer id;
+//
+//    public String dictName;
 
     public Integer key;
 

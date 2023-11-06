@@ -18,7 +18,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         
         registry.addInterceptor(tokenInterceptor)
                 .excludePathPatterns("/auth/**")
-                .excludePathPatterns("/upload/callback/**");
+                .excludePathPatterns("/upload/callback/**")
+                .excludePathPatterns("/video/**");
         
     }
 

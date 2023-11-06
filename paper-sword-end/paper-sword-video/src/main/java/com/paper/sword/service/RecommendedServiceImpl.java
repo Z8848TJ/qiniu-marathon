@@ -3,16 +3,14 @@ package com.paper.sword.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paper.sword.common.mapper.MarkMapper;
 import com.paper.sword.common.mapper.SimilarityMapper;
-import com.paper.sword.common.vo.MarkBo;
 import com.paper.sword.common.vo.MarkVo;
 import com.paper.sword.common.vo.Similarity;
 import com.paper.sword.video.RecommendedService;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.Map;
 
@@ -22,20 +20,21 @@ import java.util.Map;
  *
  */
 @Service
+@Slf4j
 public class RecommendedServiceImpl implements RecommendedService {
 
-    @Autowired
+    @Resource
     private MarkMapper markMapper;
-    @Autowired
+    @Resource
     private SimilarityMapper similarityMapper;
 
 
     @Override
     public Map<Integer, MarkVo> getRecommend() {
-        Map<Integer, MarkVo> integerArrayListMap = markMapper.select();
-        return integerArrayListMap;
+        return markMapper.select();
     }
 
+    
     @Override
     public List<Integer> getVideoTypeByUserId(Integer userId) {
         return markMapper.selectByUserId(userId);
@@ -69,7 +68,7 @@ public class RecommendedServiceImpl implements RecommendedService {
                     similarityMapper.insert(similarity1);
                 }
 
-                System.out.println(user1 + " and " + user2 + " Jaccard Similarity: " + similarity);
+                log.info(user1 + " and " + user2 + " Jaccard Similarity: " + similarity);
             }
         }
     }

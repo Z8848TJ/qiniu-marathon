@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.paper.sword.common.annotation.ControlsLog;
+import com.paper.sword.common.enumType.OperateType;
+import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.LikeVideoVo;
 import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.mq.producer.KafkaProducer;
@@ -12,8 +14,11 @@ import com.paper.sword.user.entity.Like;
 import com.paper.sword.mapper.LikeMapper;
 import com.paper.sword.user.LikeService;
 import com.paper.sword.user.entity.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ import java.util.List;
  * @date 2023/10/25
  */
 @Service
+@Slf4j
 public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> 
         implements LikeService {
 
@@ -36,6 +42,9 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
     
     @Reference
     private CommentService commentService;
+    
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public void likeVideo(String videoId, Integer fromId, Integer toId, Integer type) {
@@ -48,8 +57,12 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
             likeMapper.insert(like);
 
             // 发送通知消息
-            Message message = buildMessage(videoId, fromId, toId);
+            Message message = buildMessage(videoId, fromId, toId, 0);
             kafkaProducer.sendInteractMessage(message);
+
+            // 计算视频分数
+            String scoreKey = RedisUtil.getVideoScoreKey();
+            redisTemplate.opsForSet().add(scoreKey, videoId);
         } else {
             // 删除数据库记录
             likeMapper.delete(new QueryWrapper<Like>()
@@ -60,13 +73,29 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
     }
 
     @Override
-    @ControlsLog(operateType = 1)
-    public void collectVideo(String videoId, Integer userId) {
-        Like like = new Like();
-        like.setVideoId(videoId);
-        like.setUserId(userId);
-        like.setType(1);
-        likeMapper.insert(like);
+    @ControlsLog(operateType = OperateType.collect)
+    public void collectVideo(String videoId, Integer fromId,  Integer toId, Integer type) {
+        if(type == 1) {
+            Like like = new Like();
+            like.setVideoId(videoId);
+            like.setUserId(fromId);
+            like.setType(1);
+            like.setCreateTime(new Date());
+            likeMapper.insert(like);
+
+            // 发送通知消息
+            Message message = buildMessage(videoId, fromId, toId, 1);
+            kafkaProducer.sendInteractMessage(message);
+
+            // 计算视频分数
+            String scoreKey = RedisUtil.getVideoScoreKey();
+            redisTemplate.opsForSet().add(scoreKey, videoId);
+        } else {
+            // 删除数据库记录
+            likeMapper.delete(new QueryWrapper<Like>()
+                    .eq("video_id", videoId)
+                    .eq("user_id", fromId));
+        }
     }
 
     @Override
@@ -85,12 +114,14 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
         
         res.add(like);
         res.add(collect);
+
+        log.info("是否点赞，收藏 ==> {}", res);
         
         return res;
     }
 
     @Override
-    @ControlsLog(operateType = 3)
+    @ControlsLog(operateType = OperateType.retransmission)
     public void transfer(String videoId) {}
 
     @Override
@@ -114,15 +145,23 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
         list.add(collectCount);
         list.add(commentCount);
         
+        log.info("视频信息 ==> {}", list);
+        
         return list;
     }
 
     @Override
-    @ControlsLog(operateType = 5)
+    public Integer gainLikeCount(Integer userId) {
+        return query().eq("user_id", userId)
+                .eq("type", 0).count();
+    }
+
+    @Override
+    @ControlsLog(operateType = OperateType.NotInterested)
     public void notLike(String videoId) {}
 
     @Override
-    @ControlsLog(operateType = 6)
+    @ControlsLog(operateType = OperateType.report)
     public void report(String videoId) {}
 
     @Override
@@ -135,13 +174,14 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
         return likeMapper.getCollectVideo(userId);
     }
 
-    private Message buildMessage(String videoId, Integer fromId, Integer toId) {
+    // 构造通知消息
+    private Message buildMessage(String videoId, Integer fromId, Integer toId, Integer type) {
         Message message = new Message();
         message.setToId(toId);
         message.setFromId(fromId);
         message.setCreateTime(new Date());
-        // 0 - 关注
-        message.setType(0);
+        // 0 - 关注 1 - 收藏
+        message.setType(type);
         // 0-未读
         message.setStatus(0);
         // 额外信息 - 视频ID

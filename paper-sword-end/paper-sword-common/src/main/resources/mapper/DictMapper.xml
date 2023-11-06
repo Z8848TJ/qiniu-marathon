@@ -9,4 +9,7 @@
             parameterType="java.lang.Integer">
         select * from t_dict where `key` = ${key} and dict_name = "video"
     </select>
+    <select id="getVideoType" resultType="com.paper.sword.common.entity.Dict">
+        select `key`, `value` from  t_dict where dict_name = "video"
+    </select>
 </mapper>

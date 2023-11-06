@@ -36,6 +36,7 @@ spring:
         max-idle: 16
         min-idle: 8
         max-wait: 1000
+    password: 123456
   kafka:
     bootstrap-servers: 49.234.3.91:9092
     producer:

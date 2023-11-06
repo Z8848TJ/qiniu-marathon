@@ -1,12 +1,10 @@
 package com.paper.sword.user.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +12,8 @@ import java.util.Date;
  * @date 2023/10/26
  */
 @Data
-public class Comment {
+@TableName("t_comments")
+public class Comment implements Serializable {
 
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;

@@ -2,7 +2,6 @@ package com.paper.sword;
 import com.paper.sword.common.vo.fileVo;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -10,8 +9,8 @@ import java.io.InputStreamReader;
  * @author wwh
  * @date 2023/10/29
  */
-public class getLable {
-        public static fileVo getLable(String scriptPath,String videoPath,String outputDir) {
+public class GetLabel {
+        public static fileVo getLabel(String scriptPath,String videoPath,String outputDir) {
             fileVo fileVo = new fileVo();
             String line = "";
             String ans = "";
@@ -45,4 +44,4 @@ public class getLable {
 
             return fileVo;
         }
-    }
+}

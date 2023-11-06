@@ -9,7 +9,7 @@
             <div class="uploadBox" @click="triggerFileInput">
                 <input type="file" ref="fileInput" @change="uploadFile">
                 <div class="upload">
-                    <img src="../../../videolist/image/contribute.png" alt="">
+                    <img src="/contribute.png" alt="">
                     <div class="uploadText">{{uploadText}}</div>
                     <div class="progressBox" v-if="uploadProgress !== 0">
                         <div class="progressBar" :style="`width: ${Math.floor(uploadProgress)}%`"></div>
@@ -24,7 +24,7 @@
                             <el-tag class="mx-1" type="warning" effect="plain" round> 查看封面 </el-tag>
                             <div class="cover">
                                 <img :src="cover" alt="" v-if="cover !==''">
-                                <img src="../../../videolist/image/favicon.png" alt="" v-else>
+                                <img src="/favicon.png" alt="" v-else>
                             </div>
                         </div>
                         <div class="tagBox">

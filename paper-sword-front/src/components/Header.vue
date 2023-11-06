@@ -4,39 +4,35 @@
             <div class="group1">
                 <div class="logo" @click="navigate('/')">搞子剑</div>
                 <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/' }" @click="navigate('/')">推荐</div>
-                <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/following' }" @click="navigate('/following')">关注</div>
+                <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/hot' }" @click="navigate('/hot')">热门</div>
 <!--                <div class="nav" @click="navigate('/friends')">朋友</div>-->
                 <div class="nav" :class="{ 'highlight': router.currentRoute.value.path === '/user/self' }" @click="navigate('/user/self')">我的</div>
                 <div class="category" @mouseenter="showCateInfo" @mouseleave="hideCateInfo">
-                    <div class="nav" @click="navigate('/')">分类</div>
-                    <div class="nav-dropdown" v-if="showNav">
-                        <!-- 分类导航内容 -->
-                        <!-- 这里可以放你的分类导航菜单 -->
+                    <div class="nav">{{currentCate ===''?'分类':currentCate}}</div>
+                    <div class="navDropdown" v-if="showNav">
                         <ul>
-                            <li v-for="(cate,index) in cateList">{{cate.name}}</li>
-                            <li>体育</li>
-                            <li>游戏</li>
+                            <li v-for="(cate,index) in cateList" @click="nav(cate)">{{cate.value}}</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="searchBox">
                 <input class="search-input" type="text" placeholder="你想搜什么">
-                <img class="search-icon" src="../../videolist/image/search.png" alt="Search">
+                <img class="search-icon" src="/search.png" alt="Search">
                 <div class="search-text">搜索</div>
             </div>
             <div class="group2">
                 <div class="nav">
-                    <img class="letter" src="../../videolist/image/letter.png" alt="">
+                    <img class="letter" src="/letter.png" alt="">
                     <span>消息</span>
                 </div>
                 <div class="nav" @click="navigate('/publish')">
-                    <img class="contribute" src="../../videolist/image/contribute.png" alt="">
+                    <img class="contribute" src="/contribute.png" alt="">
                     <span>投稿</span>
                 </div>
                 <div class="avatar" @click="showLogin" v-if="!store.state.isLogin">登录</div>
                 <div class="avatar" v-else @mouseenter="showUserInfo" @mouseleave="hideUserInfo">
-                    <img src="../../videolist/image/favicon.png" @click="toUser">
+                    <img :src="store.state.avatar" @click="toUser">
 <!--                    <div class="userInfo" v-if="showProfile">-->
 <!--                        <div class="user-name">Your Name</div>-->
 <!--                        <div class="userActions">-->
@@ -55,6 +51,7 @@
     import {ref, onMounted,onBeforeUnmount} from 'vue'
     import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
+    import {GetAction} from "../util/api";
 
     const router = useRouter()
     const store = useStore()
@@ -67,7 +64,23 @@
         router.push('/user/self')
     }
     const navigate = (route)=>{
-        router.push(route)
+        if(route === '/user/self'){
+            if(store.state.isLogin){
+                router.push(route)
+            }else{}
+        }else{
+            router.push(route)
+        }
+
+    }
+    const nav = (cate)=>{
+        router.push({
+            name:'category',
+            params:{
+                key:cate.key
+            }
+        })
+        currentCate.value = cate.value
     }
 
     //分类
@@ -79,12 +92,8 @@
     const hideCateInfo = ()=>{
         showNav.value = false
     }
-    const cateList = ref([
-        {id:1,name:'热门'},
-        {id:2,name:'体育'},
-        {id:3,name:'游戏'},
-    ])
-
+    const cateList = ref([])
+    const currentCate = ref('')
 
     //用户
     //登录态
@@ -119,13 +128,22 @@
         emits('changeRoute',to.path)
     })
 
+    //头像
+    const avatar = ref('')
     onMounted(()=>{
         // console.log(router.currentRoute.value.path)
         const userInfo = localStorage.getItem('token')
         if(userInfo){
             store.commit('isLogin')
+            GetAction('/user/header').then((res)=>{
+                console.log(res)
+                store.commit('setAvatar',res.data)
+            })
         }
-
+        GetAction('/video/videoLab').then((res)=>{
+            // console.log(res)
+            cateList.value = res.data.info
+        })
     })
     onBeforeUnmount(()=>{
         // clearTimeout(showProfileId.value)
@@ -186,10 +204,10 @@
     position: relative;
     z-index: 2;
 }
-.nav-dropdown{
+.navDropdown{
     /*display: none;*/
     width: 240px;
-    height: 150px;
+    min-height: 150px;
     color: #ffffff;
     background-color: rgba(0,0,0,0.3);
     border-radius: 8px;
@@ -197,13 +215,13 @@
     top: 50px;
     left: -100px;
 }
-.nav-dropdown ul{
+.navDropdown ul{
     list-style: none;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
 }
-.nav-dropdown li{
+.navDropdown li{
     width: 60px;
     height: 20px;
     margin: 10px;

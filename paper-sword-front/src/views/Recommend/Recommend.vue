@@ -6,25 +6,27 @@
             <p style="color: white">加载中...</p>
         </div>
         <Swiper
-                @swiper="onSwiper" @slideChange="onSlideChange" :class="{'swiper-no-swiping':isDragVolume}"
+                @swiper="onSwiper" @slideChange="onSlideChange" :class="{'swiper':true,'swiper-no-swiping':!canToggleVideo}"
                 :modules="modules"
                 :direction="'vertical'"
-                mousewheel
+                :mousewheel="canToggleVideo"
                 keyboard
                 v-else
         >
             <swiper-slide
-                    v-for="(video,index) of videos"
+                    v-for="(video,index) of store.state.videos"
                     :key="video.id"
             >
-<!--                @mousedown="onMouseDown"-->
-                    <VideoPlayer
-                            v-if="shouldRenderVideo(index)"
-                            :source="video"
-                            @dragVolume="changeVolume"
-                            :isPlaying="currentIndex === index"
-                    >
-                    </VideoPlayer>
+                <!--                @mousedown="onMouseDown"-->
+                <VideoPlayer
+                        v-if="shouldRenderVideo(index)"
+                        :source="video"
+                        @canToggleVideo="changeToggleVideo"
+                        :isPlaying="currentIndex === index"
+                        @fullscreen="toggleFullscreen"
+                        :videoHeight="videoHeight"
+                >
+                </VideoPlayer>
             </swiper-slide>
         </Swiper>
     </div>
@@ -32,7 +34,7 @@
 </template>
 
 <script setup>
-    import {ref,onMounted} from 'vue'
+    import {ref,onMounted,watch,computed} from 'vue'
     import { Swiper, SwiperSlide } from 'swiper/vue'
     import 'swiper/css'
     import {Autoplay,Mousewheel,Keyboard} from 'swiper/modules'
@@ -62,11 +64,22 @@
         currentIndex.value = e.activeIndex
     }
 
-    //拖动音量条不会改变视频
-    const isDragVolume = ref(false)
-    const changeVolume = (value)=>{
-        isDragVolume.value = value
+    //拖动音量条(和滚动评论)不会改变视频
+    const canToggleVideo = ref(true)
+    const changeToggleVideo = (value)=>{
+        canToggleVideo.value = value
     }
+    watch(canToggleVideo,(newValue)=>{
+        if(mySwiper){
+            if(newValue){
+                mySwiper.mousewheel.enable()
+            }else{
+                mySwiper.mousewheel.disable()
+            }
+        }
+    },{
+        immediate:true
+    })
 
     //同时只渲染三个视频
     const shouldRenderVideo = (index) => {
@@ -79,18 +92,33 @@
 
 
     // loading
-    const loading = ref(true);
+    const loading = ref(true)
     const initData = ()=>{
         loading.value = true
         console.log('初始化数据')
-        if(router.currentRoute.value.name === 'following'){
-            console.log('关注')
-
-        }else {
+        if(router.currentRoute.value.name === 'recommend'){
             console.log('推荐')
-            GetAction('video/recommend').then((res) => {
+            GetAction('/video/recommend').then((res) => {
+                console.log('推荐的视频',res)
+                store.commit('initVideos',res.data.info)
+                loading.value = false
+            })
+        }else if(router.currentRoute.value.name === 'hot'){
+            console.log('热门')
+            GetAction('/video/hot', {begin: 0}).then((res)=>{
+                console.log('热门',res)
+                store.commit('initVideos',res.data.info)
+                loading.value = false
+            })
+        }else {
+            console.log('分类')
+            // console.log(router.currentRoute)
+            const params = {
+                type:router.currentRoute.value.params.key
+            }
+            GetAction('/video/type',params).then((res)=>{
                 console.log(res)
-                videos.value = res.data.info
+                store.commit('initVideos',res.data.info)
                 loading.value = false
             })
         }
@@ -98,6 +126,47 @@
     const changeRoute = (e)=>{
         initData()
     }
+
+    //全屏
+    const isFull = ref(false)
+    const videoHeight = computed(()=>{
+        if(isFull.value){
+            return '100vh'
+        }else{
+            return 'calc(100vh - 50px)'
+        }
+    })
+    const toggleFullscreen = function () {
+        const element = document.querySelector('.swiper')
+        if(isFull.value){
+            console.log('退出全屏')
+            if (document.exitFullscreen) {
+                document.exitFullscreen()
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen()
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen()
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen()
+            }
+            element.style.userSelect = 'none'
+        }else{
+            console.log('全屏')
+            if (element.requestFullscreen) {
+                element.requestFullscreen()
+            } else if (element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen()
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen()
+            } else if (element.msRequestFullscreen) {
+                // IE11
+                element.msRequestFullscreen()
+            }
+        }
+        isFull.value = !isFull.value
+
+    }
+
 
     onMounted(() => {
         initData()
@@ -147,5 +216,6 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 </style>

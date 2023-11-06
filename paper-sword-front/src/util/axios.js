@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://z989un.natappfree.cc/'  //正式
+axios.defaults.baseURL = 'http://gcw56d.natappfree.cc/'  //正式
 // axios.defaults.baseURL = 'http://localhost:3000' //测试
 
 //post请求头

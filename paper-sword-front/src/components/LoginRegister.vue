@@ -2,11 +2,11 @@
     <div class="container">
         <div class="loginBox">
             <div class="logo">
-<!--                <img src="./assets/logo.png" alt="TikTok Logo" />-->
+                <img src="/logo.png" alt="TikTok Logo" />
             </div>
             <div class="form">
                 <div class="closeBox" @click="closeLoginRegister">
-                    <img src="../../videolist/image/close.png" alt="">
+                    <img src="/close.png" alt="">
                 </div>
                 <div class="block" v-if="!isRegister"></div>
                 <h2>{{ isRegister ? '注册' : '登录' }}</h2>
@@ -29,13 +29,19 @@
                 <a @click="toggleForm">{{ isRegister ? '登录' : '立即注册' }}</a>
             </div>
         </div>
+        <div class="alert">
+            <el-alert title="登录成功！" type="success" center show-icon v-if="success"/>
+        </div>
     </div>
 </template>
 
 <script setup>
-    import { ref, onBeforeUnmount } from 'vue'
+    import {ref, onBeforeUnmount, defineComponent} from 'vue'
     import {GetAction, PostAction} from '../util/api'
     import {useStore} from 'vuex'
+    import {ElAlert,ElTag} from 'element-plus'
+    import 'element-plus/dist/index.css';
+
 
     const store = useStore()
     const username = ref('')
@@ -45,8 +51,10 @@
     const password = ref('')
     const passwordError = ref('')
     const isRegister = ref(false)
+    defineComponent(ElAlert)
 
-
+    const success = ref(false)
+    const successTimeId = ref(null)
     const handleLogin = () => {
         //注册信息
         const registerParams = {
@@ -72,9 +80,13 @@
             console.log('登录:', loginParams)
             PostAction('auth/login',loginParams).then((res)=>{
                 console.log(res)
-                localStorage.setItem('token',res.data.info)
-                store.commit('login',loginParams)
-                store.commit('showLoginRegister',true)
+                localStorage.setItem('token',res.data.token)
+                store.commit('setAvatar',res.data.header)
+                store.commit('changeLog',true)
+                success.value = true
+                successTimeId.value = setTimeout(()=>{
+                    store.commit('showLoginRegister',false)
+                },500)
             })
 
         }
@@ -158,6 +170,7 @@
 
     onBeforeUnmount(()=>{
         clearInterval(countTime.value)
+        clearTimeout(successTimeId.value)
     })
 
 </script>
@@ -185,6 +198,9 @@
         padding: 30px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .closeBox {
@@ -264,12 +280,26 @@
     }
 
     a {
-        color: #333;
+        color: #ffffff;
         text-decoration: underline;
         cursor: pointer;
     }
 
     a:hover {
-        color: #555;
+        color: blue;
+    }
+    .alert{
+        width: 200px;
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-100px,0);
+    }
+
+    .el-alert {
+        margin: 20px 0 0;
+    }
+    .el-alert:first-child {
+        margin: 0;
     }
 </style>

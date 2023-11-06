@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <div id="playBox" :class="{'playBox':true,'full':isFull}" tabindex="0" @keydown="adjustProgress">
-            <div id="videoBox" class="videoBox" @click="play">
+        <div id="playBox" :class="{'playBox':true}" tabindex="0" @keydown="adjustProgress">
+            <div id="videoBox" class="videoBox" :style="{height: videoHeight}" @click="play">
                 <video id="video"
                        :src="source.videoUrl"
                        ref="video"
@@ -11,7 +11,7 @@
 
                 ></video>
                 <div class="vPlay">
-                    <img src="../../videolist/image/bigPlay.png" alt="" v-if="!isPlay">
+                    <img src="/bigPlay.png" alt="" v-if="!isPlay">
                 </div>
             </div>
             <div class="detailBox">
@@ -22,21 +22,21 @@
             </div>
             <div class="interactionBox">
                 <div class="like">
-                    <img src="../../videolist/image/like.png" alt="" v-if="!isLiked" @click="changeLiked(1)">
-                    <img src="../../videolist/image/liked.png" alt="" v-else @click="changeLiked(0)">
+                    <img src="/like.png" alt="" v-if="!isLiked" @click="changeLiked(1)">
+                    <img src="/liked.png" alt="" v-else @click="changeLiked(0)">
                     <div class="interactionText">{{likeNumber}}</div>
                 </div>
-                <div class="review">
-                    <img src="../../videolist/image/review.png" alt="">
+                <div class="review" @click="showReview">
+                    <img src="/review.png" alt="">
                     <div class="interactionText">{{reviewNumber}}</div>
                 </div>
                 <div class="collect">
-                    <img src="../../videolist/image/star.png" alt="" v-if="!isStar" @click="changeCollect(1)">
-                    <img src="../../videolist/image/stared.png" alt="" v-else @click="changeCollect(0)">
+                    <img src="/star.png" alt="" v-if="!isStar" @click="changeCollect(1)">
+                    <img src="/stared.png" alt="" v-else @click="changeCollect(0)">
                     <div class="interactionText">{{collectNumber}}</div>
                 </div>
                 <div class="more">
-                    <img src="../../videolist/image/more.png" alt="">
+                    <img src="/more.png" alt="">
                 </div>
             </div>
             <div class="controlBox">
@@ -47,8 +47,8 @@
                 <div class="control">
                     <div class="group1">
                         <div class="playButton" @click="play">
-                            <img src="../../videolist/image/pause.png" alt="" title="暂停" v-if="isPlay">
-                            <img src="../../videolist/image/play.png" alt="" title="播放" v-else>
+                            <img src="/pause.png" alt="" title="暂停" v-if="isPlay">
+                            <img src="/play.png" alt="" title="播放" v-else>
                         </div>
                         <div class="time">
                             <span class="currentTime">{{currentTime}}</span> / <span class="totalTime">{{totalTime}}</span>
@@ -78,7 +78,7 @@
                                         class="barBox"
                                         @click="setVolume"
                                         @mousedown="startDrag"
-                                        @mousemove="dragVolume"
+                                        @mousemove="changeToggleVideo"
                                         @mouseleave="endDrag"
                                         @mouseup="endDrag"
                                         ref="refVolumeBar"
@@ -91,24 +91,39 @@
                         </div>
 
                         <div class="fullscreen" title="全屏" ref="fullscreen" @click="toggleFullscreen">
-                            <img src="../../videolist/image/fullscreen.png" alt="">
+                            <img src="/fullscreen.png" alt="">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="reviewBox" @mouseenter="disabledRoll" @mouseleave="enabledRoll" v-if="isShowReview">
+            <div class="title">评论</div>
+            <div class="infiniteList" style="overflow: auto" @scroll="handleScroll">
+                <Review v-for="(item,index) in comment" :key="index" :source="comment[index]"></Review>
+            </div>
+            <div class="submit">
+                <input v-model="newComment" type="text" placeholder="输入你的评论" />
+                <button @click="submitComment">提交评论</button>
+            </div>
+            <div class="blurBg" :style="{ 'background-image': `url(${source.cover})` }"></div>
+        </div>
         <div class="blurBg" :style="{ 'background-image': `url(${source.cover})` }"></div>
-
     </div>
 </template>
 
 <script setup>
     import {ref,computed,onMounted,onBeforeUnmount,watch } from 'vue'
-    import {GetAction} from "../util/api";
+    import {GetAction, PostAction} from "../util/api";
     import {useStore} from 'vuex'
     import LoginRegister from '../components/LoginRegister.vue'
+    import Review from "../components/Review.vue";
 
-    const props = defineProps(['source','isPlaying'])
+
+
+
+    const props = defineProps(['source','isPlaying','videoHeight'])
+    const emits = defineEmits(['canToggleVideo','fullscreen'])
     const store = useStore()
 
     const video = ref(null)
@@ -203,35 +218,41 @@
 
     //全屏
     const isFull = ref(false)
-    const toggleFullscreen = function () {
-        const element = document.querySelector('#playBox')
-        if(isFull.value){
-            console.log('退出全屏')
-            if (document.exitFullscreen) {
-                document.exitFullscreen()
-            } else if (document.webkitCancelFullScreen) {
-                document.webkitCancelFullScreen()
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen()
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen()
-            }
-            element.style.userSelect = 'none'
-        }else{
-            console.log('全屏')
-            if (element.requestFullscreen) {
-                element.requestFullscreen()
-            } else if (element.webkitRequestFullScreen) {
-                element.webkitRequestFullScreen()
-            } else if (element.mozRequestFullScreen) {
-                element.mozRequestFullScreen()
-            } else if (element.msRequestFullscreen) {
-                // IE11
-                element.msRequestFullscreen()
-            }
-        }
-        isFull.value = !isFull.value
+    const videoBox = document.querySelector('.videoBox')
+    // const toggleFullscreen = function () {
+    //     const element = document.querySelector('#playBox')
+    //     if(isFull.value){
+    //         console.log('退出全屏')
+    //         if (document.exitFullscreen) {
+    //             document.exitFullscreen()
+    //         } else if (document.webkitCancelFullScreen) {
+    //             document.webkitCancelFullScreen()
+    //         } else if (document.mozCancelFullScreen) {
+    //             document.mozCancelFullScreen()
+    //         } else if (document.msExitFullscreen) {
+    //             document.msExitFullscreen()
+    //         }
+    //         element.style.userSelect = 'none'
+    //     }else{
+    //         console.log('全屏')
+    //         if (element.requestFullscreen) {
+    //             element.requestFullscreen()
+    //         } else if (element.webkitRequestFullScreen) {
+    //             element.webkitRequestFullScreen()
+    //         } else if (element.mozRequestFullScreen) {
+    //             element.mozRequestFullScreen()
+    //         } else if (element.msRequestFullscreen) {
+    //             // IE11
+    //             element.msRequestFullscreen()
+    //         }
+    //     }
+    //     isFull.value = !isFull.value
+    //
+    // }
 
+    const toggleFullscreen = ()=>{
+        emits('fullscreen',!isFull.value)
+        isFull.value = !isFull.value
     }
 
     //倍速
@@ -276,11 +297,11 @@
     //图标
     const volumeIcon = computed(()=>{
         if (isMuted.value||volume.value === 0){
-            return '../../videoList/image/noVolume.png'
+            return '/noVolume.png'
         }else if(volume.value <0.5){
-            return '../../videoList/image/lowVolume.png'
+            return '/lowVolume.png'
         }else {
-            return '../../videoList/image/highVolume.png'
+            return '/highVolume.png'
         }
     })
     //静音
@@ -307,7 +328,6 @@
         prevVolume.value = isMuted.value ? 1.0 : volume.value
     }
     //拖动
-    const emits = defineEmits(['dragVolume'])
     const startDrag = (event) => {
         // console.log('startDrag')
         if (isMuted.value) toggleMute()
@@ -323,10 +343,10 @@
         prevVolume.value = isMuted.value ? 1.0 : volume.value
         dragState.value.startVolume = volume.value
 
-        volumeBar.addEventListener('mousemove', dragVolume)
+        volumeBar.addEventListener('mousemove', changeToggleVideo)
         volumeBar.addEventListener('mouseup', endDrag)
     }
-    const dragVolume = (event) => {
+    const changeToggleVideo = (event) => {
         if (dragState.value.dragging) {
             const volumeBar = event.currentTarget
             const deltaY = event.clientY - dragState.value.startY
@@ -341,21 +361,21 @@
         if (dragState.value.dragging) {
             dragState.value.dragging = false
             const volumeBar = refVolumeBar.value
-            volumeBar.removeEventListener('mousemove', dragVolume)
+            volumeBar.removeEventListener('mousemove', changeToggleVideo)
             volumeBar.removeEventListener('mouseup', endDrag)
         }
     }
     //音量条显隐
     const showVolumeBar = () => {
         isVolumeBarVisible.value = true
-        emits('dragVolume',true)
+        emits('canToggleVideo',false)
         clearTimeout(volumeTimeId.value)
     }
     const hideVolumeBar = () => {
         volumeTimeId.value = setTimeout(()=>{
             isVolumeBarVisible.value = false
         },500)
-        emits('dragVolume',false)
+        emits('canToggleVideo',true)
     }
 
     //点赞等信息
@@ -382,8 +402,33 @@
             })
         }
     }
-    //评论转发数
+    //评论
     const reviewNumber = ref(0)
+    const comment = ref([])
+    const isShowReview = ref(false)
+    const showReview = ()=>{
+        if(!store.state.isLogin){
+            store.commit('showLoginRegister',true)
+        }else{
+            isShowReview.value = !isShowReview.value
+        }
+    }
+    const disabledRoll = () => {
+        emits('canToggleVideo',false)
+    }
+    const enabledRoll = () => {
+        emits('canToggleVideo',true)
+    }
+    const handleScroll = ()=>{
+        const target = event.target;
+        if (target.scrollHeight - target.scrollTop === target.clientHeight) {
+            load(); // 当到达底部时加载更多评论
+        }
+    }
+    //添加评论
+
+
+    //转发
     const isStar = ref(false)
     const collectNumber = ref(0)
     const changeCollect = (type)=>{
@@ -414,16 +459,52 @@
     const initData = ()=>{
         let params = {
             videoId : props.source.id,
+            begin : 0,
+            userId:store.state.userId
         }
         GetAction('/video/count',params).then((res)=>{
-            console.log(res)
+            console.log('数量信息',res)
             likeNumber.value = res.data.counts[0]
             reviewNumber.value = res.data.counts[2]
             collectNumber.value = res.data.counts[1]
             isLiked.value = res.data.likeAndCollect[0]
             isStar.value = res.data.likeAndCollect[1]
         })
+        //获取评论
+        GetAction('/video/comment',params).then((res)=>{
+            console.log('评论',res)
+            comment.value = res.data.info
+        })
     }
+
+    //添加评论
+    const newComment = ref('')
+    const submitComment  = ()=>{
+        if (newComment.value.trim() === '') {
+            // 防止提交空评论
+            return
+        }
+        // 构建评论对象，可以包括评论内容、评论者信息、评论时间等
+        const comment = {
+            videoId : props.source.id,
+            parentId : 0,
+            content: newComment.value,
+            recoverUserId : props.source.userId
+        }
+        PostAction('/comment/add',comment).then((res)=>{
+            console.log(res)
+            initData()
+        })
+        // 清空
+        newComment.value = ''
+    }
+    const count = ref(20)
+    const load = () => {
+        console.log(222222)
+        count.value += 2
+    }
+
+
 
     onMounted(()=>{
         initData()
@@ -453,7 +534,9 @@
 
 <style scoped>
 .container{
+    display: flex;
     position: relative;
+    min-width: 900px;
 }
 .fullscreen {
     user-select: none;
@@ -462,13 +545,16 @@
     content: "";
     /*background-image: url("../../videolist/image/bg2.png");*/
     background-size: cover;
-    filter: blur(10px);
+    filter: blur(100px);
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -1;
+}
+.playBox{
+    min-width: 450px;
 }
 .videoBox{
     position: relative;
@@ -477,7 +563,7 @@
     margin: 0 auto;
 }
 #video{
-    height: calc(100% - 50px);
+    height: calc(100vh - 50px);
     width: 100%;
 }
 .vPlay{
@@ -669,13 +755,102 @@ img{
     position: absolute;
     bottom: 0;
 }
-.loading-container{
-    width: 100%;
-    height: 100vh;
+
+.playBox{
+    overflow: hidden;
+    flex: 3;
+    position: relative;
+}
+.reviewBox{
+    /*flex: 1;*/
+    width: 400px;
+    height: calc(100vh - 50px);
+    overflow: auto;
+    padding: 0;
+    position: relative;
+}
+.reviewBox .title{
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 20px;
+    color: #ffffff;
+    background-color: #000000;
+}
+.infiniteList {
+    height: calc(100vh - 150px);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    /*background-color: red;*/
+}
+
+.submit {
     display: flex;
-    justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.7);
+    background: #fff; /* 背景颜色 */
+    border-radius: 50px; /* 圆角 */
+    padding: 5px 10px; /* 内边距 */
+    margin: 10px 0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+}
+/* 输入框样式 */
+input[type="text"] {
+    flex: 1; /* 输入框占据剩余空间 */
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* 提交按钮样式 */
+button {
+    background: #fe345e; /* 按钮背景颜色 */
+    border: none;
+    outline: none;
+    color: #fff; /* 按钮文字颜色 */
+    padding: 10px 20px; /* 按钮内边距 */
+    border-radius: 20px; /* 圆角 */
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+/* 提交按钮悬停样式 */
+button:hover {
+    background: #ff003a; /* 鼠标悬停时的背景颜色 */
+}
+
+
+
+/* 滚动条 */
+/* 自定义垂直滚动条 */
+::-webkit-scrollbar {
+    width: 10px; /* 滚动条宽度 */
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滚动条滑块颜色 */
+    border-radius: 5px; /* 滚动条滑块圆角 */
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 滚动条轨道颜色 */
+}
+
+/* 自定义水平滚动条 */
+::-webkit-scrollbar-horizontal {
+    height: 10px; /* 水平滚动条高度 */
+}
+
+/* 自定义水平滚动条滑块 */
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #ccc; /* 水平滚动条滑块颜色 */
+}
+
+/* 自定义水平滚动条轨道 */
+::-webkit-scrollbar-track:horizontal {
+    background-color: #f1f1f1; /* 水平滚动条轨道颜色 */
 }
 
 </style>

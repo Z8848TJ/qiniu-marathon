@@ -14,8 +14,8 @@ const routes = [
         component: Recommend
     },
     {
-        path: '/following',
-        name: 'following',
+        path: '/hot',
+        name: 'hot',
         component: Recommend
     },
     {
@@ -23,7 +23,10 @@ const routes = [
         name: 'friends',
         component: Recommend
     },
-    // {    path: '/',    name: 'user',    component: User,  },
+    {   path: '/category/:key',
+        name: 'category',
+        component: Recommend
+    },
     {
         path: '/user/self',
         name: 'user',

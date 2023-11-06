@@ -2,7 +2,6 @@ package com.paper.sword;
 import com.paper.sword.common.vo.fileVo;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -10,14 +9,14 @@ import java.io.InputStreamReader;
  * @author wwh
  * @date 2023/10/29
  */
-public class getLable {
-        public static fileVo getLable(String scriptPath,String videoPath,String outputDir) {
+public class GetLabel {
+        public static fileVo getLabel(String scriptPath,String videoPath,String outputDir) {
             fileVo fileVo = new fileVo();
             String line = "";
             String ans = "";
             try {
                 // 定义Python脚本的命令和参数
-                String pythonScript = "python";
+                String pythonScript = "python3";
                 String arg1 = VideoFrameExtractor.getFrame(videoPath,outputDir);
                 // 创建ProcessBuilder并设置命令和参数
                 ProcessBuilder processBuilder = new ProcessBuilder(pythonScript, scriptPath, outputDir);
@@ -45,8 +44,4 @@ public class getLable {
 
             return fileVo;
         }
-
-    public static void main(String[] args) {
-        getLable("C:\\Users\\86151\\PycharmProjects\\pythonProject2\\demo.py","http://s38keg0f3.hb-bkt.clouddn.com/04940270b1d346c8ba39ac56ebd36bef","D:\\demo");
-    }
-    }
+}

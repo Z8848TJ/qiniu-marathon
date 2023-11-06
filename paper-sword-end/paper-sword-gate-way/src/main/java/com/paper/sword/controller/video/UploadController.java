@@ -2,7 +2,6 @@ package com.paper.sword.controller.video;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.paper.sword.common.entity.Dict;
 import com.paper.sword.common.entity.Video;
 import com.paper.sword.common.mapper.DictMapper;
@@ -10,14 +9,13 @@ import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.common.vo.*;
 import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
-import com.paper.sword.getLable;
+import com.paper.sword.GetLabel;
 import com.paper.sword.user.UserService;
 import com.paper.sword.user.entity.User;
 import com.paper.sword.video.VideoEsService;
 import com.paper.sword.video.VideoService;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,13 +105,13 @@ public class UploadController {
 
 
         if(Integer.parseInt(size) > 0) {
-            fileVo lable = getLable.getLable(labelConfig.scriptPath, qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
+            fileVo label = GetLabel.getLabel(labelConfig.scriptPath, qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
             // 将视频信息保存到数据库
             Video video = new Video();
             String id = PaperSwordUtil.generateUUID();
             video.setId(id);
-            video.setVideoType(lable.getType());
-            String[] split = lable.getType().split(",");
+            video.setVideoType(label.getType());
+            String[] split = label.getType().split(",");
             StringBuilder stringBuilder = new StringBuilder();
 
 
@@ -130,7 +128,7 @@ public class UploadController {
             video.setVideoUrl(qiniuConfig.getVideoBucketUrl()+fileName);
             video.setCreateTime(new Date());
             video.setUserId(userId);
-            String coverUrl = upload.imageUpload(lable.imagePath);
+            String coverUrl = upload.imageUpload(label.imagePath);
             video.setCover(qiniuConfig.getImageBucketUrl() + coverUrl);
             video.setVideoString(videoTypeString);
             log.info("上传视频信息 ==> {}", video);

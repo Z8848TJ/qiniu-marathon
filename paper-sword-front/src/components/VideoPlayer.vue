@@ -11,7 +11,7 @@
 
                 ></video>
                 <div class="vPlay">
-                    <img src="bigPlay.png" alt="" v-if="!isPlay">
+                    <img src="/bigPlay.png" alt="" v-if="!isPlay">
                 </div>
             </div>
             <div class="detailBox">

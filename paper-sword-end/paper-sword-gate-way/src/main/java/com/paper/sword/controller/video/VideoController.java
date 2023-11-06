@@ -1,11 +1,9 @@
 package com.paper.sword.controller.video;
 
-import com.paper.sword.common.annotation.ControlsLog;
-import com.paper.sword.common.vo.EsVideo;
-import com.paper.sword.common.vo.Result;
-import com.paper.sword.common.vo.Similarity;
-import com.paper.sword.common.vo.UserHolder;
+import com.paper.sword.common.vo.*;
+import com.paper.sword.user.CommentService;
 import com.paper.sword.user.LikeService;
+import com.paper.sword.user.entity.Comment;
 import com.paper.sword.video.RecommendedService;
 import com.paper.sword.video.VideoEsService;
 import com.paper.sword.video.VideoService;
@@ -14,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/video")
@@ -36,26 +31,24 @@ public class VideoController {
     @Reference
     private VideoEsService esService;
     
-    
-    /**
-     * 获取用户视频列表
-     */
-    @GetMapping("/list")
-    public Result videoList() {
-        
-        List<Video> list = 
-                videoService.videoListByUserId(UserHolder.getUser().getId());
-        
-        return Result.success().data(list);
-    }
+    @Reference
+    private CommentService commentService;
 
     /**
      * 获取视频点赞数，收藏数，评论数
      */
     @GetMapping("/count")
     public Result listCount(@RequestParam String videoId) {
+        UserVO user = UserHolder.getUser();
         List<Integer> counts = likeService.videoInfoCount(videoId);
-        List<Boolean> res = likeService.isLikeAndIsCollect(videoId, UserHolder.getUser().getId());
+        
+        List<Boolean> res = new ArrayList<>();
+        if (user == null) {
+            res.add(false);
+            res.add(false);
+        } else {
+            res = likeService.isLikeAndIsCollect(videoId, user.getId());
+        }
         
         return Result.success()
                 .data("counts", counts)
@@ -66,7 +59,12 @@ public class VideoController {
 
     @GetMapping("/recommend")
     public Result recommend() {
-        List<Similarity> similarityByUser = recommendedService.getSimilarityByUser(UserHolder.getUser().getId());
+        UserVO user = UserHolder.getUser();
+        List<Similarity> similarityByUser = new ArrayList<>();
+        if(user != null) {
+            similarityByUser =  recommendedService.getSimilarityByUser(user.getId());
+        } 
+        
         HashSet<Integer> strings = new HashSet<>();
         for (Similarity similarity : similarityByUser) {
             List<Integer> videoTypeByUserId = recommendedService.getVideoTypeByUserId(similarity.userTwo);
@@ -105,6 +103,20 @@ public class VideoController {
         esService.saveEsVideo(esVideo);
 
         return Result.success().data("投稿成功");
+    }
+    
+    @GetMapping("/videoComment")
+    public Result videoComment(@RequestParam String videoId) {
+        List<Comment> list = commentService.getParentComment(videoId);
+        
+        return Result.success().data(list);
+    }
+    
+    @GetMapping("/videoChildrenComment")
+    public Result childrenComment(@RequestParam String commentId) {
+        List<Comment> list = commentService.getChildrenComment(commentId);
+        
+        return Result.success().data(list);
     }
 
 

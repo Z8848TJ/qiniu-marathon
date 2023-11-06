@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.paper.sword.common.annotation.ControlsLog;
+import com.paper.sword.common.enumType.OperateType;
 import com.paper.sword.common.util.PaperSwordUtil;
 import com.paper.sword.mapper.CommentMapper;
 import com.paper.sword.mq.producer.KafkaProducer;
@@ -29,8 +30,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
 
     @Resource
     private KafkaProducer kafkaProducer;
+    
     @Override
-    @ControlsLog(operateType = 4)
+    @ControlsLog(operateType = OperateType.comment)
     public void writeComment(Comment comment) {
         comment.setId(PaperSwordUtil.generateUUID());
         commentMapper.insert(comment);

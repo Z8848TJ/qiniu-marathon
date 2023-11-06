@@ -25,4 +25,8 @@ public interface FollowService extends IService<Follow> {
 
 
     List<User> followList(Integer userId);
+
+    int followCount(Integer id);
+
+    int followedCount(Integer id);
 }

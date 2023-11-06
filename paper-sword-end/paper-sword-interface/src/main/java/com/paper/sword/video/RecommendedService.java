@@ -1,6 +1,5 @@
 package com.paper.sword.video;
 
-import com.paper.sword.common.vo.MarkBo;
 import com.paper.sword.common.vo.MarkVo;
 import com.paper.sword.common.vo.Similarity;
 

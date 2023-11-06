@@ -88,6 +88,16 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow>
         return followMapper.selectFollowList(userId);
     }
 
+    @Override
+    public int followCount(Integer id) {
+        return query().eq("user_id", id).count();
+    }
+
+    @Override
+    public int followedCount(Integer id) {
+        return query().eq("follow_user_id", id).count();
+    }
+
     private Message buildMessage(Follow follow) {
         Message message = new Message();
         message.setToId(follow.getUserId());

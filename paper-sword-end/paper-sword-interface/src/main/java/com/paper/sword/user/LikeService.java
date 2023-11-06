@@ -24,7 +24,7 @@ public interface LikeService extends IService<Like> {
     /**
      * 收藏
      */
-    void collectVideo(String videoId, Integer userId);
+    void collectVideo(String videoId, Integer fromId,  Integer toId, Integer type);
 
     /**
      * 用户是否点赞，是否收藏
@@ -60,4 +60,9 @@ public interface LikeService extends IService<Like> {
      * 视频点赞，收藏， 评论数
      */
     List<Integer> videoInfoCount(String videoId);
+
+    /**
+     * 用户获赞
+     */
+    Integer gainLikeCount(Integer id);
 }

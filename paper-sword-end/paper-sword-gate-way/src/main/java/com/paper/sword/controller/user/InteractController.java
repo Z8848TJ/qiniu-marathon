@@ -31,8 +31,9 @@ public class InteractController {
     // 收藏
     @GetMapping("/collect")
     @ControlsLog(operateType = OperateType.collect)
-    public Result collect(@RequestParam String videoId, @RequestParam Integer userId) {
-        likeService.collectVideo(videoId, userId);
+    public Result collect(@RequestParam String videoId, @RequestParam Integer userId, @RequestParam Integer type) {
+        Integer fromId = UserHolder.getUser().getId();
+        likeService.collectVideo(videoId, fromId, userId, type);
         return Result.success();
     }
     

@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Data
 public class LikeVideoVo {
-    @TableId(value = "id", type = IdType.ID_WORKER)
+
     public String id;
 
     public String userId;
@@ -26,11 +26,7 @@ public class LikeVideoVo {
 
     public String videoUrl;
 
-    public String like;
-
-    public String collect;
-
-    public String title;
+    public String cover;
 
     public String description;
 

@@ -30,9 +30,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
 
     @Resource
     private KafkaProducer kafkaProducer;
-    
     @Override
-    @ControlsLog(operateType = OperateType.comment)
+    @ControlsLog(operateType = 4)
     public void writeComment(Comment comment) {
         comment.setId(PaperSwordUtil.generateUUID());
         commentMapper.insert(comment);

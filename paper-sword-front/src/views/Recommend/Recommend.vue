@@ -1,6 +1,6 @@
 <template>
     <div class="recommend">
-        <Header></Header>
+        <Header @changeRoute="changeRoute"></Header>
         <div class="loading" v-if="loading">
             <div class="loading-spinner"></div>
             <p style="color: white">加载中...</p>
@@ -21,15 +21,14 @@
                     <VideoPlayer
                             v-if="shouldRenderVideo(index)"
                             :source="video"
-
                             @dragVolume="changeVolume"
                             :isPlaying="currentIndex === index"
                     >
                     </VideoPlayer>
             </swiper-slide>
         </Swiper>
-        <LoginRegister class="loginRegisterBox" v-if="store.state.showLoginRegister"></LoginRegister>
     </div>
+    <LoginRegister v-if="store.state.showLoginRegister"></LoginRegister>
 </template>
 
 <script setup>
@@ -37,14 +36,14 @@
     import { Swiper, SwiperSlide } from 'swiper/vue'
     import 'swiper/css'
     import {Autoplay,Mousewheel,Keyboard} from 'swiper/modules'
+    import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
     import {GetAction} from '../../util/api'
-
-    const store = useStore()
-
     import VideoPlayer from '../../components/VideoPlayer.vue'
     import LoginRegister from '../../components/LoginRegister.vue'
 
+    const router = useRouter()
+    const store = useStore()
 
     //视频
     let mySwiper = null
@@ -81,15 +80,30 @@
 
     // loading
     const loading = ref(true);
+    const initData = ()=>{
+        loading.value = true
+        console.log('初始化数据')
+        if(router.currentRoute.value.name === 'following'){
+            console.log('关注')
 
+        }else {
+            console.log('推荐')
+            GetAction('video/recommend').then((res) => {
+                console.log(res)
+                videos.value = res.data.info
+                loading.value = false
+            })
+        }
+    }
+    const changeRoute = (e)=>{
+        initData()
+    }
 
     onMounted(() => {
-        GetAction('video/recommend').then((res)=>{
-            console.log(res)
-            videos.value = res.data.info
-            loading.value = false
-        })
+        initData()
     })
+
+
 
 
 </script>
@@ -133,4 +147,5 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 </style>

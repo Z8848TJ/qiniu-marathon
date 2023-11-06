@@ -26,7 +26,11 @@ public class LikeVideoVo {
 
     public String videoUrl;
 
-    public String cover;
+    public String like;
+
+    public String collect;
+
+    public String title;
 
     public String description;
 

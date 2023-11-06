@@ -105,11 +105,13 @@
 <script setup>
     import {ref,computed,onMounted,onBeforeUnmount,watch } from 'vue'
     import {GetAction} from "../util/api";
+    import {useStore} from 'vuex'
+    import LoginRegister from '../components/LoginRegister.vue'
 
     const props = defineProps(['source','isPlaying'])
+    const store = useStore()
 
     const video = ref(null)
-
     //播放暂停
     const isPlay = ref(false)
     const play = () =>{
@@ -358,43 +360,69 @@
 
     //点赞等信息
     const isLiked = ref(false)
-    const likeNumber = ref(110)
+    const likeNumber = ref(0)
     const changeLiked = (type)=>{
-        if(type ===1){
-            isLiked.value = true
-            likeNumber.value++
+        if(!store.state.isLogin){
+            store.commit('showLoginRegister',true)
         }else{
-            isLiked.value = false
-            likeNumber.value--
+            if(type ===1){
+                isLiked.value = true
+                likeNumber.value++
+            }else{
+                isLiked.value = false
+                likeNumber.value--
+            }
+            let params = {
+                videoId : props.source.id,
+                userId : props.source.userId,
+                type : type
+            }
+            GetAction('/interact/like',params).then((res)=>{
+                console.log(res)
+            })
         }
-        let params = {
-            videoId : props.source.id,
-            userId : props.source.userId,
-            type : type
-        }
-        GetAction('/interact/like',params).then((res)=>{
-            console.log(res)
-        })
     }
     //评论转发数
-    const reviewNumber = ref(1145)
+    const reviewNumber = ref(0)
     const isStar = ref(false)
-    const collectNumber = ref(16)
+    const collectNumber = ref(0)
     const changeCollect = (type)=>{
-        if(type ===1){
-            isStar.value = true
-            collectNumber.value++
-        }else{
-            isStar.value = false
-            collectNumber.value--
+        if(!store.state.isLogin){
+            store.commit('showLoginRegister',true)
+        }else {
+            if (type === 1) {
+                isStar.value = true
+                collectNumber.value++
+            } else {
+                isStar.value = false
+                collectNumber.value--
+            }
+            let params = {
+                videoId: props.source.id,
+                userId: props.source.userId,
+                type: type
+            }
+            GetAction('/interact/collect', params).then((res) => {
+                console.log('count', res)
+
+            })
         }
-        GetAction('/interact/collect')
     }
 
 
     //初始化信息
     const initData = ()=>{
-
+        let params = {
+            videoId : props.source.id,
+        }
+        GetAction('/video/count',params).then((res)=>{
+            console.log(res)
+            likeNumber.value = res.data.counts[0]
+            reviewNumber.value = res.data.counts[2]
+            collectNumber.value = res.data.counts[1]
+            isLiked.value = res.data.likeAndCollect[0]
+            isStar.value = res.data.likeAndCollect[1]
+        })
     }
 
     onMounted(()=>{

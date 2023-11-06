@@ -37,13 +37,13 @@
                 <div class="avatar" @click="showLogin" v-if="!store.state.isLogin">登录</div>
                 <div class="avatar" v-else @mouseenter="showUserInfo" @mouseleave="hideUserInfo">
                     <img src="../../videolist/image/favicon.png" @click="toUser">
-                    <div class="userInfo" v-if="showProfile">
-                        <div class="user-name">Your Name</div>
-                        <div class="userActions">
-                            <button @click="editProfile">编辑资料</button>
-                            <button @click="logout">退出登录</button>
-                        </div>
-                    </div>
+<!--                    <div class="userInfo" v-if="showProfile">-->
+<!--                        <div class="user-name">Your Name</div>-->
+<!--                        <div class="userActions">-->
+<!--                            <button @click="editProfile">编辑资料</button>-->
+<!--                            <button @click="logout">退出登录</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -89,32 +89,34 @@
     //用户
     //登录态
     const isLogin = ref(false)
-    const showProfileId = ref(null)
-    const showProfile = ref(false)
-    const showUserInfo = ()=>{
-        clearTimeout(showProfileId.value)
-        showProfile.value = true
-    }
-    const hideUserInfo = () => {
-        showProfileId.value = setTimeout(()=>{
-            showProfile.value = false
-        },500)
-    }
-    const logout = ()=>{
-        showProfileId.value = setTimeout(()=>{
-            localStorage.removeItem('token')
-            showProfile.value = false
-            store.commit('logout')
-            store.state.isLogin = false
-        },500)
-
-    }
+    // const showProfileId = ref(null)
+    // const showProfile = ref(false)
+    // const showUserInfo = ()=>{
+    //     clearTimeout(showProfileId.value)
+    //     showProfile.value = true
+    // }
+    // const hideUserInfo = () => {
+    //     showProfileId.value = setTimeout(()=>{
+    //         showProfile.value = false
+    //     },500)
+    // }
+    // const logout = ()=>{
+    //     showProfileId.value = setTimeout(()=>{
+    //         localStorage.removeItem('token')
+    //         showProfile.value = false
+    //         store.commit('logout')
+    //         store.state.isLogin = false
+    //     },500)
+    //
+    // }
 
     //路由变化
+    const emits = defineEmits(['changeRoute'])
     const currentRoute = ref('')
     router.afterEach((to)=>{
         // console.log(to)
         currentRoute.value = to.path
+        emits('changeRoute',to.path)
     })
 
     onMounted(()=>{
@@ -126,7 +128,7 @@
 
     })
     onBeforeUnmount(()=>{
-        clearTimeout(showProfileId.value)
+        // clearTimeout(showProfileId.value)
     })
 
 </script>
@@ -270,6 +272,7 @@ input::placeholder {
     width: 40px;
     line-height: 40px;
     border-radius: 50%;
+    color: #ffffff;
     /*background-color: red;*/
     margin: 0 10px;
     position: relative;

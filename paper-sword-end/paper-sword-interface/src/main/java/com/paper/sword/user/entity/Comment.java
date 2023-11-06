@@ -14,7 +14,7 @@ import java.util.Date;
 @TableName("t_comments")
 public class Comment {
 
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;
 
     public Integer userId;

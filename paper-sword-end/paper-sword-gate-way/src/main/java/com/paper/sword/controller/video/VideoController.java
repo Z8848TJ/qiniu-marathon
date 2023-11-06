@@ -119,5 +119,19 @@ public class VideoController {
         return Result.success().data(list);
     }
 
+    @RequestMapping("/search")
+    public Result recommend(String keyword){
+
+        List<String> searchVideo = esService.getEsVideo(keyword);
+        ArrayList<Video> videos = new ArrayList<>();
+        for (String s : searchVideo) {
+            Video byId = videoService.getById(s);
+            videos.add(byId);
+        }
+        return Result.success().data(searchVideo);
+    }
+
+
+
 
 }

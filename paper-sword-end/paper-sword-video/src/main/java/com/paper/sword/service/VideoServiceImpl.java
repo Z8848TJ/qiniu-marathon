@@ -9,7 +9,6 @@ import com.paper.sword.video.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +62,19 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
                 esVideoList.add(video);
             }
         }
+    }
+
+    @Override
+    public List<Video> getHotVideo(Integer begin) {
+        Integer count = query().count();
+        LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        
+        begin = begin > count ? begin : 0;
+        int end = begin + 10 < count ? begin + 10 : count;
+        
+        wrapper.last("order by score desc limit " + begin + " ," + end);
+
+        return baseMapper.selectList(wrapper);
     }
 }
 

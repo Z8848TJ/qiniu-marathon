@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @TableName("t_like")
 @Data
-public class Like {
+public class Like implements Serializable {
 
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     public String id;

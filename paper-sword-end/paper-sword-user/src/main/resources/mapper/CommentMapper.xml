@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paper.sword.mapper.CommentMapper">
+
+    <select id="selectCommentList" resultType="com.paper.sword.common.vo.CommentVo">
+        select user_id, content, video_id, recover_user_id, username, header_url, t.create_time
+
+        from t_comments t join t_user u on t.user_id = u.id
+
+        where video_id = #{videoId} order by t.create_time desc limit #{begin}, 10;
+    </select>
+</mapper>

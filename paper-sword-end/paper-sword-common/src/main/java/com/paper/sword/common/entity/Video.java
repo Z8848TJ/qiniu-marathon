@@ -2,10 +2,8 @@ package com.paper.sword.common.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -28,14 +26,18 @@ public class Video implements Serializable {
     @TableField(exist = false)
     public String videoString;
 
+    @TableField(exist = false)
+    public String headUrl;
+
     public String videoUrl;
-
-
+    
     public String username;
 
     public String cover;
 
     public String description;
+    
+    public double score;
 
     @TableField(fill = FieldFill.INSERT)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")

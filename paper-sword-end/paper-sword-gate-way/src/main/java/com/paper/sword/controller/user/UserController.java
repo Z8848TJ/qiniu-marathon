@@ -4,6 +4,7 @@ import com.paper.sword.common.entity.Video;
 import com.paper.sword.common.vo.LikeVideoVo;
 import com.paper.sword.common.vo.Result;
 import com.paper.sword.common.vo.UserHolder;
+import com.paper.sword.common.vo.UserVO;
 import com.paper.sword.config.QiniuConfig;
 import com.paper.sword.user.FollowService;
 import com.paper.sword.user.LikeService;
@@ -36,6 +37,21 @@ public class UserController {
     
     @Autowired
     private QiniuConfig qiniuConfig;
+    
+    @GetMapping("/header")
+    public Result getUserHeader() {
+        UserVO user = UserHolder.getUser();
+        
+        User u = null;
+        if(user != null) {
+            u = userService.getById(user.getId());
+            return Result.success().data("header",qiniuConfig.getHeaderBucketUrl() + u.getHeaderUrl())
+                    .data("id", user.getId());
+        } else {
+            return Result.success().data(null);
+        }
+        
+    }
 
     /**
      * 获取用户视频列表

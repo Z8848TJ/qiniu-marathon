@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.paper.sword.common.annotation.ControlsLog;
 import com.paper.sword.common.enumType.OperateType;
+import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.LikeVideoVo;
 import com.paper.sword.common.vo.UserHolder;
 import com.paper.sword.mq.producer.KafkaProducer;
@@ -16,6 +17,8 @@ import com.paper.sword.user.entity.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -39,6 +42,9 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
     
     @Reference
     private CommentService commentService;
+    
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public void likeVideo(String videoId, Integer fromId, Integer toId, Integer type) {
@@ -53,6 +59,10 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
             // 发送通知消息
             Message message = buildMessage(videoId, fromId, toId, 0);
             kafkaProducer.sendInteractMessage(message);
+
+            // 计算视频分数
+            String scoreKey = RedisUtil.getVideoScoreKey();
+            redisTemplate.opsForSet().add(scoreKey, videoId);
         } else {
             // 删除数据库记录
             likeMapper.delete(new QueryWrapper<Like>()
@@ -76,6 +86,10 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like>
             // 发送通知消息
             Message message = buildMessage(videoId, fromId, toId, 1);
             kafkaProducer.sendInteractMessage(message);
+
+            // 计算视频分数
+            String scoreKey = RedisUtil.getVideoScoreKey();
+            redisTemplate.opsForSet().add(scoreKey, videoId);
         } else {
             // 删除数据库记录
             likeMapper.delete(new QueryWrapper<Like>()

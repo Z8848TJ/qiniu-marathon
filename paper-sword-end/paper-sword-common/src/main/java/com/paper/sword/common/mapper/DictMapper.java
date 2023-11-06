@@ -5,6 +5,8 @@ import com.paper.sword.common.entity.Dict;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author wwh
  * @date 2023/11/4
@@ -12,4 +14,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface DictMapper extends BaseMapper<Dict> {
     Dict getValueByKey(@Param("key") Integer key);
+    
+    List<Dict> getVideoType();
 }

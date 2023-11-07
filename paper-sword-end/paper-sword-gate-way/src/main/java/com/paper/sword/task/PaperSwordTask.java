@@ -54,13 +54,13 @@ public class PaperSwordTask {
     
 
     // 每一小时执行一次 
-    @Scheduled(cron = "0 0 0 * * ? ")
+    @Scheduled(cron = "0 0 */2 * * ?")
     public void mark(){
         Map<Integer, MarkVo> recommend = recommendedService.getRecommend();
         recommendedService.getSimilar(recommend);
     }
 
-    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0 0 */1 * * ?")
     public void calcVideoScore() {
         String scoreKey = RedisUtil.getVideoScoreKey();
         BoundSetOperations<String, Object> operations = 

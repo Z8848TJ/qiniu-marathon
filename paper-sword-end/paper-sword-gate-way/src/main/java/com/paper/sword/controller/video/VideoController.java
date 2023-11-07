@@ -45,9 +45,6 @@ public class VideoController {
     private DictMapper dictMapper;
     
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    
-    @Autowired
     private QiniuConfig qiniuConfig;
 
     /**
@@ -89,15 +86,13 @@ public class VideoController {
         HashSet<Integer> strings = new HashSet<>();
         for (Similarity similarity : similarityByUser) {
             List<Integer> videoTypeByUserId = recommendedService.getVideoTypeByUserId(similarity.userTwo);
-            for (Integer i : videoTypeByUserId) {
-                strings.add(i);
-            }
+            strings.addAll(videoTypeByUserId);
         }
         StringBuilder stringBuilder = new StringBuilder();
         int i = 0;
         for (Integer string : strings) {
             if(i!=strings.size() - 1){
-                stringBuilder.append(string+",");
+                stringBuilder.append(string).append(",");
                 i++;
             }else{
                 stringBuilder.append(string);
@@ -106,34 +101,6 @@ public class VideoController {
         List<Video> videoList = esService.getEsVideoByType(stringBuilder.toString());
         
         return Result.success().data(videoList);
-    }
-
-    /**
-     * 获取视频信息
-     */
-    @PostMapping("/videoInfo")
-    public Result videoInfo(@RequestBody Video video) {
-        // 更新视频信息
-        video.setUsername(UserHolder.getUser().getUsername());
-        video.setCreateTime(new Date());
-        videoService.updateById(video);
-        
-        // 将视频信息存入 es
-        Video byId = videoService.getById(video.getId());
-        EsVideo esVideo = new EsVideo();
-        esVideo.setId(UUID.randomUUID().toString());
-        esVideo.setVideoId(byId.getId());
-        esVideo.setVideoType(byId.getVideoType());
-        esVideo.setUsername(UserHolder.getUser().getUsername());
-        esVideo.setDescription(byId.getDescription());
-        esVideo.setCreateTime(byId.getCreateTime());
-        esService.saveEsVideo(esVideo);
-        
-        // 计算视频分数
-        String scoreKey = RedisUtil.getVideoScoreKey();
-        redisTemplate.opsForSet().add(scoreKey, video.getId());
-
-        return Result.success().data("投稿成功");
     }
 
     /**

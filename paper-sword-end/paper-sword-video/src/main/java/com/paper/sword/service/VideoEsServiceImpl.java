@@ -58,7 +58,7 @@ public class VideoEsServiceImpl implements VideoEsService {
         }
         
         // 补全视频列表
-        if(esVideoList.size() < 10) {
+        if(esVideoList.size() < 20) {
             videoService.completeVideo(esVideoList);
         }
         

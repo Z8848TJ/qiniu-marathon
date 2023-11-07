@@ -6,6 +6,7 @@ import com.paper.sword.common.entity.Dict;
 import com.paper.sword.common.entity.Video;
 import com.paper.sword.common.mapper.DictMapper;
 import com.paper.sword.common.util.PaperSwordUtil;
+import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.*;
 import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
@@ -17,18 +18,18 @@ import com.paper.sword.video.VideoService;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * @author: zzh
@@ -59,6 +60,9 @@ public class UploadController {
 
     @Autowired
     private Upload upload;
+    
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
     
     
     @GetMapping("/video")
@@ -103,37 +107,46 @@ public class UploadController {
             return JSON.toJSONString(res);
         }
 
+        log.info("视频大小 ==> {}", size);
 
         if(Integer.parseInt(size) > 0) {
+            // 分析视频标签
             fileVo label = GetLabel.getLabel(labelConfig.scriptPath, qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
-            // 将视频信息保存到数据库
+            
+            String labType = label.getType();
+            // 未识别视频标签，默认为 10-其他
+            if(StringUtils.isBlank(labType)) {
+                labType = "10";
+            }
+            
+            // 将视频标签解析为对应字符内容
+            String[] split = labType.split(",");
+            StringBuilder buffer = new StringBuilder();
+            
+            for (int i = 0; i < split.length - 1; i++) {
+                Dict key = dictMapper.getValueByKey(Integer.parseInt(split[i]));
+                buffer.append(key.getValue()).append(",");
+            }
+            Dict key = dictMapper.getValueByKey(Integer.parseInt(split[split.length - 1]));
+            buffer.append(key.getValue());
+
+            // 上传封面
+            String coverUrl = upload.imageUpload(label.imagePath);
+            
+            // 保存视频信息
             Video video = new Video();
             String id = PaperSwordUtil.generateUUID();
             video.setId(id);
-            video.setVideoType(label.getType());
-            String[] split = label.getType().split(",");
-            StringBuilder stringBuilder = new StringBuilder();
-
-
-            for (int i = 0; i < split.length - 1; i++) {
-                Dict key = dictMapper.getValueByKey(Integer.parseInt(split[i]));
-                stringBuilder.append(key.getValue()).append(",");
-            }
-
-            Dict key = dictMapper.getValueByKey(Integer.parseInt(split[split.length - 1]));
-            stringBuilder.append(key.getValue());
-
-            String videoTypeString = stringBuilder.toString();
-
-            video.setVideoUrl(qiniuConfig.getVideoBucketUrl()+fileName);
+            video.setVideoType(labType);
+            video.setVideoUrl(qiniuConfig.getVideoBucketUrl() + fileName);
             video.setCreateTime(new Date());
             video.setUserId(userId);
-            String coverUrl = upload.imageUpload(label.imagePath);
             video.setCover(qiniuConfig.getImageBucketUrl() + coverUrl);
-            video.setVideoString(videoTypeString);
+            video.setVideoString(buffer.toString());
             log.info("上传视频信息 ==> {}", video);
-
             videoService.save(video);
+            
+            // 删除临时文件
             File folder = new File(labelConfig.outputDir);
             File[] files = folder.listFiles();
             for (File file : files) {
@@ -149,6 +162,34 @@ public class UploadController {
         }
 
         return JSON.toJSONString(res);
+    }
+
+    /**
+     * 获取视频信息
+     */
+    @PostMapping("/videoInfo")
+    public Result videoInfo(@RequestBody Video video) {
+        // 更新视频信息
+        video.setUsername(UserHolder.getUser().getUsername());
+        video.setCreateTime(new Date());
+        videoService.updateById(video);
+
+        // 将视频信息存入 es
+        Video byId = videoService.getById(video.getId());
+        EsVideo esVideo = new EsVideo();
+        esVideo.setId(UUID.randomUUID().toString());
+        esVideo.setVideoId(byId.getId());
+        esVideo.setVideoType(byId.getVideoType());
+        esVideo.setUsername(UserHolder.getUser().getUsername());
+        esVideo.setDescription(byId.getDescription());
+        esVideo.setCreateTime(byId.getCreateTime());
+        esService.saveEsVideo(esVideo);
+
+        // 计算视频分数
+        String scoreKey = RedisUtil.getVideoScoreKey();
+        redisTemplate.opsForSet().add(scoreKey, video.getId());
+
+        return Result.success().data("投稿成功");
     }
     
     @PostMapping("/callback/header")

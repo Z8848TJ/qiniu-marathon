@@ -38,8 +38,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         // 获取视频的总数
         Integer count = query().count();
 
-        int begin = RANDOM.nextInt(Math.max(count - 10, 0));
-        int end = begin + 10 < count ? begin + 10 : count;
+        int begin = RANDOM.nextInt(Math.max(count - 20, 0));
+        int end = begin + 20 < count ? begin + 20 : count;
 
         // 随机查询视频
         QueryWrapper<Video> wrapper = new QueryWrapper<>();
@@ -54,7 +54,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         }
 
         for (Video video : videos) {
-            if(esVideoList.size() == 10) {
+            if(esVideoList.size() == 20) {
                 break;
             }
             

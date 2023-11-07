@@ -11,8 +11,8 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2023/10/30
  */
 @Configuration
-@PropertySource("classpath:lable.properties")
-@ConfigurationProperties(prefix = "lable")
+@PropertySource("classpath:label.properties")
+@ConfigurationProperties(prefix = "label")
 @Data
 @Slf4j
 public class LabelConfig {

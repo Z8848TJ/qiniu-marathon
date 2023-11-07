@@ -1,7 +1,7 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://gcw56d.natappfree.cc/'  //正式
-// axios.defaults.baseURL = 'http://localhost:3000' //测试
+axios.defaults.baseURL = 'http://49.234.3.91:8090/'  //正式
+// axios.defaults.baseURL = 'http://dwy855.natappfree.cc/' //测试
 
 //post请求头
 if(localStorage.getItem('token')){

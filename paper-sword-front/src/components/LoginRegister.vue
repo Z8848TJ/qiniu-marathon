@@ -40,7 +40,7 @@
     import {GetAction, PostAction} from '../util/api'
     import {useStore} from 'vuex'
     import {ElAlert,ElTag} from 'element-plus'
-    import 'element-plus/dist/index.css';
+    import 'element-plus/dist/index.css'
 
 
     const store = useStore()
@@ -69,21 +69,22 @@
             password: password.value,
         }
         if (isRegister.value) {
-            console.log('注册:', registerParams)
+            // console.log('注册:', registerParams)
             PostAction('auth/register',registerParams).then((res)=>{
-                console.log(res)
+                // console.log(res)
                 if(res.code===200){
                     isRegister.value = false
                 }
             })
         } else {
-            console.log('登录:', loginParams)
+            // console.log('登录:', loginParams)
             PostAction('auth/login',loginParams).then((res)=>{
-                console.log(res)
+                // console.log(res)
                 localStorage.setItem('token',res.data.token)
-                store.commit('setAvatar',res.data.header)
+                store.commit('setAvatar',res.data)
                 store.commit('changeLog',true)
                 success.value = true
+                // console.log(store.state.avatar)
                 successTimeId.value = setTimeout(()=>{
                     store.commit('showLoginRegister',false)
                 },500)
@@ -120,7 +121,7 @@
         return emailRegex.test(email)
     }
     const isValidPassword = (password)=>{
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/
         return passwordRegex.test(password)
     }
     const clearError = (field) => {
@@ -136,14 +137,14 @@
     const countTime = ref(null)
 
     const sendCode = ()=>{
-        console.log(email.value)
+        // console.log(email.value)
         if(email.value !== ''){
             const params = {
                 email:email.value,
                 type:0
             }
             GetAction('auth/sendEmail', params).then((res)=>{
-                console.log(res)
+                // console.log(res)
                 if(res.code === 200){
                     clearInterval(countTime.value)
                     countTime.value = null

@@ -56,7 +56,7 @@
     import {GetAction, PostAction} from "../../util/api"
     import * as qiniu from 'qiniu-js'
     import {ElAlert,ElTag} from 'element-plus'
-    import 'element-plus/dist/index.css';
+    import 'element-plus/dist/index.css'
     import {useRouter} from 'vue-router'
 
 
@@ -74,7 +74,7 @@
         const file = event.target.files[0]
         // console.log(file)
         upload(file).then((res)=>{
-            console.log(res)
+            // console.log(res)
             cover.value = res.data.info.cover
             videoTag.value = res.data.info.videoString.split(',')
             videoId.value = res.data.info.id
@@ -85,47 +85,43 @@
     const upload = (file)=> {
         return new Promise((resolve, reject) => {
             GetAction('upload/video').then((res) => {
-                console.log(res)
-                let uptoken = res.data.token;
+                // console.log(res)
+                let uptoken = res.data.token
                 let key = res.data.key
                 let config = {
-                    useCdnDomain: true,        //表示是否使用 cdn 加速域名，为布尔值，true 表示使用，默认为 false。
-                    region: qiniu.region.z1,      //选择上传域名区域；当为 null 或 undefined 时，自动分析上传域名区域。  我这里是华东区
-                    domain: "http://uc.qiniuapi.com", //配置好的七牛云域名  如   https://cdn.qniyun.com/
-                    chunkSize: 100,     //每个分片的大小，单位mb，默认值3
-                    forceDirect: true,    //直传还是断点续传方式，true为直传
-                };
+                    useCdnDomain: true,                 //表示是否使用 cdn 加速域名，为布尔值，true 表示使用，默认为 false。
+                    region: qiniu.region.z1,            //选择上传域名区域；当为 null 或 undefined 时，自动分析上传域名区域。  我这里是华东区
+                    domain: "http://uc.qiniuapi.com",   //配置好的七牛云域名  如   https://cdn.qniyun.com/
+                    chunkSize: 100,                     //每个分片的大小，单位mb，默认值3
+                    forceDirect: true,                  //直传还是断点续传方式，true为直传
+                }
                 let putExtra = {
                     fname: file.name,    //文件原始文件名
                     params: {},
                     mimeType: [] || null,
-                    // ...config,
-                };
-                // console.log("-------",file, key, uptoken)
-                let observable = qiniu.upload(file, key, uptoken, putExtra, config);
+                }
+                let observable = qiniu.upload(file, key, uptoken, putExtra, config)
                 observable.subscribe({
                     next: (res) => {
-                        //主要用来展示进度
-                        console.log(res)
+                        // console.log(res)
                         if (res.total.percent) {
-                            uploadProgress.value = Math.floor(res.total.percent);
+                            uploadProgress.value = Math.floor(res.total.percent)
                         }
                     },
                     error: (err) => {
-                        //上传错误后触发
-                        console.log(err);
+                        // console.log(err)
                         reject(err)
                     },
                     complete: (res) => {
                         resolve(res)
-                        uploadProgress.value = 100;
+                        uploadProgress.value = 100
                     },
-                });
-            });
+                })
+            })
         })
     }
     // 上传进度百分比
-    const uploadProgress = ref(0);
+    const uploadProgress = ref(0)
 
     //视频封面
     const cover = ref('')
@@ -143,8 +139,8 @@
             id: videoId.value,
             description: description.value,
         }
-        PostAction('/video/videoInfo',params).then((res)=>{
-            console.log(res)
+        PostAction('/upload/videoInfo',params).then((res)=>{
+            // console.log(res)
             //投稿成功，继续添加逻辑
             submitSuccess.value = true
             submitTimeId.value = setTimeout(()=>{

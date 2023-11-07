@@ -95,29 +95,29 @@
     const loading = ref(true)
     const initData = ()=>{
         loading.value = true
-        console.log('初始化数据')
+        // console.log('初始化数据')
         if(router.currentRoute.value.name === 'recommend'){
-            console.log('推荐')
+            // console.log('推荐')
             GetAction('/video/recommend').then((res) => {
-                console.log('推荐的视频',res)
+                // console.log('推荐的视频',res)
                 store.commit('initVideos',res.data.info)
                 loading.value = false
             })
         }else if(router.currentRoute.value.name === 'hot'){
-            console.log('热门')
+            // console.log('热门')
             GetAction('/video/hot', {begin: 0}).then((res)=>{
-                console.log('热门',res)
+                // console.log('热门',res)
                 store.commit('initVideos',res.data.info)
                 loading.value = false
             })
-        }else {
-            console.log('分类')
+        }else if(router.currentRoute.value.name === 'category'){
+            // console.log('分类')
             // console.log(router.currentRoute)
             const params = {
                 type:router.currentRoute.value.params.key
             }
             GetAction('/video/type',params).then((res)=>{
-                console.log(res)
+                // console.log(res)
                 store.commit('initVideos',res.data.info)
                 loading.value = false
             })
@@ -139,7 +139,7 @@
     const toggleFullscreen = function () {
         const element = document.querySelector('.swiper')
         if(isFull.value){
-            console.log('退出全屏')
+            // console.log('退出全屏')
             if (document.exitFullscreen) {
                 document.exitFullscreen()
             } else if (document.webkitCancelFullScreen) {
@@ -151,7 +151,7 @@
             }
             element.style.userSelect = 'none'
         }else{
-            console.log('全屏')
+            // console.log('全屏')
             if (element.requestFullscreen) {
                 element.requestFullscreen()
             } else if (element.webkitRequestFullScreen) {

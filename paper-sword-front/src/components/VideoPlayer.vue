@@ -136,10 +136,10 @@
             progressWidth.value = 0
         }
         if(isPlay.value){
-            console.log('暂停')
+            // console.log('暂停')
             video.value.pause()
         }else{
-            console.log('播放')
+            // console.log('播放')
             video.value.play()
         }
         isPlay.value = !isPlay.value
@@ -398,7 +398,7 @@
                 type : type
             }
             GetAction('/interact/like',params).then((res)=>{
-                console.log(res)
+                // console.log(res)
             })
         }
     }
@@ -448,7 +448,7 @@
                 type: type
             }
             GetAction('/interact/collect', params).then((res) => {
-                console.log('count', res)
+                // console.log('count', res)
 
             })
         }
@@ -463,7 +463,7 @@
             userId:store.state.userId
         }
         GetAction('/video/count',params).then((res)=>{
-            console.log('数量信息',res)
+            // console.log('数量信息',res)
             likeNumber.value = res.data.counts[0]
             reviewNumber.value = res.data.counts[2]
             collectNumber.value = res.data.counts[1]
@@ -472,7 +472,7 @@
         })
         //获取评论
         GetAction('/video/comment',params).then((res)=>{
-            console.log('评论',res)
+            // console.log('评论',res)
             comment.value = res.data.info
         })
     }
@@ -492,7 +492,7 @@
             recoverUserId : props.source.userId
         }
         PostAction('/comment/add',comment).then((res)=>{
-            console.log(res)
+            // console.log(res)
             initData()
         })
         // 清空
@@ -500,10 +500,8 @@
     }
     const count = ref(20)
     const load = () => {
-        console.log(222222)
         count.value += 2
     }
-
 
 
     onMounted(()=>{
@@ -512,11 +510,11 @@
             if(newValue.isPlaying){
                 isPlay.value = true
                 video.value.play()
-                document.addEventListener('keydown', adjustProgress);
+                document.addEventListener('keydown', adjustProgress)
             }else{
                 video.value.pause()
                 isPlay.value = false
-                document.removeEventListener('keydown', adjustProgress);
+                document.removeEventListener('keydown', adjustProgress)
             }
         },{
             immediate: true,
@@ -528,7 +526,7 @@
         video.value = null
         clearTimeout(speedTimeId.value)
         clearTimeout(volumeTimeId.value)
-        document.removeEventListener('keydown', adjustProgress);
+        document.removeEventListener('keydown', adjustProgress)
     })
 </script>
 

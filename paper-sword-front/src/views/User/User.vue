@@ -81,15 +81,15 @@
         },500)
     }
 
-    // const isCurrentUser = ref(false); // 根据用户身份状态判断是否是当前用户
-    // const isFollowing = ref(false); // 根据用户关注状态判断是否已关注
+    // const isCurrentUser = ref(false) // 根据用户身份状态判断是否是当前用户
+    // const isFollowing = ref(false) // 根据用户关注状态判断是否已关注
     // const followUser = () => {
-    //     isFollowing.value = !isFollowing.value;
-    // };
+    //     isFollowing.value = !isFollowing.value
+    // }
 
     onMounted(()=>{
         GetAction('/user/mainInfo').then((res)=>{
-            console.log(res)
+            // console.log(res)
             followCount.value = res.data.followCount
             followedCount.value = res.data.followedCount
             likesCount.value = res.data.likeCount

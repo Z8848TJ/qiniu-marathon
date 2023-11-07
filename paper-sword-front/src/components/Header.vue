@@ -48,10 +48,10 @@
 </template>
 
 <script setup>
-    import {ref, onMounted,onBeforeUnmount} from 'vue'
+    import {ref,onMounted,onBeforeUnmount} from 'vue'
     import {useRouter} from 'vue-router'
     import {useStore} from 'vuex'
-    import {GetAction} from "../util/api";
+    import {GetAction} from "../util/api"
 
     const router = useRouter()
     const store = useStore()
@@ -60,15 +60,19 @@
         store.commit('showLoginRegister',true)
     }
     const toUser = ()=>{
-        console.log('跳转我的页面')
+        // console.log('跳转我的页面')
         router.push('/user/self')
     }
     const navigate = (route)=>{
         if(route === '/user/self'){
             if(store.state.isLogin){
                 router.push(route)
-            }else{}
-        }else{
+            }
+        }else if(route === '/publish'){
+            if(store.state.isLogin){
+                router.push(route)
+            }
+        }else {
             router.push(route)
         }
 
@@ -129,14 +133,13 @@
     })
 
     //头像
-    const avatar = ref('')
     onMounted(()=>{
         // console.log(router.currentRoute.value.path)
         const userInfo = localStorage.getItem('token')
         if(userInfo){
             store.commit('isLogin')
             GetAction('/user/header').then((res)=>{
-                console.log(res)
+                // console.log(res)
                 store.commit('setAvatar',res.data)
             })
         }

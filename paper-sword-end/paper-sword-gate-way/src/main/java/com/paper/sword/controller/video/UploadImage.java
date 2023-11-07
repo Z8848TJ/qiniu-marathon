@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/11/3
  */
 @Component
-public class Upload {
+public class UploadImage {
 
     @Autowired
     private QiniuConfig qiniuConfig;

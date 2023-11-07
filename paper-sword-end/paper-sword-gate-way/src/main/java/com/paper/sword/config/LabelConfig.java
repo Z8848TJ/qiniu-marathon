@@ -20,5 +20,7 @@ public class LabelConfig {
     public String scriptPath;
 
     public String outputDir;
+    
+    public String pythonUrl;
 
 }

@@ -10,7 +10,7 @@ import com.paper.sword.common.util.RedisUtil;
 import com.paper.sword.common.vo.*;
 import com.paper.sword.config.LabelConfig;
 import com.paper.sword.config.QiniuConfig;
-import com.paper.sword.GetLabel;
+import com.paper.sword.LabelGet;
 import com.paper.sword.user.UserService;
 import com.paper.sword.user.entity.User;
 import com.paper.sword.video.VideoEsService;
@@ -59,7 +59,7 @@ public class UploadController {
     private DictMapper dictMapper;
 
     @Autowired
-    private Upload upload;
+    private UploadImage upload;
     
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -110,8 +110,13 @@ public class UploadController {
         log.info("视频大小 ==> {}", size);
 
         if(Integer.parseInt(size) > 0) {
+            String fileUrl = qiniuConfig.getVideoBucketUrl() + fileName;
             // 分析视频标签
-            fileVo label = GetLabel.getLabel(labelConfig.scriptPath, qiniuConfig.getVideoBucketUrl() + fileName, labelConfig.outputDir);
+            fileVo label = LabelGet.getLabelList(
+                    labelConfig.getScriptPath(),
+                    fileUrl, 
+                    labelConfig.getOutputDir(),
+                    labelConfig.pythonUrl);
             
             String labType = label.getType();
             // 未识别视频标签，默认为 10-其他

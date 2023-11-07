@@ -21,7 +21,6 @@ public class CommentController {
 
     @PostMapping("/add")
     public Result addComment(@RequestBody Comment comment){
-        comment.setRecoverUserId(UserHolder.getUser().getId());
         comment.setCreateTime(new Date());
         comment.setUserId(UserHolder.getUser().getId());
         commentService.writeComment(comment);

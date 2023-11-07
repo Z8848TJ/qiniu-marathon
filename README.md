@@ -38,6 +38,7 @@ gate-way 模块：
 - label.properties
   - label.scriptPath：修改 py 目录下 demo.py 文件位置为自己的文件地址
   - label.outputDir：修改视频分析后的图片的输出位置
+  - label.pythonUrl：修改为自己的 python 地址
 - qiniu.properties
   - access-key：七牛云 access-key；
   - secret-key：七牛云 secret-key；
